@@ -1,17 +1,15 @@
-import React from "react";
 import { AuthProvider } from "./context/AuthContext";
+import { ChampsProvider } from "./context/ChampsContext";
 import LoginScreen from "./screens/LoginScreen";
 
 const App = () => {
   return (
-    <AppState>
-      <LoginScreen />
-    </AppState>
+    <AuthProvider>
+      <ChampsProvider>
+        <LoginScreen />
+      </ChampsProvider>
+    </AuthProvider>
   );
-};
-
-const AppState = ({ children }: any) => {
-  return <AuthProvider>{children}</AuthProvider>;
 };
 
 export default App;

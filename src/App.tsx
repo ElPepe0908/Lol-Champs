@@ -1,8 +1,17 @@
-import React from 'react'
+import React from "react";
+import { AuthProvider } from "./context/AuthContext";
+import LoginScreen from "./screens/LoginScreen";
 
 const App = () => {
   return (
-    <div>Lol Champs</div>
-    )
-}
-export default App
+    <AppState>
+      <LoginScreen />
+    </AppState>
+  );
+};
+
+const AppState = ({ children }: any) => {
+  return <AuthProvider>{children}</AuthProvider>;
+};
+
+export default App;

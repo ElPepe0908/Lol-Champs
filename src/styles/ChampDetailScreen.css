@@ -1,0 +1,9 @@
+/* @media screen and (max-width: 1600px) {
+} */
+
+.carouselItem {
+  background-color: "#17171B";
+  width: "21%";
+  height: "100%";
+  border-radius: 10;
+}

@@ -84,7 +84,6 @@ export const HomeScreen = () => {
             <FilterButton>Medium</FilterButton>
             <FilterButton>Hard</FilterButton>
           </DifficultyFiltersContainer>
-
           <LogoutButton>
             <MdOutlineLogout />
             <LogoutText>Log Out</LogoutText>

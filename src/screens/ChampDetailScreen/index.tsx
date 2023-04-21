@@ -62,13 +62,6 @@ import axios from "axios";
 import { useEffect } from "react";
 import { Card } from "../../components/Card";
 
-// interface SwiperProps {
-//   loop?: boolean;
-//   modules?: Array<any>;
-//   pagination?: any;
-//   navigation?: boolean | NavigationOptions;
-// }
-
 const ChampDetailScreen = () => {
   const [ChampSkins, setChampSkins] = useState<any>([]);
 

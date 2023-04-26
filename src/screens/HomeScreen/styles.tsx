@@ -7,7 +7,7 @@ export const HomeScreenContainer = styled.div`
 `;
 
 export const HomeScreenHeader = styled.div`
-  height: 20vh;
+  height: 18vh;
   display: flex;
   align-items: center;
 
@@ -71,6 +71,7 @@ export const LogoContainer = styled.div`
 
 export const Logo = styled.img`
   width: 200px;
+  cursor: pointer;
   @media ${device.desktops_large} {
     width: 190px;
   }
@@ -203,62 +204,137 @@ export const SideBar = styled.div`
   }
 `;
 
+export const SideBarResponsive = styled.div`
+  display: none;
+
+  @media ${device.phones} {
+    background: #07121a;
+    width: 35vw;
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+  }
+  @media ${device.old_phones} {
+    width: 45vw;
+  }
+`;
+
+export const FiltersContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const RolesFilter = styled.p`
+  display: none;
+
+  @media ${device.phones} {
+    display: flex;
+    width: 100%;
+  }
+`;
+
 export const FilterButton = styled.button`
   background-color: #27272d;
-  width: 200px;
+  width: 100%;
+  height: 50px;
   padding: 10px;
   border-radius: 4px;
   border: none;
   display: flex;
+  align-items: center;
   justify-content: center;
   color: #808080;
-  margin: 12px 0;
+  margin: 6px 0;
   cursor: pointer;
 
   @media ${device.desktops_large} {
-    width: 180px;
     padding: 8px;
   }
   @media ${device.desktops} {
-    width: 190px;
     padding: 10px;
   }
   @media ${device.tablets} {
-    width: 140px;
-    height: 40px;
     font-size: 14px;
   }
   @media ${device.phones} {
-    width: 120px;
-    height: 35px;
+    width: 100%;
+    height: 50px;
+    font-size: 13px;
+    align-items: center;
+    margin: 8px 0;
+  }
+  @media ${device.small_phones} {
+    height: 40px;
     font-size: 12px;
   }
 `;
 
+export const RolesFilterContainer = styled.div`
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media ${device.desktops_large} {
+    width: 70%;
+  }
+
+  @media ${device.old_phones} {
+    width: 80%;
+  }
+  @media ${device.small_phones} {
+    width: 75%;
+  }
+`;
+
+export const DifficultyFilter = styled.p`
+  display: flex;
+  margin-bottom: 5px;
+  width: 100%;
+`;
+
 export const DifficultyFiltersContainer = styled.div`
   margin-top: 40px;
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media ${device.desktops_large} {
+    width: 70%;
+  }
+
+  @media ${device.old_phones} {
+    width: 80%;
+  }
+  @media ${device.small_phones} {
+    width: 75%;
+  }
 `;
 
 export const LogoutButton = styled.div`
-  width: 200px;
+  width: 60%;
   flex: 1;
   display: flex;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 25px;
   cursor: pointer;
 
   @media ${device.desktops_large} {
-    width: 180px;
-  }
-  @media ${device.desktops} {
-    width: 190px;
-    margin-top: 30px;
-  }
-  @media ${device.tablets} {
-    width: 140px;
+    width: 70%;
   }
   @media ${device.phones} {
-    width: 120px;
+    width: 70%;
+    margin-top: 60px;
+  }
+  @media ${device.old_phones} {
+    width: 80%;
+  }
+  @media ${device.small_phones} {
+    width: 75%;
   }
 `;
 
@@ -284,7 +360,7 @@ export const SideBarDivider = styled.div`
 
 export const ChampsCardsContainer = styled.div`
   width: 79vw;
-  height: 80vh;
+  height: 82vh;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

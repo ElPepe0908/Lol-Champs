@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
-const LoginScreen = () => {
+const LoginScreenTest = () => {
   const { authState, login, logout } = useContext(AuthContext);
   const { isLoggedIn, username } = authState;
 
@@ -22,4 +22,4 @@ const LoginScreen = () => {
     </div>
   );
 };
-export default LoginScreen;
+export default LoginScreenTest;

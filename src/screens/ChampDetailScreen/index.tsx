@@ -62,7 +62,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { Card } from "../../components/Card";
 
-const ChampDetailScreen = () => {
+export const ChampDetailScreen = () => {
   const [ChampSkins, setChampSkins] = useState<any>([]);
 
   const sliderRef = useRef<any>(null);
@@ -181,7 +181,7 @@ const ChampDetailScreen = () => {
                           />
                         </SwiperSlide>
                       ))}
-                      {/* {Ch`ampSkins?.map((skin: any) => (
+                      {/* {ChampSkins?.map((skin: any) => (
                         <SwiperSlide key={skin?.url}>
                           <Card url={skin?.url} />
                         </SwiperSlide>
@@ -263,5 +263,3 @@ const ChampDetailScreen = () => {
     </GeneralDiv>
   );
 };
-
-export default ChampDetailScreen;

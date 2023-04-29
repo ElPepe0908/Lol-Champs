@@ -549,10 +549,16 @@ export const ChampCarrusellInner = styled("div")({
   height: "225px",
 
   [`@media ${device.tablets}`]: {
+    height: "180px",
+  },
+  [`@media ${device.phones}`]: {
     height: "150px",
   },
   [`@media ${device.old_phones}`]: {
-    height: "125px",
+    height: "170px",
+  },
+  [`@media ${device.small_phones}`]: {
+    height: "180px",
   },
 });
 
@@ -562,11 +568,17 @@ export const ChampCarrusellSpellDiv = styled("div")({
   height: "100%",
   borderRadius: 10,
 
+  [`@media ${device.desktops}`]: {
+    width: "31%",
+  },
   [`@media ${device.tablets}`]: {
     width: "32%",
   },
   [`@media ${device.old_phones}`]: {
     width: "48%",
+  },
+  [`@media ${device.small_phones}`]: {
+    width: "100%",
   },
 });
 

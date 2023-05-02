@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   ChampCard,
@@ -32,6 +32,11 @@ import { MdArrowForwardIos, MdOutlineLogout } from "react-icons/md";
 import { AiOutlineSearch } from "react-icons/ai";
 import lolLogo from "../../assets/lol-logo.png";
 import { Sidebar } from "./Sidebar";
+import axios from "axios";
+import {
+  ChampionElement,
+  ChampsListResponse,
+} from "../../interfaces/ChampsListInterface";
 
 const champsList = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
@@ -44,15 +49,53 @@ export type Classes = {
   Drawer: string;
 };
 
-// const useStyles = makeStyles((theme: Theme) => ({
-//   Drawer: {
-//     backgroundColor: "#000",
-//   },
-// }));
+// console.log({ ChampSkins });
 
-// export type Classes = ReturnType<typeof useStyles>;
+// const getSkins = async () => {
+//   const url = `https://league-of-legends-champions.p.rapidapi.com/champions/en-us?page=0&size=30`;
+//   // const url = `https://league-of-legends-champions.p.rapidapi.com/champions/${champ}`;
+
+//   const options = {
+//     method: "GET",
+//     headers: {
+//       "X-RapidAPI-Key": "2d60f7bfc5msh614cefcd884660dp1b936djsn2451881ee132",
+//       "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
+//     },
+//   };
+//   return fetch(url, options)
+//     .then((resp) => resp.json())
+//     .then((resp) => console.log("resp", resp))
+//     .catch((error) => console.error(error));
+// };
+// const skins = getSkins();
 
 export const HomeScreen = () => {
+  const [ChampSkins, setChampSkins] = useState<ChampionElement[]>([]);
+
+  const getSkins = async () => {
+    const url = `https://league-of-legends-champions.p.rapidapi.com/champions/en-us?page=0&size=30`;
+    const headers = {
+      "X-RapidAPI-Key": "36d0f53ee9msh3a618e1e5aecca5p1906b1jsn2172de59bbcd",
+      "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
+    };
+
+    return await axios
+      .get<ChampsListResponse>(url, { headers })
+      .then(({ data }) => setChampSkins(data.champions))
+      // .then(({ data }) => setChampDetail(data.champ))
+      .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    getSkins();
+  }, []);
+
+  console.log({ ChampSkins });
+
+  if (!ChampSkins) {
+    return <h1>Loading...</h1>;
+  }
+
   return (
     <HomeScreenContainer>
       <HomeScreenHeader>

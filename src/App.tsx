@@ -10,9 +10,9 @@ const App = () => {
   return (
     <AuthProvider>
       <ChampsProvider>
-        {/* <ChampDetailScreen /> */}
+        <ChampDetailScreen />
         {/* <HomeScreen /> */}
-        <LoginScreen />
+        {/* <LoginScreen /> */}
       </ChampsProvider>
     </AuthProvider>
   );

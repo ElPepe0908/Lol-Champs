@@ -370,8 +370,6 @@ export const ChampInfoSkinsDiv = styled("div")({
 });
 
 export const ChampSkinDiv = styled("div")({
-  backgroundImage:
-    'url("https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Bard_0.jpg")',
   backgroundSize: "cover",
   backgroundPosition: "center center",
   backgroundColor: "#17171B",
@@ -394,6 +392,10 @@ export const ChampSkinDiv = styled("div")({
     height: "300px",
     width: "96%",
     margin: "0 2%",
+  },
+
+  "&:not(:first-child).hidden": {
+    display: "none",
   },
 });
 
@@ -514,8 +516,7 @@ export const GeneralSpellsUpperDiv = styled("div")({
 export const SpellSeparationLine = styled("div")({
   backgroundColor: "#17171B",
   width: "34%",
-  height: 2,
-  borderRadius: 10,
+  height: 1.8,
 
   [`@media ${device.old_phones}`]: {
     display: "none",
@@ -567,6 +568,11 @@ export const ChampCarrusellSpellDiv = styled("div")({
   width: "24%",
   height: "100%",
   borderRadius: 10,
+  display: "flex",
+  alignItems: "end",
+  justifyContent: "center",
+  backgroundSize: "cover",
+  backgroundPosition: "center center",
 
   [`@media ${device.desktops}`]: {
     width: "31%",

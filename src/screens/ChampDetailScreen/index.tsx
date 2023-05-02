@@ -61,108 +61,133 @@ import {
 import axios from "axios";
 import { useEffect } from "react";
 import { Card } from "../../components/Card";
+import { ChampionElement } from "../../interfaces/ChampDetailInterface";
+import { ChampDetailResponse } from "../../interfaces/ChampDetailInterface";
 
 export const ChampDetailScreen = () => {
-  const [ChampSkins, setChampSkins] = useState<any>([]);
+  const [ChampDetail, setChampDetail] = useState<ChampionElement>(
+    {} as ChampionElement
+  );
 
-  const sliderRef = useRef<any>(null);
+  const spells = [
+    ChampDetail.champion_passive,
+    ChampDetail.champion_q,
+    ChampDetail.champion_w,
+    ChampDetail.champion_e,
+    ChampDetail.champion_r,
+  ];
 
-  const handlePrev = useCallback(() => {
-    if (!sliderRef.current) return;
-    sliderRef.current.swiper.slidePrev();
-  }, []);
-
-  const handleNext = useCallback(() => {
-    if (!sliderRef.current) return;
-    sliderRef.current.swiper.slideNext();
-  }, []);
-
-  const getSkins = async () => {
-    const url = `http://ddragon.leagueoflegends.com/cdn/11.6.1/data/en_US/champion/Bard.json`; // Bard
+  const getDetail = async () => {
+    const url = `https://league-of-legends-champions.p.rapidapi.com/champions/en-us/bard`;
+    const headers = {
+      "X-RapidAPI-Key": "36d0f53ee9msh3a618e1e5aecca5p1906b1jsn2172de59bbcd",
+      "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
+    };
 
     return await axios
-      .get(url)
-      .then(({ data }) => setChampSkins(data.data.Bard.skins))
+      .get<ChampDetailResponse>(url, { headers })
+      .then(({ data }) => setChampDetail(data.champion[0]))
+      // .then(({ data }) => console.log(data))
       .catch((error) => console.log(error));
   };
 
   useEffect(() => {
-    getSkins();
+    getDetail();
   }, []);
 
-  console.log({ ChampSkins });
+  console.log({ ChampDetail });
 
-  return (
-    <GeneralDiv>
+  const capitalizeFirstLetter = (word: string) => {
+    const strCapitalized = word.charAt(0).toUpperCase() + word.slice(1);
+    return strCapitalized;
+  };
+
+  if (!ChampDetail.champion_name) {
+    return <div>Loading...</div>;
+  }
+
+  const champId = JSON.parse(ChampDetail.data_dragon_json).key;
+  console.log({ champId });
+
+  const mobileScreen = (
+    <UpperGeneralDiv>
+      <ChampDetailDiv>
+        <BackInfoDiv>
+          <GoBackDiv>
+            <MdKeyboardArrowLeft size={50} />
+          </GoBackDiv>
+          <ChampInfoResp>
+            <ChampNameDiv>
+              <ArrowIconResp>
+                <MdKeyboardArrowLeft size={25} />
+              </ArrowIconResp>
+              <ChampNameResp>{ChampDetail.champion_name}</ChampNameResp>
+            </ChampNameDiv>
+            <ChampTitleResp>{champId} - The Wandering Caretaker</ChampTitleResp>
+            <ChampStatsDivResp>
+              <ChampStatsInfoResp>
+                {ChampDetail.recommended_roles[0]}
+              </ChampStatsInfoResp>
+              <ChampStatsInfoResp>
+                {ChampDetail.recommended_roles[1]}
+              </ChampStatsInfoResp>
+            </ChampStatsDivResp>
+          </ChampInfoResp>
+        </BackInfoDiv>
+      </ChampDetailDiv>
+    </UpperGeneralDiv>
+  );
+
+  const desktopScreen = (
+    <>
       <UpperGeneralDiv>
         <ChampDetailDiv>
-          <BackInfoDiv>
-            <GoBackDiv>
-              <MdKeyboardArrowLeft size={50} />
-            </GoBackDiv>
-            <ChampInfoResp>
-              <ChampNameDiv>
-                <ArrowIconResp>
-                  <MdKeyboardArrowLeft size={25} />
-                </ArrowIconResp>
-                <ChampNameResp>Bard</ChampNameResp>
-              </ChampNameDiv>
-              <ChampTitleResp>001 - The Wandering Caretaker</ChampTitleResp>
-              <ChampStatsDivResp>
-                <ChampStatsInfoResp>Tank</ChampStatsInfoResp>
-                <ChampStatsInfoResp>Support</ChampStatsInfoResp>
-              </ChampStatsDivResp>
-            </ChampInfoResp>
-          </BackInfoDiv>
-
           <ChampInfoDiv>
             <ChampNameDiv>
               <ArrowIcon>
                 <MdKeyboardArrowLeft size={25} />
               </ArrowIcon>
-              <ChampName>Bard</ChampName>
+              <ChampName> {ChampDetail.champion_name} </ChampName>
             </ChampNameDiv>
-            <ChampTitle>The Wandering Caretaker</ChampTitle>
+            <ChampTitle>
+              {capitalizeFirstLetter(ChampDetail.champion_title)}
+            </ChampTitle>
             <ChampSeparation>
               <SeparationLine1 />
               <SeparationCircle />
               <SeparationLine2 />
             </ChampSeparation>
-
-            <ChampTextInfo>
-              A traveler from beyond the stars, Bard is an agent of serendipity
-              who fights to maintain a balance where life can endure the
-              indifference of chaos. Many Runeterrans sing songs that ponder his
-              extraordinary nature, yet they all agree that the cosmic vagabond
-              is drawn to artifacts of great magical power. Surrounded by a
-              jubilant choir of helpful spirit meeps, it is impossible to
-              mistake his actions as malevolent, as Bard always serves the
-              greater good... in his own odd way.
-            </ChampTextInfo>
-
-            <ChampId>001</ChampId>
+            {ChampDetail.champion_blurb ? (
+              <ChampTextInfo>{ChampDetail.lore}</ChampTextInfo>
+            ) : (
+              <ChampTextInfo>Loading...</ChampTextInfo>
+            )}
+            <ChampId>{champId}</ChampId>
           </ChampInfoDiv>
           <ChampStatsDiv>
-            <ChampStatsInfo>Tank</ChampStatsInfo>
-            <ChampStatsInfo>Support</ChampStatsInfo>
+            <ChampStatsInfo>{ChampDetail.recommended_roles[0]}</ChampStatsInfo>
+            <ChampStatsInfo>{ChampDetail.recommended_roles[1]}</ChampStatsInfo>
           </ChampStatsDiv>
         </ChampDetailDiv>
 
         <ChampInfoSkinsDiv>
-          <ChampSkinDiv />
+          {ChampDetail.skins ? (
+            ChampDetail.skins.map((skin, index) => (
+              <ChampSkinDiv
+                key={skin.name}
+                style={{ backgroundImage: `url(${skin.imageUrl})` }}
+                className={index === 0 ? "" : "hidden"}
+              />
+            ))
+          ) : (
+            <ChampSkinDiv> Loading...</ChampSkinDiv>
+          )}
           <CarouselInner>
-            {/* <CarouselFlex>
-              <MdKeyboardArrowUp size={30} />
-            </CarouselFlex>
-            <CarouselFlexResp>
-              <MdKeyboardArrowLeft size={25} />
-            </CarouselFlexResp> */}
             <CarouselDiv>
               <Container>
                 <SwiperContainer>
                   <div>
                     <Swiper
-                      ref={sliderRef}
                       style={{
                         width: "100%",
                         height: "100%",
@@ -181,60 +206,11 @@ export const ChampDetailScreen = () => {
                           />
                         </SwiperSlide>
                       ))}
-                      {/* {ChampSkins?.map((skin: any) => (
-                        <SwiperSlide key={skin?.url}>
-                          <Card url={skin?.url} />
-                        </SwiperSlide>
-                      ))}` */}
                     </Swiper>
-                    <div className="prev-arrow" onClick={handlePrev} />
-                    <div className="next-arrow" onClick={handleNext} />
                   </div>
-
-                  {/* 
-                  <Swiper
-                    loop={true}
-                    modules={[Pagination, Navigation]}
-                    pagination={{
-                      clickable: true,
-                    }}
-                    navigation={true}
-                    // navigation={{
-                    //   enabled: true,
-                    //   nextEl: ".swiper-button-next",
-                    //   prevEl: ".swiper-button-prev",
-                    // }}
-                    slidesPerView={4}
-                    breakpoints={{
-                      320: { slidesPerView: 2, spaceBetween: 20 },
-                      576: { slidesPerView: 2, spaceBetween: 20 },
-                      768: { slidesPerView: 3, spaceBetween: 20 },
-                      992: { slidesPerView: 3, spaceBetween: 20 },
-                      1200: { slidesPerView: 4, spaceBetween: 20 },
-                      1450: { slidesPerView: 4, spaceBetween: 20 },
-                    }}
-                  >
-                    {ChampSkins?.map((skin: any) => (
-                      <SwiperSlide key={skin?.url}>
-                        <Card url={skin?.url} />
-                      </SwiperSlide>
-                    ))}
-                    <div className="prev" />
-                    <div className="next" />
-                  </Swiper> */}
                 </SwiperContainer>
               </Container>
-              {/*  <CarouselItem />
-               <CarouselItem />
-               <CarouselItem />
-               <CarouselItem /> */}
             </CarouselDiv>
-            {/* <CarouselFlexResp>
-              <MdKeyboardArrowRight size={25} />
-            </CarouselFlexResp>
-            <CarouselFlex>
-              <MdKeyboardArrowDown size={30} />
-            </CarouselFlex> */}
           </CarouselInner>
         </ChampInfoSkinsDiv>
       </UpperGeneralDiv>
@@ -250,16 +226,34 @@ export const ChampDetailScreen = () => {
             <MdKeyboardArrowLeft size={25} />
           </CarouselFlexSpells>
           <ChampCarrusellInner>
+            {spells?.map((spell: any, index) => (
+              <ChampCarrusellSpellDiv
+                key={spell}
+                style={{
+                  backgroundImage: `url(${spell.champion_passive_video_poster})`,
+                }}
+              >
+                {spell.champion_passive_name}
+              </ChampCarrusellSpellDiv>
+            ))}
+
+            {/* <ChampCarrusellSpellDiv />
             <ChampCarrusellSpellDiv />
             <ChampCarrusellSpellDiv />
-            <ChampCarrusellSpellDiv />
-            <ChampCarrusellSpellDiv />
+            <ChampCarrusellSpellDiv /> */}
           </ChampCarrusellInner>
           <CarouselFlexSpells>
             <MdKeyboardArrowRight size={25} />
           </CarouselFlexSpells>
         </ChampCarrusellDiv>
       </GeneralSpellsDiv>
+    </>
+  );
+
+  return (
+    <GeneralDiv>
+      {mobileScreen}
+      {desktopScreen}
     </GeneralDiv>
   );
 };

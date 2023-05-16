@@ -1,6 +1,23 @@
 import styled from "styled-components";
 import { device } from "../../constants";
 import { Navigation } from "swiper";
+import { MdClear, MdKeyboardArrowLeft } from "react-icons/md";
+import { MdPlayArrow } from "react-icons/md";
+
+type BackgroundImageProps = {
+  backgroundImage: string;
+};
+
+type BackgroundVideoProps = {
+  backgroundVideo: string;
+};
+
+export const LoaderContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
 
 export const GeneralDiv = styled("div")({
   width: "95%",
@@ -563,29 +580,134 @@ export const ChampCarrusellInner = styled("div")({
   },
 });
 
-export const ChampCarrusellSpellDiv = styled("div")({
-  backgroundColor: "#17171B",
-  width: "24%",
-  height: "100%",
-  borderRadius: 10,
-  display: "flex",
-  alignItems: "end",
-  justifyContent: "center",
-  backgroundSize: "cover",
-  backgroundPosition: "center center",
+export const ChampCarrusellSpellDiv = styled.div<BackgroundImageProps>`
+  width: 24%;
+  height: 100%;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center center;
+  background-image: url(${(props) => props.backgroundImage});
+  cursor: pointer;
 
-  [`@media ${device.desktops}`]: {
-    width: "31%",
-  },
-  [`@media ${device.tablets}`]: {
-    width: "32%",
-  },
-  [`@media ${device.old_phones}`]: {
-    width: "48%",
-  },
-  [`@media ${device.small_phones}`]: {
-    width: "100%",
-  },
+  @media ${device.desktops} {
+    width: 31%;
+  }
+  @media ${device.tablets} {
+    width: 32%;
+  }
+  @media ${device.old_phones} {
+    width: 48%;
+  }
+  @media ${device.small_phones} {
+    width: 100%;
+  }
+`;
+
+export const ChampSpellsVideo = styled.div`
+  display: flex;
+  width: 60vw;
+  height: 75vh;
+  border: 10px solid #101016;
+  border-radius: 10px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9990;
+
+  @media ${device.desktops_large} {
+    width: 70vw;
+    height: 75vh;
+  }
+  @media ${device.desktops} {
+    width: 70vw;
+    height: 60vh;
+  }
+  @media ${device.tablets} {
+    width: 86vw;
+    height: 55vh;
+  }
+  @media ${device.phones} {
+    width: 96vw;
+    height: 50vh;
+  }
+  @media ${device.old_phones} {
+    width: 96vw;
+    height: 40vh;
+  }
+  @media ${device.small_phones} {
+    width: 96vw;
+    height: 30vh;
+  }
+`;
+
+export const ChampSpellsVideoPlayer = styled.video`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const LogoSpellVideo = styled.div`
+  display: flex;
+  width: 50px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 1);
+  position: fixed;
+  transform: translate(-50%, -50%);
+
+  @media ${device.desktops} {
+    width: 45px;
+    height: 45px;
+  }
+  @media ${device.phones} {
+    width: 40px;
+    height: 40px;
+  }
+  @media ${device.old_phones} {
+    width: 35px;
+    height: 35px;
+  }
+`;
+
+export const RemoveIcon = styled(MdClear)`
+  font-size: 30px;
+  fill: #a3a3a3;
+
+  @media ${device.desktops} {
+    font-size: 25px;
+  }
+  @media ${device.phones} {
+    width: 20px;
+    height: 20px;
+  }
+  @media ${device.old_phones} {
+    width: 15px;
+    height: 15px;
+  }
+`;
+
+export const LogoSpellCircle = styled("div")({
+  width: "50px",
+  height: "50px",
+  borderRadius: "50%",
+  backgroundColor: "rgba(0, 0, 0, 0.4)",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+});
+
+export const LogoSpellIcon = styled(MdPlayArrow)({
+  fontSize: "30px",
+  fill: "#A3A3A3",
 });
 
 export const SwiperContainer = styled("div")({
@@ -599,3 +721,8 @@ export const Container = styled("div")({
   maxWidth: "none",
   height: "100%",
 });
+
+export const ArrowBackInfo = styled(MdKeyboardArrowLeft)`
+  font-size: 30px;
+  cursor: pointer;
+`;

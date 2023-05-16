@@ -49,6 +49,14 @@ import {
   ChampCarrusellSpellDiv,
   SwiperContainer,
   Container,
+  LoaderContainer,
+  ArrowBackInfo,
+  LogoSpellCircle,
+  LogoSpellIcon,
+  ChampSpellsVideo,
+  LogoSpellVideo,
+  ChampSpellsVideoPlayer,
+  RemoveIcon,
 } from "./styles";
 
 import {
@@ -59,54 +67,125 @@ import {
 } from "react-icons/md";
 
 import axios from "axios";
+import {
+  ChampDetailResponse,
+  ChampionElement,
+} from "../../interfaces/ChampDetailInterface";
+import { useQuery } from "react-query";
+import { Loader } from "../../components/Loader";
 import { useEffect } from "react";
-import { Card } from "../../components/Card";
-import { ChampionElement } from "../../interfaces/ChampDetailInterface";
-import { ChampDetailResponse } from "../../interfaces/ChampDetailInterface";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const ChampDetailScreen = () => {
-  const [ChampDetail, setChampDetail] = useState<ChampionElement>(
-    {} as ChampionElement
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const {
+    data: championDetail,
+    isFetching,
+    isError,
+    isStale,
+  } = useQuery(
+    ["championDetail"],
+    () => getDetail(pathNameChamp), // Reemplzar por el nombre del campeon clickeado
+    {
+      refetchOnWindowFocus: false,
+    }
   );
+  console.log("championDetail", championDetail);
+  const navigate = useNavigate();
+  const state = useLocation();
+  console.log("state", state);
+  const pathNameChamp = state.pathname.split("/")[2];
+  console.log("pathNameChamp", pathNameChamp);
 
-  const spells = [
-    ChampDetail.champion_passive,
-    ChampDetail.champion_q,
-    ChampDetail.champion_w,
-    ChampDetail.champion_e,
-    ChampDetail.champion_r,
-  ];
+  const handleNavigate = () => {
+    navigate("/");
+  };
+  // const champion: ChampionElement = state?.state;
+  // const fetchChampionDetail = async () => {
+  //   if (championDetail?.champion_name) {
+  //     try {
+  //       return await getDetail(championDetail.champion_name);
+  //     } catch (error) {
+  //       console.log("error");
+  //     }
+  //   }
+  // };
 
-  const getDetail = async () => {
-    const url = `https://league-of-legends-champions.p.rapidapi.com/champions/en-us/bard`;
-    const headers = {
-      "X-RapidAPI-Key": "36d0f53ee9msh3a618e1e5aecca5p1906b1jsn2172de59bbcd",
-      "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
+  // useEffect(() => {
+  //   fetchChampionDetail();
+  // }, [championDetail?.champion_name]);
+
+  // const spells = [
+  //   /////////////////////////// /////////////////////////////////////// CONVERTIR CON USEQUERY
+  //   ChampDetail.champion_passive,
+  //   ChampDetail.champion_q,
+  //   ChampDetail.champion_w,
+  //   ChampDetail.champion_e,
+  //   ChampDetail.champion_r,
+  // ];
+
+  const getDetail = async (name: string): Promise<ChampionElement> => {
+    const options = {
+      method: "GET",
+      url: `https://league-of-legends-champions.p.rapidapi.com/champions/en-us/${name}`,
+      headers: {
+        "X-RapidAPI-Key": "36d0f53ee9msh3a618e1e5aecca5p1906b1jsn2172de59bbcd",
+        "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
+      },
     };
 
-    return await axios
-      .get<ChampDetailResponse>(url, { headers })
-      .then(({ data }) => setChampDetail(data.champion[0]))
-      // .then(({ data }) => console.log(data))
-      .catch((error) => console.log(error));
+    // return await axios
+    //   .get<ChampDetailResponse>(url, { headers })
+    //   .then(({ data }) => setChampDetail(data.champion[0]))
+    //   .catch((error) => console.log(error));
+
+    try {
+      const response = await axios.request<ChampDetailResponse>(options);
+      console.log("response", response.data.champion);
+      return response.data.champion[0];
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   };
 
-  useEffect(() => {
-    getDetail();
-  }, []);
+  // useEffect(() => {
+  //   getDetail("Aatrox");
+  // }, []);
 
-  console.log({ ChampDetail });
+  console.log("championDetail", championDetail?.champion_name);
 
   const capitalizeFirstLetter = (word: string) => {
     const strCapitalized = word.charAt(0).toUpperCase() + word.slice(1);
     return strCapitalized;
   };
 
-  if (!ChampDetail.champion_name) {
-    return <div>Loading...</div>;
-  }
+  const isPageError = () => {
+    if (isError) {
+      return (
+        <LoaderContainer>
+          {/* <ErrorText>We couldn't find your champion. </ErrorText> */}
+        </LoaderContainer>
+      );
+    }
+  };
 
-  const champId = JSON.parse(ChampDetail.data_dragon_json).key;
+  const isPageFetching = () => {
+    return (
+      <GeneralDiv>
+        {mobileScreen}
+        {desktopScreen}
+      </GeneralDiv>
+    );
+  };
+
+  if (!championDetail?.champion)
+    return (
+      <LoaderContainer>
+        <Loader />
+      </LoaderContainer>
+    );
+  const champId = JSON.parse(championDetail.data_dragon_json as string).key;
   console.log({ champId });
 
   const mobileScreen = (
@@ -114,23 +193,28 @@ export const ChampDetailScreen = () => {
       <ChampDetailDiv>
         <BackInfoDiv>
           <GoBackDiv>
-            <MdKeyboardArrowLeft size={50} />
+            <ArrowBackInfo onClick={handleNavigate} />
           </GoBackDiv>
           <ChampInfoResp>
             <ChampNameDiv>
               <ArrowIconResp>
-                <MdKeyboardArrowLeft size={25} />
+                <ArrowBackInfo />
               </ArrowIconResp>
-              <ChampNameResp>{ChampDetail.champion_name}</ChampNameResp>
+              <ChampNameResp>{championDetail.champion_name}</ChampNameResp>
             </ChampNameDiv>
-            <ChampTitleResp>{champId} - The Wandering Caretaker</ChampTitleResp>
+            <ChampTitleResp>
+              {champId} -{" "}
+              {capitalizeFirstLetter(championDetail.champion_title as string)}
+            </ChampTitleResp>
             <ChampStatsDivResp>
               <ChampStatsInfoResp>
-                {ChampDetail.recommended_roles[0]}
+                {championDetail.recommended_roles[0]}
               </ChampStatsInfoResp>
-              <ChampStatsInfoResp>
-                {ChampDetail.recommended_roles[1]}
-              </ChampStatsInfoResp>
+              {championDetail.recommended_roles[1] ? (
+                <ChampStatsInfoResp>
+                  {championDetail.recommended_roles[1]}
+                </ChampStatsInfoResp>
+              ) : null}
             </ChampStatsDivResp>
           </ChampInfoResp>
         </BackInfoDiv>
@@ -145,34 +229,40 @@ export const ChampDetailScreen = () => {
           <ChampInfoDiv>
             <ChampNameDiv>
               <ArrowIcon>
-                <MdKeyboardArrowLeft size={25} />
+                <ArrowBackInfo onClick={handleNavigate} />
               </ArrowIcon>
-              <ChampName> {ChampDetail.champion_name} </ChampName>
+              <ChampName> {championDetail.champion_name} </ChampName>
             </ChampNameDiv>
             <ChampTitle>
-              {capitalizeFirstLetter(ChampDetail.champion_title)}
+              {capitalizeFirstLetter(championDetail.champion_title as string)}
             </ChampTitle>
             <ChampSeparation>
               <SeparationLine1 />
               <SeparationCircle />
               <SeparationLine2 />
             </ChampSeparation>
-            {ChampDetail.champion_blurb ? (
-              <ChampTextInfo>{ChampDetail.lore}</ChampTextInfo>
+            {championDetail.champion_blurb ? (
+              <ChampTextInfo>{championDetail.lore}</ChampTextInfo>
             ) : (
               <ChampTextInfo>Loading...</ChampTextInfo>
             )}
             <ChampId>{champId}</ChampId>
           </ChampInfoDiv>
           <ChampStatsDiv>
-            <ChampStatsInfo>{ChampDetail.recommended_roles[0]}</ChampStatsInfo>
-            <ChampStatsInfo>{ChampDetail.recommended_roles[1]}</ChampStatsInfo>
+            <ChampStatsInfo>
+              {championDetail.recommended_roles[0]}
+            </ChampStatsInfo>
+            {championDetail.recommended_roles[1] ? (
+              <ChampStatsInfo>
+                {championDetail.recommended_roles[1]}
+              </ChampStatsInfo>
+            ) : null}
           </ChampStatsDiv>
         </ChampDetailDiv>
 
         <ChampInfoSkinsDiv>
-          {ChampDetail.skins ? (
-            ChampDetail.skins.map((skin, index) => (
+          {championDetail.skins ? (
+            championDetail.skins.map((skin, index) => (
               <ChampSkinDiv
                 key={skin.name}
                 style={{ backgroundImage: `url(${skin.imageUrl})` }}
@@ -226,21 +316,45 @@ export const ChampDetailScreen = () => {
             <MdKeyboardArrowLeft size={25} />
           </CarouselFlexSpells>
           <ChampCarrusellInner>
-            {spells?.map((spell: any, index) => (
-              <ChampCarrusellSpellDiv
-                key={spell}
-                style={{
-                  backgroundImage: `url(${spell.champion_passive_video_poster})`,
-                }}
-              >
-                {spell.champion_passive_name}
-              </ChampCarrusellSpellDiv>
-            ))}
+            <ChampCarrusellSpellDiv
+              backgroundImage={
+                championDetail.champion_passive.champion_passive_video_poster
+              }
+            >
+              <LogoSpellCircle>
+                <LogoSpellIcon />
+              </LogoSpellCircle>
+            </ChampCarrusellSpellDiv>
 
-            {/* <ChampCarrusellSpellDiv />
-            <ChampCarrusellSpellDiv />
-            <ChampCarrusellSpellDiv />
-            <ChampCarrusellSpellDiv /> */}
+            <ChampCarrusellSpellDiv
+              backgroundImage={
+                championDetail.champion_q.champion_q_video_poster
+              }
+            >
+              <LogoSpellCircle>
+                <LogoSpellIcon />
+              </LogoSpellCircle>
+            </ChampCarrusellSpellDiv>
+
+            <ChampCarrusellSpellDiv
+              backgroundImage={
+                championDetail.champion_w.champion_w_video_poster
+              }
+            >
+              <LogoSpellCircle>
+                <LogoSpellIcon />
+              </LogoSpellCircle>
+            </ChampCarrusellSpellDiv>
+
+            <ChampCarrusellSpellDiv
+              backgroundImage={
+                championDetail.champion_e.champion_e_video_poster
+              }
+            >
+              <LogoSpellCircle>
+                <LogoSpellIcon />
+              </LogoSpellCircle>
+            </ChampCarrusellSpellDiv>
           </ChampCarrusellInner>
           <CarouselFlexSpells>
             <MdKeyboardArrowRight size={25} />
@@ -250,10 +364,5 @@ export const ChampDetailScreen = () => {
     </>
   );
 
-  return (
-    <GeneralDiv>
-      {mobileScreen}
-      {desktopScreen}
-    </GeneralDiv>
-  );
+  return isPageError() || isPageFetching();
 };

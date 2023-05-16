@@ -8,7 +8,7 @@ export interface ChampionElement {
   uid: string;
   url: string;
   data_dragon_id: string;
-  data_dragon_json: string;
+  data_dragon_json: string | undefined;
   champion_blurb: string;
   lore: string;
   champion_icon: string;

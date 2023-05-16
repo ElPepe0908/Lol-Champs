@@ -77,19 +77,16 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export const ChampDetailScreen = () => {
+  const [selectedVideo, setSelectedVideo] = useState(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const {
     data: championDetail,
     isFetching,
     isError,
     isStale,
-  } = useQuery(
-    ["championDetail"],
-    () => getDetail(pathNameChamp), // Reemplzar por el nombre del campeon clickeado
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
+  } = useQuery(["championDetail"], () => getDetail(pathNameChamp), {
+    refetchOnWindowFocus: false,
+  });
   console.log("championDetail", championDetail);
   const navigate = useNavigate();
   const state = useLocation();
@@ -100,29 +97,6 @@ export const ChampDetailScreen = () => {
   const handleNavigate = () => {
     navigate("/");
   };
-  // const champion: ChampionElement = state?.state;
-  // const fetchChampionDetail = async () => {
-  //   if (championDetail?.champion_name) {
-  //     try {
-  //       return await getDetail(championDetail.champion_name);
-  //     } catch (error) {
-  //       console.log("error");
-  //     }
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchChampionDetail();
-  // }, [championDetail?.champion_name]);
-
-  // const spells = [
-  //   /////////////////////////// /////////////////////////////////////// CONVERTIR CON USEQUERY
-  //   ChampDetail.champion_passive,
-  //   ChampDetail.champion_q,
-  //   ChampDetail.champion_w,
-  //   ChampDetail.champion_e,
-  //   ChampDetail.champion_r,
-  // ];
 
   const getDetail = async (name: string): Promise<ChampionElement> => {
     const options = {
@@ -133,12 +107,6 @@ export const ChampDetailScreen = () => {
         "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
       },
     };
-
-    // return await axios
-    //   .get<ChampDetailResponse>(url, { headers })
-    //   .then(({ data }) => setChampDetail(data.champion[0]))
-    //   .catch((error) => console.log(error));
-
     try {
       const response = await axios.request<ChampDetailResponse>(options);
       console.log("response", response.data.champion);
@@ -149,10 +117,6 @@ export const ChampDetailScreen = () => {
     }
   };
 
-  // useEffect(() => {
-  //   getDetail("Aatrox");
-  // }, []);
-
   console.log("championDetail", championDetail?.champion_name);
 
   const capitalizeFirstLetter = (word: string) => {
@@ -160,11 +124,30 @@ export const ChampDetailScreen = () => {
     return strCapitalized;
   };
 
+  const handleOpenVideo = (videoName: string) => {
+    setSelectedVideo(videoName as any);
+  };
+
+  const handleCloseVideo = () => {
+    setSelectedVideo(null);
+  };
+
+  useEffect(() => {
+    const videoElement = videoRef.current;
+    if (selectedVideo && videoElement) {
+      videoElement.play();
+    } else if (!selectedVideo && videoElement) {
+      videoElement?.pause();
+    }
+  }, [selectedVideo]);
+
   const isPageError = () => {
     if (isError) {
       return (
         <LoaderContainer>
-          {/* <ErrorText>We couldn't find your champion. </ErrorText> */}
+          <p>
+            We couldn't find your champion. <br /> Try again later!
+          </p>
         </LoaderContainer>
       );
     }
@@ -317,6 +300,7 @@ export const ChampDetailScreen = () => {
           </CarouselFlexSpells>
           <ChampCarrusellInner>
             <ChampCarrusellSpellDiv
+              onClick={() => handleOpenVideo("champion_passive")}
               backgroundImage={
                 championDetail.champion_passive.champion_passive_video_poster
               }
@@ -325,8 +309,24 @@ export const ChampDetailScreen = () => {
                 <LogoSpellIcon />
               </LogoSpellCircle>
             </ChampCarrusellSpellDiv>
+            {selectedVideo === "champion_passive" && (
+              <ChampSpellsVideo>
+                <ChampSpellsVideoPlayer
+                  src={
+                    championDetail.champion_passive.champion_passive_video_mp4
+                  }
+                  ref={videoRef}
+                  controls
+                  autoPlay
+                />
+                <LogoSpellVideo onClick={handleCloseVideo}>
+                  <RemoveIcon />
+                </LogoSpellVideo>
+              </ChampSpellsVideo>
+            )}
 
             <ChampCarrusellSpellDiv
+              onClick={() => handleOpenVideo("champion_q")}
               backgroundImage={
                 championDetail.champion_q.champion_q_video_poster
               }
@@ -335,8 +335,22 @@ export const ChampDetailScreen = () => {
                 <LogoSpellIcon />
               </LogoSpellCircle>
             </ChampCarrusellSpellDiv>
+            {selectedVideo === "champion_q" && (
+              <ChampSpellsVideo>
+                <ChampSpellsVideoPlayer
+                  src={championDetail.champion_q.champion_q_video_mp4}
+                  ref={videoRef}
+                  controls
+                  autoPlay
+                />
+                <LogoSpellVideo onClick={handleCloseVideo}>
+                  <RemoveIcon />
+                </LogoSpellVideo>
+              </ChampSpellsVideo>
+            )}
 
             <ChampCarrusellSpellDiv
+              onClick={() => handleOpenVideo("champion_w")}
               backgroundImage={
                 championDetail.champion_w.champion_w_video_poster
               }
@@ -345,8 +359,22 @@ export const ChampDetailScreen = () => {
                 <LogoSpellIcon />
               </LogoSpellCircle>
             </ChampCarrusellSpellDiv>
+            {selectedVideo === "champion_w" && (
+              <ChampSpellsVideo>
+                <ChampSpellsVideoPlayer
+                  src={championDetail.champion_w.champion_w_video_mp4}
+                  ref={videoRef}
+                  controls
+                  autoPlay
+                />
+                <LogoSpellVideo onClick={handleCloseVideo}>
+                  <RemoveIcon />
+                </LogoSpellVideo>
+              </ChampSpellsVideo>
+            )}
 
             <ChampCarrusellSpellDiv
+              onClick={() => handleOpenVideo("champion_e")}
               backgroundImage={
                 championDetail.champion_e.champion_e_video_poster
               }

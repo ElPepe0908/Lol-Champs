@@ -2,9 +2,18 @@ import styled from "styled-components";
 
 import { device } from "../../constants";
 
+export const LoaderContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
+
 export const LoginScreenContainer = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const LoginScreenHeader = styled.div`
@@ -106,10 +115,11 @@ export const LoginButton = styled.input`
   border: none;
   border-radius: 10px;
   background-color: #212121;
-  font-size: 13px;
+  font-size: 15px;
   padding: 0 25px;
   margin-bottom: 30px;
-  color: $4B4B4B;
+  color: #686868;
+  font-weight: 600;
 
   @media ${device.small_phones} {
     height: 53px;

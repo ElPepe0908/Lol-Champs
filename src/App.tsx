@@ -18,16 +18,12 @@ import {
 export const App = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    navigate("/login");
-  }, []);
-
   return (
     <AuthProvider>
       <ChampsProvider>
         <Routes>
-          <Route path="/*" element={<HomeScreen />} />
-          <Route path="/login" element={<LoginScreen />} />
+          <Route path="/home" element={<HomeScreen />} />
+          <Route path="/*" element={<LoginScreen />} />
           <Route path="/champ-detail/:name" element={<ChampDetailScreen />} />
         </Routes>
       </ChampsProvider>

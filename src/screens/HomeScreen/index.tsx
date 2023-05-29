@@ -31,7 +31,10 @@ import {
   DeleteTextButton,
   ChampName,
   ChampNameDiv,
-  // FloatingText,
+  LoaderContainer,
+  ChampRequestContainer,
+  ChampCardRequest,
+  SelectFilterButton,
 } from "./styles";
 
 import { MdArrowForwardIos, MdOutlineLogout } from "react-icons/md";
@@ -46,19 +49,14 @@ import {
 } from "../../interfaces/ChampsListInterface";
 import { RefetchOptions, RefetchQueryFilters, useQuery } from "react-query";
 import { ReactNode, useEffect } from "react";
-import { useForm } from "../../hooks/useForm";
-import { useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import queryString from "query-string";
-import { History } from "history";
-import { RolesType } from "../../constants/index";
+import { useNavigate } from "react-router-dom";
+import { RolesType, initialChampsToRender } from "../../constants/index";
 import { Loader } from "../../components/Loader";
+import { AppRouter } from "../../routes/AppRouter";
 
 type Anchor = "left";
-
-// export type History = {
-//   push: (path: string) => void;
-//   history: History;
-// };
 
 export type Classes = {
   Drawer: string;
@@ -66,6 +64,13 @@ export type Classes = {
 
 const ChampCardWithHover = ({ champ }: { champ: ChampionElement }) => {
   const [show, setShow] = useState(false);
+  const navigate = useNavigate();
+
+  const navigateToChampionDetail = () => {
+    navigate(`/champ-detail/${champ.node.champion_name}`, {
+      state: { champion: champ },
+    });
+  };
 
   const handleMouseOver = () => {
     setShow(true);
@@ -75,101 +80,93 @@ const ChampCardWithHover = ({ champ }: { champ: ChampionElement }) => {
     setShow(false);
   };
 
+  const champCardStyle = champ
+    ? { backgroundImage: `url(${champ.node.champion_splash})` }
+    : { alignItems: "center" };
+
   return (
     <ChampCard
-      style={{
-        backgroundImage: `url(${champ.node.champion_splash})`,
-      }}
+      style={champCardStyle}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
+      onClick={navigateToChampionDetail}
     >
-      <ChampNameDiv show={show}>
-        <ChampName>{champ.node.champion_name}</ChampName>
-      </ChampNameDiv>
+      {champ ? (
+        <ChampNameDiv show={show}>
+          <ChampName>{champ.node.champion_name}</ChampName>
+        </ChampNameDiv>
+      ) : (
+        <Loader />
+      )}
     </ChampCard>
   );
 };
 
 export const HomeScreen = () => {
-  const [Champs, setChamps] = useState<ChampionElement[]>([]);
-  const {
-    data: champs,
-    isError,
-    error,
-    isLoading,
-    isFetching,
-    refetch: refetchChamps,
-  } = useQuery({
+  const { data: champs, refetch: refetchChamps } = useQuery({
     queryKey: ["champs"],
     queryFn: async () => getChamps(),
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+    cacheTime: Infinity,
   });
   const [searchValue, setSearchValue] = useState("" as string);
-  const [champsFiltered, setChampsFiltered] = useState<ChampionElement[]>([]);
-  // const {
-  //   data: champsFilteredByName,
-  //   refetch: refetchChampsByName,
-  //   isFetching,
-  // } = useQuery({
-  //   queryKey: ["champsFilteredByName"],
-  //   queryFn: () => getChampsByName(searchChamp),
-  //   refetchOnWindowFocus: false,
-  //   staleTime: Infinity,
-  //   initialData: champs,
-  // });
-  // console.log("initialData champsFilteredByname", champs);
+  const [champsFiltered, setChampsFiltered] = useState<ChampionElement[]>(
+    new Array(initialChampsToRender).fill("")
+  );
+  const [requestCount, setRequestCount] = useState(0);
+  const [newChamps, setNewChamps] = useState<ChampionElement[]>([]);
+  const [selectedRole, setselectedRole] = useState(null);
+  const [showSelectedRole, setShowSelectedRole] = useState(false);
 
-  const { data: champsRole, refetch: refetchChampsByRole } = useQuery({
-    queryKey: ["champsByRole"],
-    queryFn: () => getChampsByRole("Tank"),
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
-  });
-  // console.log("champsRole USEQUERY", champsRole);
+  const handleRoleOver = (role: any) => {
+    setselectedRole(role);
+    setShowSelectedRole(true);
+    console.log("selectedRole", selectedRole);
+  };
+  const handleRoleOut = () => {
+    setselectedRole(null);
+    setShowSelectedRole(false);
+    console.log("selectedRole", selectedRole);
+  };
+  const navigate = useNavigate();
+
+  const navigateToLogin = () => {
+    navigate("/login");
+  };
+  console.log("champsFiltered", champsFiltered);
+  const requestNewChamps = async () => {
+    if (requestCount >= 2) {
+      return;
+    }
+    const newChamps = await getChamps();
+    const filterNewChamps = newChamps?.filter((newChamp) => {
+      return !champsFiltered.some(
+        (champ) => champ.node.uid === newChamp.node.uid
+      );
+    });
+    setNewChamps(newChamps as ChampionElement[]);
+    setChampsFiltered((prevChamps) => {
+      return [
+        ...prevChamps,
+        ...(filterNewChamps as ChampionElement[]),
+        ...(newChamps as ChampionElement[]),
+      ];
+    });
+    setRequestCount((prevCount) => prevCount + 1);
+    console.log("requestCount", requestCount);
+    console.log("newChamps", newChamps);
+    console.log("champsFiltered", champsFiltered);
+  };
 
   useEffect(() => {
     if (champs) {
       setChampsFiltered(champs as ChampionElement[]);
-      console.log("champsFiltered", champsFiltered);
     }
   }, [champs]);
 
-  const roles = [
-    "Assassin",
-    "Mage",
-    "Tank",
-    "Support",
-    "Fighter",
-    "Marksman",
-  ].toString();
-
-  const champCardHover = (champ: ChampionElement) => {
-    /////////////////////////////////////////////////////////////////////////////////////******************* */
-    return (
-      <ChampNameDiv show={true}>
-        <ChampName>{champ.node.champion_name}</ChampName>
-      </ChampNameDiv>
-    );
-  };
-
-  // const handleDeleteButtonClick = () => {
-  //   setSearchValue("");
-
-  //   refetchChampsByName().then(() =>
-  //     setChampsFiltered(champs as ChampionElement[])
-  //   );
-  // };
-
   const handleDeleteButtonClick = () => {
     setSearchValue("");
-    // refetchChamps().then((data) =>
-    //   setChamps(data.data as SetStateAction<ChampionElement[]>)
-    // );
-
-    // refetchChampsByName().then((data) =>
-    //   console.log("data.data", data.data as SetStateAction<ChampionElement[]>)
-    // );
     setChampsFiltered(champs as ChampionElement[]); // Cambio el estado de champsFiltered, y que me muestre los champs iniciales
   };
 
@@ -180,39 +177,25 @@ export const HomeScreen = () => {
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // const searchInput = e.currentTarget.elements.namedItem(
-    //   "searchChamp"
-    // ) as HTMLInputElement;
-    // const searchChamp = searchInput.value.toLocaleLowerCase().trim();
-    // return refetchChampsByName();
     if (searchChamp === "") return;
     refetchChamps();
     return getChampsByName(searchChamp);
   };
-  // const getChamps = async () => {
-  //   const url = `https://league-of-legends-champions.p.rapidapi.com/champions/en-us?page=1&size=1.8`;
-  //   const headers = {
-  //     "X-RapidAPI-Key": "36d0f53ee9msh3a618e1e5aecca5p1906b1jsn2172de59bbcd",
-  //     "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
-  //   };
-
-  //   return await axios
-  //     .get<ChampsListResponse>(url, { headers })
-  //     .then(({ data }) => setChamps(data.champions))
-  //     .catch((error) => console.log(error));
-  // };
 
   const getChamps = async () => {
-    const url = `https://league-of-legends-champions.p.rapidapi.com/champions/en-us?page=0&size=10`;
-    const headers = {
-      "X-RapidAPI-Key": "36d0f53ee9msh3a618e1e5aecca5p1906b1jsn2172de59bbcd",
-      "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
-    };
+    // const url = `https://league-of-legends-champions.p.rapidapi.com/champions/en-us?page=${requestCount}&size=10`;
+    // const url = `panConQueso${requestCount}`;
+    const url = `http://ddragon.leagueoflegends.com/cdn/13.10.1/data/en_US/champion.json`;
+    // const headers = {
+    //   "X-RapidAPI-Key": "36d0f53ee9msh3a618e1e5aecca5p1906b1jsn2172de59bbcd",
+    //   "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
+    // };
 
     try {
-      const response = await axios.get<ChampsListResponse>(url, { headers });
+      const response = await axios.get(url);
       // setChamps(response.data.champions);
-      return response.data.champions;
+      console.log("response.data", response.data);
+      return response.data.data;
     } catch (error) {
       console.log(error);
     }
@@ -221,10 +204,11 @@ export const HomeScreen = () => {
   const getChampsByRole = async (role: string) => {
     const options = {
       method: "GET",
-      url: "https://league-of-legends-champions.p.rapidapi.com/champions/en-us",
+      // url: "https://league-of-legends-champions.p.rapidapi.com/champions/en-us",
+      url: `panConQueso${role}`,
       params: {
-        page: "0",
-        size: "10",
+        page: requestCount,
+        size: 10,
         role,
       },
       headers: {
@@ -233,30 +217,25 @@ export const HomeScreen = () => {
       },
     };
     try {
-      const response = await axios.request(options);
-      const RoleChamps: any = response.data.champions.filter(
+      const response = await axios.request<ChampsListResponse>(options);
+      const RoleChamps: ChampionElement[] = response.data.champions.filter(
         (champ: ChampionElement) => champ.node.recommended_roles.includes(role)
       );
-      return RoleChamps;
-      // setChamps(RoleChamps);
-      //  refetchear champs y cambiarle la queryFn a getCgamspByRole ////////////////////////////////////////////////////////////////////////////
-      // try {
-      //   const RoleChamps = champs?.filter((champ: ChampionElement) =>
-      //     champ.node.recommended_roles.includes(role)
-      //   );
-      //   console.log(RoleChamps); // TODO: Remove
+      setChampsFiltered(RoleChamps);
     } catch (error) {
       console.log(error);
+      return champsFiltered;
     }
   };
 
   const getChampsByName = async (name: string) => {
     const options = {
       method: "GET",
-      url: "https://league-of-legends-champions.p.rapidapi.com/champions/en-us",
+      // url: "https://league-of-legends-champions.p.rapidapi.com/champions/en-us",
+      url: `panConQueso${requestCount}`,
       params: {
-        page: "0",
-        size: "10",
+        page: requestCount,
+        size: 10,
         name,
       },
       headers: {
@@ -265,14 +244,8 @@ export const HomeScreen = () => {
       },
     };
     const response = await axios.request<ChampsListResponse>(options);
-    // return response.data.champions;
     setChampsFiltered(response.data.champions);
   };
-
-  if (isLoading) return <Loader />;
-  else if (isError)
-    return <div> Something went wrong: {error as ReactNode} </div>;
-
   return (
     <HomeScreenContainer>
       <HomeScreenHeader>
@@ -348,46 +321,154 @@ export const HomeScreen = () => {
           <RolesFilterContainer>
             <RolesFilter>Roles</RolesFilter>
 
-            <FilterButton onClick={() => refetchChampsByRole()}>
-              Assassin
+            <FilterButton
+              onClick={() => getChampsByRole("Assassin")}
+              onMouseOver={() => handleRoleOver("Assassin")}
+              onMouseOut={handleRoleOut}
+            >
+              {selectedRole === "Assassin" ? (
+                <>
+                  <SelectFilterButton show={showSelectedRole} />
+                  <p style={{ color: "#fff", margin: 0 }}>Assassin</p>
+                </>
+              ) : (
+                <p style={{ color: "#808080", margin: 0 }}>Assassin</p>
+              )}
             </FilterButton>
-            <FilterButton onClick={() => getChampsByRole("Tank")}>
-              Tank
+            <FilterButton
+              onClick={() => getChampsByRole("Tank")}
+              onMouseOver={() => handleRoleOver("Tank")}
+              onMouseOut={handleRoleOut}
+            >
+              {selectedRole === "Tank" ? (
+                <>
+                  <SelectFilterButton show={showSelectedRole} />
+                  <p style={{ color: "#fff", margin: 0 }}>Tank</p>
+                </>
+              ) : (
+                <p style={{ color: "#808080", margin: 0 }}>Tank</p>
+              )}
             </FilterButton>
-            <FilterButton onClick={() => getChampsByRole("Mage")}>
-              Mage
+            <FilterButton
+              onClick={() => getChampsByRole("Mage")}
+              onMouseOver={() => handleRoleOver("Mage")}
+              onMouseOut={handleRoleOut}
+            >
+              {selectedRole === "Mage" ? (
+                <>
+                  <SelectFilterButton show={showSelectedRole} />
+                  <p style={{ color: "#fff", margin: 0 }}>Mage</p>
+                </>
+              ) : (
+                <p style={{ color: "#808080", margin: 0 }}>Mage</p>
+              )}
             </FilterButton>
-            <FilterButton onClick={() => getChampsByRole("Fighter")}>
-              Fighter
+            <FilterButton
+              onClick={() => getChampsByRole("Fighter")}
+              onMouseOver={() => handleRoleOver("Fighter")}
+              onMouseOut={handleRoleOut}
+            >
+              {selectedRole === "Fighter" ? (
+                <>
+                  <SelectFilterButton show={showSelectedRole} />
+                  <p style={{ color: "#fff", margin: 0 }}>Fighter</p>
+                </>
+              ) : (
+                <p style={{ color: "#808080", margin: 0 }}>Fighter</p>
+              )}
             </FilterButton>
-            <FilterButton onClick={() => getChampsByRole("Marksman")}>
-              Marksman
+            <FilterButton
+              onClick={() => getChampsByRole("Marksman")}
+              onMouseOver={() => handleRoleOver("Marksman")}
+              onMouseOut={handleRoleOut}
+            >
+              {selectedRole === "Marksman" ? (
+                <>
+                  <SelectFilterButton show={showSelectedRole} />
+                  <p style={{ color: "#fff", margin: 0 }}>Marksman</p>
+                </>
+              ) : (
+                <p style={{ color: "#808080", margin: 0 }}>Marksman</p>
+              )}
             </FilterButton>
-            <FilterButton onClick={() => getChampsByRole("Support")}>
-              Support
+            <FilterButton
+              onClick={() => getChampsByRole("Support")}
+              onMouseOver={() => handleRoleOver("Support")}
+              onMouseOut={handleRoleOut}
+            >
+              {selectedRole === "Support" ? (
+                <>
+                  <SelectFilterButton show={showSelectedRole} />
+                  <p style={{ color: "#fff", margin: 0 }}>Support</p>
+                </>
+              ) : (
+                <p style={{ color: "#808080", margin: 0 }}>Support</p>
+              )}
             </FilterButton>
           </RolesFilterContainer>
 
           <DifficultyFiltersContainer>
             <DifficultyFilter>Difficulty</DifficultyFilter>
-            <FilterButton>Easy</FilterButton>
-            <FilterButton>Medium</FilterButton>
-            <FilterButton>Hard</FilterButton>
+            <FilterButton
+              onMouseOver={() => handleRoleOver("Easy")}
+              onMouseOut={handleRoleOut}
+            >
+              {selectedRole === "Easy" ? (
+                <>
+                  <SelectFilterButton show={showSelectedRole} />
+                  <p style={{ color: "#fff", margin: 0 }}>Easy</p>
+                </>
+              ) : (
+                <p style={{ color: "#808080", margin: 0 }}>Easy</p>
+              )}
+            </FilterButton>
+            <FilterButton
+              onMouseOver={() => handleRoleOver("Medium")}
+              onMouseOut={handleRoleOut}
+            >
+              {selectedRole === "Medium" ? (
+                <>
+                  <SelectFilterButton show={showSelectedRole} />
+                  <p style={{ color: "#fff", margin: 0 }}>Medium</p>
+                </>
+              ) : (
+                <p style={{ color: "#808080", margin: 0 }}>Medium</p>
+              )}
+            </FilterButton>
+            <FilterButton
+              onMouseOver={() => handleRoleOver("Hard")}
+              onMouseOut={handleRoleOut}
+            >
+              {selectedRole === "Hard" ? (
+                <>
+                  <SelectFilterButton show={showSelectedRole} />
+                  <p style={{ color: "#fff", margin: 0 }}>Hard</p>
+                </>
+              ) : (
+                <p style={{ color: "#808080", margin: 0 }}>Hard</p>
+              )}
+            </FilterButton>
           </DifficultyFiltersContainer>
           <LogoutButton>
-            <MdOutlineLogout />
-            <LogoutText>Log Out</LogoutText>
+            <MdOutlineLogout
+              style={{ cursor: "pointer" }}
+              onClick={navigateToLogin}
+            />
+            <LogoutText onClick={navigateToLogin}>Log Out</LogoutText>
           </LogoutButton>
         </SideBar>
         <SideBarDivider />
         <ChampsCardsContainer>
-          {isFetching ? (
+          {champsFiltered.map((champ: ChampionElement) => (
+            <ChampCardWithHover key={champ?.node?.uid} champ={champ} />
+          ))}
+          {/* {isFetching ? (
             <Loader />
           ) : (
             champsFiltered?.map((champ: ChampionElement) => (
               <ChampCardWithHover key={champ.node.uid} champ={champ} />
             ))
-          )}
+          )} */}
 
           {/* {champs?.map((champ: ChampionElement) => (
             <ChampCard
@@ -395,6 +476,13 @@ export const HomeScreen = () => {
               style={{ backgroundImage: `url(${champ.node.champion_splash})` }}
             />
           ))} */}
+          <ChampRequestContainer>
+            {/* <RequestButtonContainer> */}
+            <ChampCardRequest onClick={requestNewChamps}>
+              Show more
+            </ChampCardRequest>
+            {/* </RequestButtonContainer> */}
+          </ChampRequestContainer>
         </ChampsCardsContainer>
       </HomeScreenBody>
     </HomeScreenContainer>

@@ -125,6 +125,7 @@ export const ChampInfoDiv = styled("div")({
   justifyContent: "space-evenly",
   padding: "20px 30px",
   marginBottom: "10px",
+  flex: 1,
 
   [`@media ${device.desktops}`]: {
     padding: "15px 20px",
@@ -149,7 +150,7 @@ export const ChampNameDiv = styled("div")({
 });
 
 export const ChampName = styled("h1")({
-  fontSize: 35,
+  fontSize: 40,
   fontWeight: "600",
   alignSelf: "center",
   marginBottom: 0,
@@ -199,6 +200,7 @@ export const ArrowIcon = styled("div")({
 });
 
 export const ChampTitle = styled("p")({
+  color: "#A8A8B3",
   marginBottom: 0,
   padding: "5px 0 20px",
   textAlign: "center",
@@ -390,7 +392,7 @@ export const ChampSkinDiv = styled("div")({
   backgroundSize: "cover",
   backgroundPosition: "center center",
   backgroundColor: "#17171B",
-  width: "80%",
+  width: "75%",
   marginRight: 20,
   borderRadius: 10,
 
@@ -415,6 +417,23 @@ export const ChampSkinDiv = styled("div")({
     display: "none",
   },
 });
+
+export const SkinNameHover = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  background-color: #070707;
+  border-radius: 0px 0px 10px 10px;
+  transition: opacity 0.2s ease-in-out;
+`;
+export const SkinName = styled.p`
+  font-size: 17px;
+  font-weight: 500;
+  height: max-content;
+  margin: 0;
+`;
 
 export const CarouselInner = styled("div")({
   width: "20%",
@@ -564,13 +583,18 @@ export const ChampCarrusellInner = styled("div")({
   justifyContent: "space-between",
   overflow: "hidden",
   flexWrap: "wrap",
-  height: "225px",
-
+  height: "250px",
+  [`@media ${device.desktops_large}`]: {
+    height: "230px",
+  },
+  [`@media ${device.desktops}`]: {
+    height: "200px",
+  },
   [`@media ${device.tablets}`]: {
-    height: "180px",
+    height: "220px",
   },
   [`@media ${device.phones}`]: {
-    height: "150px",
+    height: "210px",
   },
   [`@media ${device.old_phones}`]: {
     height: "170px",
@@ -703,6 +727,9 @@ export const LogoSpellCircle = styled("div")({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+  position: "fixed",
+  bottom: "39%",
+  alignSelf: "center",
 });
 
 export const LogoSpellIcon = styled(MdPlayArrow)({
@@ -725,4 +752,8 @@ export const Container = styled("div")({
 export const ArrowBackInfo = styled(MdKeyboardArrowLeft)`
   font-size: 30px;
   cursor: pointer;
+`;
+
+export const CustomSwiperButton = styled.div`
+  color: #bfbfbf;
 `;

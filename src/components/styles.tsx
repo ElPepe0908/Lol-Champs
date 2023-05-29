@@ -32,3 +32,14 @@ export const Dot = styled.div<DotAnimationProps>`
   animation: ${dotPulse} 1s ease-in-out infinite;
   animation-delay: ${(props) => props.delay}s;
 `;
+
+export const CarouselImage = styled.div`
+  width: 100%;
+  height: 100%;
+  background: blue;
+`;
+export const CarouselImage2 = styled.div`
+  width: 100%;
+  height: 100%;
+  background: red;
+`;

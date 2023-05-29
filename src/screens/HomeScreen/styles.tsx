@@ -2,7 +2,6 @@ import styled, { keyframes } from "styled-components";
 import { device } from "../../constants";
 import { AiOutlineSearch } from "react-icons/ai";
 import { MdClear } from "react-icons/md";
-
 type DeleteButtonProps = {
   show: boolean;
 };
@@ -10,6 +9,22 @@ type DeleteButtonProps = {
 type ChampNameProps = {
   show: boolean;
 };
+
+type DivWithBackground = {
+  backgroundImage: string;
+  hoverBackgroundImage: string;
+};
+
+type FilterButtonProps = {
+  show: boolean;
+};
+
+export const LoaderContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
 
 export const HomeScreenContainer = styled.div`
   display: flex;
@@ -292,7 +307,6 @@ export const FilterButton = styled.button`
   background-color: #27272d;
   width: 100%;
   height: 50px;
-  padding: 10px;
   border-radius: 4px;
   border: none;
   display: flex;
@@ -301,13 +315,8 @@ export const FilterButton = styled.button`
   color: #808080;
   margin: 6px 0;
   cursor: pointer;
+  position: relative;
 
-  @media ${device.desktops_large} {
-    padding: 8px;
-  }
-  @media ${device.desktops} {
-    padding: 10px;
-  }
   @media ${device.tablets} {
     font-size: 14px;
   }
@@ -322,6 +331,18 @@ export const FilterButton = styled.button`
     height: 40px;
     font-size: 12px;
   }
+`;
+
+export const SelectFilterButton = styled.div<FilterButtonProps>`
+  display: flex;
+  background-color: #ffffff;
+  width: 6px;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  border-radius: 4px 0 0 4px;
+  opacity: ${(props) => (props.show ? 1 : 0)};
+  transition: opacity 0.3s ease-in-out;
 `;
 
 export const RolesFilterContainer = styled.div`
@@ -365,7 +386,6 @@ export const LogoutButton = styled.div`
   display: flex;
   align-items: center;
   margin-top: 25px;
-  cursor: pointer;
 
   @media ${device.desktops_large} {
     width: 70%;
@@ -385,6 +405,7 @@ export const LogoutButton = styled.div`
 export const LogoutText = styled.p`
   margin-bottom: 0px;
   margin-left: 15px;
+  cursor: pointer;
 
   @media ${device.tablets} {
     font-size: 14px;
@@ -430,6 +451,7 @@ export const ChampCard = styled.div`
   background-size: cover;
   background-position: center;
   align-items: end;
+  justify-content: center;
 
   @media ${device.desktops_large} {
     width: 45%;
@@ -477,27 +499,19 @@ export const ChampName = styled.p`
   height: max-content;
   margin: 0;
 `;
-export const ChampCardRequest = styled.button`
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-self: center;
-  justify-content: center;
-  background: #27272d;
-  border: none;
-  border-radius: 50%;
+export const ChampCardRequest = styled.p`
   cursor: pointer;
+  margin: 0;
 `;
 
-export const RequestButtonContainer = styled.div`
-  width: 100%;
-  display: flex;
-`;
+// export const RequestButtonContainer = styled.div`
+//   width: 100%;
+//   display: flex;
+// `;
 
 export const ChampRequestContainer = styled.div`
   width: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
   margin-bottom: 15px;
 `;

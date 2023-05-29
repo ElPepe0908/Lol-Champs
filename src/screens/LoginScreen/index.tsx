@@ -35,20 +35,9 @@ export const LoginScreen = () => {
     return;
   });
 
-  const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fieldsFilled, setFieldsFilled] = useState(false);
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [() => handleLoginSubmit]);
 
   const navigate = useNavigate();
 
@@ -65,7 +54,7 @@ export const LoginScreen = () => {
       event.preventDefault();
       return;
     } else {
-      navigate("/");
+      navigate("/home");
     }
     console.log("Email:", email);
     console.log("Password:", password);
@@ -79,7 +68,7 @@ export const LoginScreen = () => {
     }
   }, [email, password]);
 
-  if (loading)
+  if (isLoading)
     return (
       <LoaderContainer>
         <Loader />

@@ -26,3 +26,11 @@ export const device = {
   desktops: `(max-width: ${SCREEN_SIZES.desktops})`,
   desktops_large: `(max-width: ${SCREEN_SIZES.desktops_large})`,
 };
+
+export const initialChampsToRender = 10;
+
+export interface ICarouselItem {
+  name: string;
+  imageUrl: string;
+  videoUrl?: string;
+}

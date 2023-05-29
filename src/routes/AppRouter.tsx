@@ -9,9 +9,9 @@ export const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/*" element={<HomeScreen />} />
+        <Route path="/home" element={<HomeScreen />} />
         <Route path="/champ-detail/:name" element={<ChampDetailScreen />} />
-        <Route path="/login" element={<LoginScreen />} />
+        <Route path="/*" element={<LoginScreen />} />
       </Routes>
     </BrowserRouter>
   );

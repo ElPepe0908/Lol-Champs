@@ -16,7 +16,8 @@ type DivWithBackground = {
 };
 
 type FilterButtonProps = {
-  show: boolean;
+  show?: boolean;
+  selectedRole?: any;
 };
 
 export const LoaderContainer = styled.div`
@@ -303,7 +304,7 @@ export const RolesFilter = styled.p`
   }
 `;
 
-export const FilterButton = styled.button`
+export const FilterButton = styled.button<FilterButtonProps>`
   background-color: #27272d;
   width: 100%;
   height: 50px;

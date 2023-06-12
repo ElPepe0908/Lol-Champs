@@ -62,36 +62,34 @@ import {
   CustomSwiperButton,
 } from "./styles";
 
-import {
-  MdKeyboardArrowRight,
-  MdKeyboardArrowLeft,
-  MdKeyboardArrowDown,
-  MdKeyboardArrowUp,
-} from "react-icons/md";
-
-import { css } from "styled-components";
-
 import axios from "axios";
-import {
-  ChampDetailResponse,
-  ChampionElement,
-  Skin,
-} from "../../interfaces/ChampDetailInterface";
 import { useQuery } from "react-query";
 import { Loader } from "../../components/Loader";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Carousel from "../../components/Carousel";
-import { ICarouselItem } from "../../constants";
+import { ICarouselItem, NewICarouselItem } from "../../constants";
+import {
+  Champion,
+  NewChampsDetailListResponse,
+} from "../../interfaces/NewChampsDetailListResponse";
 
-export const ChampDetailScreen = () => {
+const ChampDetailScreen = () => {
+  const { state, pathname } = useLocation();
+
+  console.log({ state: state?.championId });
+
   const {
     data: championDetail,
     isError,
     isFetching,
-  } = useQuery(["championDetail"], () => getDetail(pathNameChamp), {
-    refetchOnWindowFocus: false,
-  });
+  } = useQuery(
+    ["championDetail", state?.championId],
+    () => getDetail(pathNameChamp),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
   const [itemToShow, setItemToShow] = useState<string>("none");
   const [spellToShow, setSpellToShow] = useState<string>("none");
   const [selectedVideo, setSelectedVideo] = useState(null);
@@ -99,11 +97,11 @@ export const ChampDetailScreen = () => {
   const [selectedImageSkin, setSelectedImageSkin] = useState("");
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  useEffect(() => {
-    if (championDetail) {
-      setSelectedImageSkin(championDetail?.skins[0].imageUrl);
-    }
-  }, [championDetail]);
+  // useEffect(() => {
+  //   if (championDetail) {
+  //     setSelectedImageSkin(championDetail?.skins[0].imageUrl); // setSelectedImageSkin with the DEFAULT image skin of the champ
+  //   }
+  // }, [championDetail]);
 
   const selectNewSkin = (selectedImage: string) => {
     setSelectedImageSkin(selectedImage);
@@ -115,14 +113,13 @@ export const ChampDetailScreen = () => {
 
   const handleMouseOver = (itemToShow: string) => {
     setItemToShow(itemToShow);
-  }; //// visualizar nombre al hacer hover en skin
+  };
 
   const handleMouseOut = () => {
     setItemToShow("none");
   };
 
   const handleOpenVideo = (videoName: string) => {
-    console.log("videoName", videoName);
     setSelectedVideo(videoName as any);
   };
   const handleCloseVideo = () => {
@@ -137,30 +134,36 @@ export const ChampDetailScreen = () => {
       videoElement?.pause();
     }
   }, [selectedVideo]);
-  const navigate = useNavigate();
-  const state = useLocation();
-  const pathNameChamp = state.pathname.split("/")[2];
-  let champId = "";
 
-  if (championDetail) {
-    champId = JSON.parse(championDetail?.data_dragon_json as string).key || "";
-  }
+  let champId = "";
+  const navigate = useNavigate();
+  const pathNameChamp = pathname.split("/")[2];
+
   const handleNavigate = () => {
-    navigate("/home");
+    navigate("/home", {
+      state: {
+        championId: championDetail?.champion.id,
+        championName: championDetail?.champion.name,
+      },
+    });
   };
 
-  const getDetail = async (name: string): Promise<ChampionElement> => {
-    const options = {
-      method: "GET",
-      url: `https://league-of-legends-champions.p.rapidapi.com/champions/en-us/${name}`,
-      headers: {
-        "X-RapidAPI-Key": "36d0f53ee9msh3a618e1e5aecca5p1906b1jsn2172de59bbcd",
-        "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
-      },
-    };
+  const getDetail = async (name: string) => {
+    // const options = {
+    //   method: "GET",
+    //   url: `https://league-of-legends-champions.p.rapidapi.com/champions/en-us/${name}`,
+    //   headers: {
+    //     "X-RapidAPI-Key": "36d0f53ee9msh3a618e1e5aecca5p1906b1jsn2172de59bbcd",
+    //     "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
+    //   },
+    // };
+    const url = `http://ddragon.leagueoflegends.com/cdn/13.11.1/data/en_US/champion/${name}.json`;
     try {
-      const response = await axios.request<ChampDetailResponse>(options);
-      return response.data.champion[0];
+      const response = await axios.request<NewChampsDetailListResponse>(
+        url as any
+      );
+      console.log("response.data.data.champion", response.data.data);
+      return response.data.data;
     } catch (error) {
       console.log(error);
       throw error;
@@ -171,29 +174,29 @@ export const ChampDetailScreen = () => {
     return strCapitalized;
   };
   const champPassive = {
-    name: `P - ${championDetail?.champion_passive.champion_passive_name}`,
-    imageUrl: championDetail?.champion_passive.champion_passive_video_poster,
-    videoUrl: championDetail?.champion_passive.champion_passive_video_mp4,
+    // name: `P - ${championDetail?.champion_passive.champion_passive_name}`,
+    // imageUrl: championDetail?.champion_passive.champion_passive_video_poster,
+    // videoUrl: championDetail?.champion_passive.champion_passive_video_mp4,
   };
   const champQ = {
-    name: `Q - ${championDetail?.champion_q.champion_q_name}`,
-    imageUrl: championDetail?.champion_q.champion_q_video_poster,
-    videoUrl: championDetail?.champion_q.champion_q_video_mp4,
+    // name: `Q - ${championDetail?.champion_q.champion_q_name}`,
+    // imageUrl: championDetail?.champion_q.champion_q_video_poster,
+    // videoUrl: championDetail?.champion_q.champion_q_video_mp4,
   };
   const champW = {
-    name: `W - ${championDetail?.champion_w.champion_w_name}`,
-    imageUrl: championDetail?.champion_w.champion_w_video_poster,
-    videoUrl: championDetail?.champion_w.champion_w_video_mp4,
+    // name: `W - ${championDetail?.champion_w.champion_w_name}`,
+    // imageUrl: championDetail?.champion_w.champion_w_video_poster,
+    // videoUrl: championDetail?.champion_w.champion_w_video_mp4,
   };
   const champE = {
-    name: `E - ${championDetail?.champion_e.champion_e_name}`,
-    imageUrl: championDetail?.champion_e.champion_e_video_poster,
-    videoUrl: championDetail?.champion_e.champion_e_video_mp4,
+    // name: `E - ${championDetail?.champion_e.champion_e_name}`,
+    // imageUrl: championDetail?.champion_e.champion_e_video_poster,
+    // videoUrl: championDetail?.champion_e.champion_e_video_mp4,
   };
   const champR = {
-    name: `R - ${championDetail?.champion_r.champion_r_name}`,
-    imageUrl: championDetail?.champion_r.champion_r_video_poster,
-    videoUrl: championDetail?.champion_r.champion_r_video_mp4,
+    // name: `R - ${championDetail?.champion_r.champion_r_name}`,
+    // imageUrl: championDetail?.champion_r.champion_r_video_poster,
+    // videoUrl: championDetail?.champion_r.champion_r_video_mp4,
   };
   const spells = [champPassive, champQ, champW, champE, champR];
 
@@ -218,11 +221,6 @@ export const ChampDetailScreen = () => {
     swiper: {
       width: "25%",
       height: "66vh",
-      "@media screen and (maxWidth: 1450px)": {
-        width: "100%",
-        height: "25%",
-        paddingTop: "15px",
-      },
     },
     slide: {
       width: "100%",
@@ -233,12 +231,17 @@ export const ChampDetailScreen = () => {
       backgroundSize: "cover",
       backgroundPosition: "center",
       cursor: "pointer",
-      "@media screen and (maxWidth: 1450px)": {
+    },
+    "@media screen and (max-width: 1450px)": {
+      swiper: {
+        width: "100%",
+        height: "25%",
+        paddingTop: "15px",
+      },
+      slide: {
         height: "50%",
       },
     },
-    // prevEl: <CustomSwiperButton />,
-    // nextEl: <CustomSwiperButton />,
   };
 
   const spellBreakpoints = {
@@ -300,20 +303,20 @@ export const ChampDetailScreen = () => {
               <ArrowIconResp>
                 <ArrowBackInfo />
               </ArrowIconResp>
-              <ChampNameResp>{championDetail?.champion_name}</ChampNameResp>
+              <ChampNameResp>{championDetail?.champion.name}</ChampNameResp>
             </ChampNameDiv>
             <ChampTitleResp>
-              {champId} -
+              {championDetail?.champion.key} -
               {championDetail &&
-                capitalizeFirstLetter(championDetail?.champion_title as string)}
+                capitalizeFirstLetter(championDetail?.champion.title)}
             </ChampTitleResp>
             <ChampStatsDivResp>
               <ChampStatsInfoResp>
-                {championDetail?.recommended_roles[0]}
+                {championDetail?.champion.tags[0]}
               </ChampStatsInfoResp>
-              {championDetail?.recommended_roles[1] ? (
+              {championDetail?.champion.tags[1] ? (
                 <ChampStatsInfoResp>
-                  {championDetail?.recommended_roles[1]}
+                  {championDetail?.champion.tags[1]}
                 </ChampStatsInfoResp>
               ) : null}
             </ChampStatsDivResp>
@@ -332,31 +335,29 @@ export const ChampDetailScreen = () => {
               <ArrowIcon>
                 <ArrowBackInfo onClick={handleNavigate} />
               </ArrowIcon>
-              <ChampName> {championDetail?.champion_name} </ChampName>
+              <ChampName> {championDetail?.champion.name} </ChampName>
             </ChampNameDiv>
             <ChampTitle>
               {championDetail &&
-                capitalizeFirstLetter(championDetail?.champion_title as string)}
+                capitalizeFirstLetter(championDetail?.champion.title)}
             </ChampTitle>
             <ChampSeparation>
               <SeparationLine1 />
               <SeparationCircle />
               <SeparationLine2 />
             </ChampSeparation>
-            {championDetail?.champion_blurb ? (
-              <ChampTextInfo>{championDetail?.lore}</ChampTextInfo>
+            {championDetail?.champion.lore ? (
+              <ChampTextInfo>{championDetail?.champion.lore}</ChampTextInfo>
             ) : (
               <ChampTextInfo>Loading...</ChampTextInfo>
             )}
-            <ChampId>{champId}</ChampId>
+            <ChampId>{championDetail?.champion.key}</ChampId>
           </ChampInfoDiv>
           <ChampStatsDiv>
-            <ChampStatsInfo>
-              {championDetail?.recommended_roles[0]}
-            </ChampStatsInfo>
-            {championDetail?.recommended_roles[1] ? (
+            <ChampStatsInfo>{championDetail?.champion.tags[0]}</ChampStatsInfo>
+            {championDetail?.champion.tags[1] ? (
               <ChampStatsInfo>
-                {championDetail?.recommended_roles[1]}
+                {championDetail?.champion.tags[1]}
               </ChampStatsInfo>
             ) : null}
           </ChampStatsDiv>
@@ -367,8 +368,7 @@ export const ChampDetailScreen = () => {
             style={{ backgroundImage: `url(${selectedImageSkin})` }}
           />
           <Carousel
-            // items={skins as string[]}
-            items={championDetail?.skins as ICarouselItem[]}
+            // items={championDetail?.champion.skins as ICarouselItem[]} //TODO:  Create a skinSplash constant and call here
             ChampStyles={{ ...SkinStyles }}
             breakpoints={skinBreakpoints}
             onMouseOver={handleMouseOver}
@@ -376,7 +376,7 @@ export const ChampDetailScreen = () => {
             itemToShow={itemToShow}
             onClickImage={selectNewSkin}
             closeVideo={handleCloseVideo}
-            championSrc={championDetail as ChampionElement}
+            // championSrc={championDetail as Champion} //TODO: Call championDetail as "Champion" instead "Data"
           />
         </ChampInfoSkinsDiv>
       </UpperGeneralDiv>
@@ -388,12 +388,9 @@ export const ChampDetailScreen = () => {
           <SpellSeparationLine />
         </GeneralSpellsUpperDiv>
         <ChampCarrusellDiv>
-          {/* <CarouselFlexSpells>
-            <MdKeyboardArrowLeft size={25} />
-          </CarouselFlexSpells> */}
           <ChampCarrusellInner>
             <Carousel
-              items={spells as ICarouselItem[]}
+              // items={championDetail?.champion.spells as NewICarouselItem[]} //TODO:  Create a spellSplash constant and call here
               ChampStyles={{ ...Spellstyles }}
               breakpoints={spellBreakpoints}
               onMouseOver={handleMouseOver}
@@ -401,7 +398,7 @@ export const ChampDetailScreen = () => {
               itemToShow={itemToShow}
               onClickImage={handleOpenVideo}
               closeVideo={handleCloseVideo}
-              championSrc={championDetail as ChampionElement}
+              // championSrc={championDetail as Champion} //TODO: Call championDetail as "Champion" instead "Data"
             />
 
             {selectedVideo && (
@@ -417,117 +414,19 @@ export const ChampDetailScreen = () => {
                 </LogoSpellVideo>
               </ChampSpellsVideo>
             )}
-
-            {/* <ChampCarrusellSpellDiv
-              onClick={() => handleOpenVideo("champion_q")}
-              backgroundImage={
-                championDetail?.champion_passive
-                  .champion_passive_video_poster as string
-              }
-            >
-              <LogoSpellCircle>
-                <LogoSpellIcon />
-              </LogoSpellCircle>
-            </ChampCarrusellSpellDiv>
-            {selectedVideo === "champion_q" && (
-              <ChampSpellsVideo>
-                <ChampSpellsVideoPlayer
-                  src={championDetail?.champion_q.champion_q_video_mp4}
-                  ref={videoRef}
-                  controls
-                  autoPlay
-                />
-                <LogoSpellVideo onClick={handleCloseVideo}>
-                  <RemoveIcon />
-                </LogoSpellVideo>
-              </ChampSpellsVideo>
-            )}
-
-            <ChampCarrusellSpellDiv
-              onClick={() => handleOpenVideo("champion_w")}
-              backgroundImage={
-                championDetail?.champion_q.champion_q_video_poster as string
-              }
-            >
-              <LogoSpellCircle>
-                <LogoSpellIcon />
-              </LogoSpellCircle>
-            </ChampCarrusellSpellDiv>
-            {selectedVideo === "champion_w" && (
-              <ChampSpellsVideo>
-                <ChampSpellsVideoPlayer
-                  src={championDetail?.champion_w.champion_w_video_mp4}
-                  ref={videoRef}
-                  controls
-                  autoPlay
-                />
-                <LogoSpellVideo onClick={handleCloseVideo}>
-                  <RemoveIcon />
-                </LogoSpellVideo>
-              </ChampSpellsVideo>
-            )}
-
-            <ChampCarrusellSpellDiv
-              onClick={() => handleOpenVideo("champion_e")}
-              backgroundImage={
-                championDetail?.champion_w.champion_w_video_poster as string
-              }
-            >
-              <LogoSpellCircle>
-                <LogoSpellIcon />
-              </LogoSpellCircle>
-            </ChampCarrusellSpellDiv>
-            {selectedVideo === "champion_e" && (
-              <ChampSpellsVideo>
-                <ChampSpellsVideoPlayer
-                  src={championDetail?.champion_e.champion_e_video_mp4}
-                  ref={videoRef}
-                  controls
-                  autoPlay
-                />
-                <LogoSpellVideo onClick={handleCloseVideo}>
-                  <RemoveIcon />
-                </LogoSpellVideo>
-              </ChampSpellsVideo>
-            )}
-
-            <ChampCarrusellSpellDiv
-              onClick={() => handleOpenVideo("champion_r")}
-              backgroundImage={
-                championDetail?.champion_e.champion_e_video_poster as string
-              }
-            >
-              <LogoSpellCircle>
-                <LogoSpellIcon />
-              </LogoSpellCircle>
-            </ChampCarrusellSpellDiv>
-            {selectedVideo === "champion_r" && (
-              <ChampSpellsVideo>
-                <ChampSpellsVideoPlayer
-                  src={championDetail?.champion_r.champion_r_video_mp4}
-                  ref={videoRef}
-                  controls
-                  autoPlay
-                />
-                <LogoSpellVideo onClick={handleCloseVideo}>
-                  <RemoveIcon />
-                </LogoSpellVideo>
-              </ChampSpellsVideo>
-            )} */}
           </ChampCarrusellInner>
-          {/* <CarouselFlexSpells>
-            <MdKeyboardArrowRight size={25} />
-          </CarouselFlexSpells> */}
         </ChampCarrusellDiv>
       </GeneralSpellsDiv>
     </>
   );
+
   if (isFetching)
     return (
       <LoaderContainer>
         <Loader />
       </LoaderContainer>
     );
+
   return (
     <GeneralDiv>
       {mobileScreen}
@@ -535,3 +434,5 @@ export const ChampDetailScreen = () => {
     </GeneralDiv>
   );
 };
+
+export default ChampDetailScreen;

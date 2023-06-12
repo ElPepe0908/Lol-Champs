@@ -30,7 +30,7 @@ import { useQuery } from "react-query";
 import { Loader } from "../../components/Loader";
 import { useNavigate } from "react-router-dom";
 
-export const LoginScreen = () => {
+const LoginScreen = () => {
   const { data, isLoading, isError, error } = useQuery(["userInfo"], () => {
     return;
   });
@@ -133,3 +133,5 @@ export const LoginScreen = () => {
     </LoginScreenContainer>
   );
 };
+
+export default LoginScreen;

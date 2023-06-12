@@ -55,7 +55,7 @@ export const ChampDetailDiv = styled("div")({
     width: "24%",
   },
   [`@media ${device.desktops}`]: {
-    width: "25%",
+    width: "28%",
   },
   [`@media ${device.tablets}`]: {
     width: "28%",
@@ -376,7 +376,7 @@ export const ChampInfoSkinsDiv = styled("div")({
     width: "76%",
   },
   [`@media ${device.desktops}`]: {
-    width: "75%",
+    width: "72%",
   },
   [`@media ${device.tablets}`]: {
     marginTop: 10,

@@ -18,10 +18,11 @@ import {
   SkinName,
   SkinNameHover,
 } from "../screens/ChampDetailScreen/styles";
-import { ICarouselItem } from "../constants";
+import { ICarouselItem, NewICarouselItem } from "../constants";
+import { Champion } from "../interfaces/NewChampsDetailListResponse";
 
 interface Props {
-  items: ICarouselItem[];
+  // items: NewICarouselItem[];
   ChampStyles: any;
   breakpoints?: any;
   onMouseOver: (itemToShow: string) => void;
@@ -29,11 +30,11 @@ interface Props {
   itemToShow: string;
   onClickImage: (selectedImageSkin: string, videoName: string) => void;
   closeVideo: () => void;
-  championSrc: ChampionElement;
+  // championSrc: Champion;
 }
 
 const Carousel = ({
-  items,
+  // items,
   ChampStyles,
   breakpoints,
   onMouseOver,
@@ -41,8 +42,12 @@ const Carousel = ({
   itemToShow: itemToShow,
   onClickImage,
   closeVideo,
-  championSrc,
-}: Props) => {
+}: // championSrc,
+Props) => {
+  const navigationStyles = {
+    color: "black",
+    fontSize: "30px",
+  };
   return (
     <Swiper
       style={{ ...ChampStyles.swiper }}
@@ -50,16 +55,14 @@ const Carousel = ({
       spaceBetween={20}
       slidesPerView={4}
       breakpoints={breakpoints}
-      navigation={
-        {
-          // prevEl: (<CustomSwiperButton />) as any,
-          // nextEl: (<CustomSwiperButton />) as any,
-        }
-      }
+      navigation={{
+        prevEl: ".swiper-button-prev",
+        nextEl: ".swiper-button-next",
+      }}
       // pagination={{ clickable: true }}
       // scrollbar={{ draggable: true }}
     >
-      {items.map((item, key) => {
+      {/* {items.map((item, key) => {
         return (
           <div>
             <SwiperSlide
@@ -102,6 +105,8 @@ const Carousel = ({
           </div>
         );
       })}
+      <div className="swiper-button-prev " style={navigationStyles} />
+      <div className="swiper-button-next" style={navigationStyles} /> */}
     </Swiper>
   );
 };

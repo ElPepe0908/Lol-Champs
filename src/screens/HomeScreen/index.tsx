@@ -1,4 +1,4 @@
-import React, { SetStateAction, useState } from "react";
+import React, { useState, useRef, LegacyRef } from "react";
 
 import {
   ChampCard,
@@ -35,85 +35,37 @@ import {
   ChampRequestContainer,
   ChampCardRequest,
   SelectFilterButton,
+  FilterContentDiv,
+  FilterTankIcon,
+  FilterAssasinIcon,
+  FilterMageIcon,
+  FilterFighterIcon,
+  FilterMarksmanIcon,
+  FilterSupportIcon,
+  ChampCardContainer,
 } from "./styles";
-
 import { MdArrowForwardIos, MdOutlineLogout } from "react-icons/md";
-import { AiOutlineSearch } from "react-icons/ai";
-import { MdClear } from "react-icons/md";
 import lolLogo from "../../assets/lol-logo.png";
 import { Sidebar } from "./Sidebar";
 import axios from "axios";
-import { RefetchOptions, RefetchQueryFilters, useQuery } from "react-query";
-import { ReactNode, useEffect } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
-import queryString from "query-string";
-import { useNavigate } from "react-router-dom";
-import { RolesType, initialChampsToRender } from "../../constants/index";
+import { useQuery } from "react-query";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { initialChampsToRender } from "../../constants/index";
 import { Loader } from "../../components/Loader";
-import { AppRouter } from "../../routes/AppRouter";
 import {
   NewChampsListResponse,
   Tag,
-  Data,
   Datum,
 } from "../../interfaces/NewChampsListResponse";
 
-const ChampCardWithHover = ({
-  champ,
-  champSplash,
-}: {
-  champ: NewChampsListResponse;
-  champSplash?: string;
-}) => {
-  const [show, setShow] = useState(false);
-  const navigate = useNavigate();
-
-  console.log("champSplash", champSplash);
-  const navigateToChampionDetail = () => {
-    navigate(`/champ-detail/${champ.data.data.name.name}`, {
-      state: { champion: champ },
-    });
-  };
-
-  const handleMouseOver = () => {
-    setShow(true);
-  };
-
-  const handleMouseOut = () => {
-    setShow(false);
-  };
-
-  const champCardStyle = champ
-    ? {
-        backgroundImage:
-          "url(https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zed_0.jpg)",
-      }
-    : { alignItems: "center" };
-
-  return (
-    <ChampCard
-      style={{
-        // backgroundImage: `url(https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zed_0.jpg)`,
-        backgroundImage: `url(${champSplash})`,
-      }}
-      onMouseOver={handleMouseOver}
-      onMouseOut={handleMouseOut}
-      onClick={navigateToChampionDetail}
-    >
-      {champ ? (
-        <ChampNameDiv show={show}>
-          {/* <ChampName>{champ.data.data.name.name}</ChampName> */}
-          <ChampName>Zed</ChampName>
-        </ChampNameDiv>
-      ) : (
-        <Loader />
-      )}
-    </ChampCard>
-  );
-};
-
-export const HomeScreen = () => {
-  const { data: champs, refetch: refetchChamps } = useQuery({
+const HomeScreen = () => {
+  const {
+    data: champs,
+    refetch: refetchChamps,
+    isFetched: isFetchedChamps,
+    isFetching: isFetchingChamps,
+  } = useQuery({
     queryKey: ["champs"],
     queryFn: async () => getChamps(),
     refetchOnWindowFocus: false,
@@ -121,14 +73,15 @@ export const HomeScreen = () => {
     cacheTime: Infinity,
   });
   const [searchValue, setSearchValue] = useState("" as string);
-  const [champsFiltered, setChampsFiltered] = useState<NewChampsListResponse[]>(
+  const [champsFiltered, setChampsFiltered] = useState<Datum[]>(
     new Array(initialChampsToRender).fill("")
   );
-  console.log("champsFiltered", champsFiltered);
   const [requestCount, setRequestCount] = useState(0);
-  const [newChamps, setNewChamps] = useState<NewChampsListResponse[]>([]);
   const [selectedRole, setselectedRole] = useState(null);
   const [showSelectedRole, setShowSelectedRole] = useState(false);
+  const [originalChampsData, setOriginalChampsData] = useState<Datum[]>([]);
+
+  const { state } = useLocation();
 
   const handleRoleOver = (role: any) => {
     setselectedRole(role);
@@ -143,42 +96,21 @@ export const HomeScreen = () => {
   const navigateToLogin = () => {
     navigate("/login");
   };
-  const requestNewChamps = async () => {
-    // if (requestCount >= 2) {
-    //   return;
-    // }
-    const newChamps = (await getChamps()) as NewChampsListResponse[];
-    const filterNewChamps = newChamps.filter((newChamp) => {
-      /////////////////////////////////////////////// RESOLVER PROBLEMA DE ARRAY DEL MAP
-      return !champsFiltered.some(
-        (champ) => champ.data.data.id === newChamp.data.data.id
-      );
-      // return !champsFiltered.some((champ) => champ.id === newChamp.id);
-    });
-    setNewChamps(newChamps as NewChampsListResponse[]);
-    setChampsFiltered((prevChamps) => {
-      return [
-        ...prevChamps,
-        ...(filterNewChamps as NewChampsListResponse[]),
-        ...(newChamps as NewChampsListResponse[]),
-      ];
-    });
-    setRequestCount((prevCount) => prevCount + 1);
-    console.log("requestCount", requestCount);
-    console.log("newChamps", newChamps);
-    console.log("champsFiltered", champsFiltered);
+  const navigateToLastChampDetail = () => {
+    if (state?.championId) {
+      navigate(`/champ-detail/${state.championName}`, {
+        state: { championId: state.championId },
+      });
+    }
   };
 
   useEffect(() => {
-    if (champs) {
-      setChampsFiltered(champs); // Cambio el estado de champsFiltered, y que me muestre los champs iniciales
-      // setChampsFiltered((prevChamps) => [...prevChamps, ...champs]);
-    }
+    if (champs) setChampsFiltered(Object.values(champs));
   }, [champs]);
 
   const handleDeleteButtonClick = () => {
     setSearchValue("");
-    setChampsFiltered(champs as NewChampsListResponse[]); // Cambio el estado de champsFiltered, y que me muestre los champs iniciales
+    setChampsFiltered(originalChampsData);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -194,140 +126,62 @@ export const HomeScreen = () => {
   };
 
   const getChamps = async () => {
-    // const url = `https://league-of-legends-champions.p.rapidapi.com/champions/en-us?page=${requestCount}&size=10`;
-    // const url = `panConQueso${requestCount}`;
     const url = `http://ddragon.leagueoflegends.com/cdn/13.10.1/data/en_US/champion.json`;
-    // const headers = {
-    //   "X-RapidAPI-Key": "36d0f53ee9msh3a618e1e5aecca5p1906b1jsn2172de59bbcd",
-    //   "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
-    // };
-
     try {
-      const response = await axios.get<NewChampsListResponse[]>(url);
-      // setChamps(response.data.champions);
-      const champsData = response.data;
-      console.log("champsData", champsData);
+      const response = await axios.get<NewChampsListResponse>(url);
+      const champsData = response.data.data;
+      setOriginalChampsData(Object.values(champsData));
       return champsData;
+    } catch (error) {}
+  };
+  const getChampsByTag = (tag: Tag = Tag.Assassin) => {
+    const filterNewChamp = originalChampsData?.filter((champ: Datum) =>
+      champ.tags.includes(tag)
+    );
+    setChampsFiltered(filterNewChamp);
+  };
+
+  const getChampsByDifficulty = (difficulty: number) => {
+    let minDifficulty = 0;
+    let maxDifficulty = 10;
+
+    if (difficulty === 0) {
+      maxDifficulty = 3;
+    } else if (difficulty === 4) {
+      minDifficulty = 4;
+      maxDifficulty = 7;
+    } else if (difficulty === 8) {
+      minDifficulty = 8;
+      maxDifficulty = 10;
+    }
+
+    const filterNewChamp = originalChampsData?.filter(
+      (champ: Datum) =>
+        champ.info.difficulty >= minDifficulty &&
+        champ.info.difficulty <= maxDifficulty
+    );
+    setChampsFiltered(filterNewChamp);
+  };
+
+  const getChampsSplash = (id: string) => {
+    try {
+      const baseUrl =
+        "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/";
+      const imageUrl = `${baseUrl}${id}_0.jpg`;
+      return imageUrl;
     } catch (error) {
       console.log(error);
+      throw error;
     }
   };
 
-  // const getChampsByRole = async (role: string) => {
-  //   const options = {
-  //     method: "GET",
-  //     // url: "https://league-of-legends-champions.p.rapidapi.com/champions/en-us",
-  //     url: `panConQueso${role}`,
-  //     params: {
-  //       page: requestCount,
-  //       size: 10,
-  //       role,
-  //     },
-  //     headers: {
-  //       "X-RapidAPI-Key": "36d0f53ee9msh3a618e1e5aecca5p1906b1jsn2172de59bbcd",
-  //       "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
-  //     },
-  //   };
-  //   try {
-  //     const response = await axios.request<NewChampsListResponse>(options);
-  //     console.log("response", response);
-  //     const RoleChamps = response.data.data.data.tags.filter(
-  //       (tags: Tag) => tags.includes(role as Tag)
-  //       // (champ: NewChampsListResponse) => champ.data.data.tags.includes(role as Tag)
-  //     );
-  //     setChampsFiltered(RoleChamps);
-  //   } catch (error) {
-  //     console.log(error);
-  //     return champsFiltered;
-  //   }
-  // };
-  const getChampsByTag = (tag: string) => {
-    champsFiltered.filter((champ: NewChampsListResponse) =>
-      champ.data.data.tags.tags.includes(tag as Tag)
-    );
-  };
-
-  const getChampsSplash = async (id: string) => {
-    // const url = `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${id}_0.jpg`;
-    const baseUrl =
-      "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/";
-    const imageUrl = `${baseUrl}${id}_0.jpg`;
-    console.log("imageUrl", imageUrl);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return imageUrl;
-    // try {
-    //   const response = await axios.get(url);
-    //   console.log("response", response);
-    //   return response;
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  };
-  const renderChampCards = async () => {
-    const champPromises = Object.values(champsFiltered).map(async (champ) => {
-      const champSplashUrl = await getChampsSplash(champ.data.data.data.id);
-      return {
-        champ,
-        champSplash: champSplashUrl,
-      };
-    });
-
-    const champDataPromise = Promise.all(champPromises);
-    const champData = await champDataPromise;
-
-    return (
-      <ChampsCardsContainer>
-        {champData.map(({ champ, champSplash }) => (
-          <ChampCardWithHover
-            champ={champ}
-            champSplash={champSplash}
-            key={champ.data.data.data.id}
-          />
-        ))}
-      </ChampsCardsContainer>
-    );
-  };
-  // const champPromises = Object.values(champsFiltered).map(async (champ) => {
-  //   const champSplashUrl = await getChampsSplash(champ.data.data.data.id);
-  //   return {
-  //     champ,
-  //     champSplash: champSplashUrl,
-  //   };
-  // });
-
-  // const champData = async () => {
-  //   await Promise.all(champPromises);
-  // };
-  // const champDataPromise = Promise.all(champPromises);
-
   const getChampsByName = async (name: string) => {
-    const options = {
-      method: "GET",
-      // url: "https://league-of-legends-champions.p.rapidapi.com/champions/en-us",
-      url: `panConQueso${requestCount}`,
-      params: {
-        page: requestCount,
-        size: 10,
-        name,
-      },
-      headers: {
-        "X-RapidAPI-Key": "36d0f53ee9msh3a618e1e5aecca5p1906b1jsn2172de59bbcd",
-        "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
-      },
-    };
-    const response = await axios.request<NewChampsListResponse[]>(options);
-    setChampsFiltered(response.data);
+    const filterNewChamp = originalChampsData?.filter((champ: Datum) =>
+      champ.name.toLocaleLowerCase().includes(name)
+    );
+    setChampsFiltered(filterNewChamp);
   };
 
-  useEffect(() => {
-    console.log(
-      "champsFiltered from useEffect",
-      champsFiltered,
-      Object.values(champsFiltered).map((champ: NewChampsListResponse) => {
-        return <ChampCardWithHover key="Hola Mundo" champ={champ} />;
-      })
-    );
-  }, [champsFiltered]);
   return (
     <HomeScreenContainer>
       <HomeScreenHeader>
@@ -337,7 +191,7 @@ export const HomeScreen = () => {
             alt="league-of-legends-logo"
             onClick={() => {
               setSearchValue("");
-              setChampsFiltered(champs as NewChampsListResponse[]);
+              setChampsFiltered(originalChampsData);
               refetchChamps();
             }}
           />
@@ -349,7 +203,7 @@ export const HomeScreen = () => {
             alt="league-of-legends-logo"
             onClick={() => {
               setSearchValue("");
-              setChampsFiltered(champs as NewChampsListResponse[]);
+              setChampsFiltered(originalChampsData);
               refetchChamps();
             }}
           />
@@ -383,8 +237,6 @@ export const HomeScreen = () => {
               onChange={handleInputChange}
               autoComplete="off"
             />
-            {/* refetchChampsByName() */}
-            {/* () => setSearchValue("") */}
             {searchChamp !== "" && (
               <DeleteButton show={true} onClick={handleDeleteButtonClick}>
                 <DeleteTextButton />
@@ -392,9 +244,16 @@ export const HomeScreen = () => {
             )}
           </SearchBarContainer>
 
-          <ArrowIconContainer>
-            <MdArrowForwardIos size={25} fill="#3A3A40" />
-          </ArrowIconContainer>
+          {state?.championId && (
+            <ArrowIconContainer>
+              <MdArrowForwardIos
+                onClick={navigateToLastChampDetail}
+                style={{ cursor: "pointer" }}
+                size={25}
+                fill="#3A3A40"
+              />
+            </ArrowIconContainer>
+          )}
         </SeachArrowContainer>
       </HomeScreenHeader>
 
@@ -404,21 +263,30 @@ export const HomeScreen = () => {
             <RolesFilter>Roles</RolesFilter>
 
             <FilterButton
-              onClick={() => getChampsByTag("Assassin")}
+              onClick={() => {
+                getChampsByTag("Assassin" as Tag);
+                refetchChamps();
+              }}
               onMouseOver={() => handleRoleOver("Assassin")}
               onMouseOut={handleRoleOut}
             >
               {selectedRole === "Assassin" ? (
                 <>
                   <SelectFilterButton show={showSelectedRole} />
-                  <p style={{ color: "#fff", margin: 0 }}>Assassin</p>
+                  <FilterContentDiv>
+                    <p style={{ color: "#fff", margin: 0 }}>Assassin</p>
+                    <FilterAssasinIcon />
+                  </FilterContentDiv>
                 </>
               ) : (
                 <p style={{ color: "#808080", margin: 0 }}>Assassin</p>
               )}
             </FilterButton>
             <FilterButton
-              onClick={() => getChampsByTag("Tank")}
+              onClick={() => {
+                getChampsByTag("Tank" as Tag);
+                refetchChamps();
+              }}
               onMouseOver={() => handleRoleOver("Tank")}
               onMouseOut={handleRoleOut}
             >
@@ -426,13 +294,17 @@ export const HomeScreen = () => {
                 <>
                   <SelectFilterButton show={showSelectedRole} />
                   <p style={{ color: "#fff", margin: 0 }}>Tank</p>
+                  <FilterTankIcon />
                 </>
               ) : (
                 <p style={{ color: "#808080", margin: 0 }}>Tank</p>
               )}
             </FilterButton>
             <FilterButton
-              onClick={() => getChampsByTag("Mage")}
+              onClick={() => {
+                getChampsByTag("Mage" as Tag);
+                refetchChamps();
+              }}
               onMouseOver={() => handleRoleOver("Mage")}
               onMouseOut={handleRoleOut}
             >
@@ -440,6 +312,7 @@ export const HomeScreen = () => {
                 <>
                   <SelectFilterButton show={showSelectedRole} />
                   <p style={{ color: "#fff", margin: 0 }}>Mage</p>
+                  <FilterMageIcon />
                 </>
               ) : (
                 <p style={{ color: "#808080", margin: 0 }}>Mage</p>
@@ -447,7 +320,10 @@ export const HomeScreen = () => {
             </FilterButton>
             <FilterButton
               selectedRole={selectedRole}
-              onClick={() => getChampsByTag("Fighter")}
+              onClick={() => {
+                getChampsByTag("Fighter" as Tag);
+                refetchChamps();
+              }}
               onMouseOver={() => handleRoleOver("Fighter")}
               onMouseOut={handleRoleOut}
             >
@@ -455,6 +331,7 @@ export const HomeScreen = () => {
                 <>
                   <SelectFilterButton show={showSelectedRole} />
                   <p style={{ color: "#fff", margin: 0 }}>Fighter</p>
+                  <FilterFighterIcon />
                 </>
               ) : (
                 <p style={{ color: "#808080", margin: 0 }}>Fighter</p>
@@ -462,7 +339,10 @@ export const HomeScreen = () => {
             </FilterButton>
             <FilterButton
               selectedRole={selectedRole}
-              onClick={() => getChampsByTag("Marksman")}
+              onClick={() => {
+                getChampsByTag("Marksman" as Tag);
+                refetchChamps();
+              }}
               onMouseOver={() => handleRoleOver("Marksman")}
               onMouseOut={handleRoleOut}
             >
@@ -470,6 +350,7 @@ export const HomeScreen = () => {
                 <>
                   <SelectFilterButton show={showSelectedRole} />
                   <p style={{ color: "#fff", margin: 0 }}>Marksman</p>
+                  <FilterMarksmanIcon />
                 </>
               ) : (
                 <p style={{ color: "#808080", margin: 0 }}>Marksman</p>
@@ -477,8 +358,10 @@ export const HomeScreen = () => {
             </FilterButton>
             <FilterButton
               selectedRole={selectedRole}
-              // onClick={() => getChampsByTag("Support")}
-              onClick={() => getChampsSplash("Zed")}
+              onClick={() => {
+                getChampsByTag("Support" as Tag);
+                refetchChamps();
+              }}
               onMouseOver={() => handleRoleOver("Support")}
               onMouseOut={handleRoleOut}
             >
@@ -486,6 +369,7 @@ export const HomeScreen = () => {
                 <>
                   <SelectFilterButton show={showSelectedRole} />
                   <p style={{ color: "#fff", margin: 0 }}>Support</p>
+                  <FilterSupportIcon />
                 </>
               ) : (
                 <p style={{ color: "#808080", margin: 0 }}>Support</p>
@@ -497,6 +381,10 @@ export const HomeScreen = () => {
             <DifficultyFilter>Difficulty</DifficultyFilter>
             <FilterButton
               selectedRole={selectedRole}
+              onClick={() => {
+                getChampsByDifficulty(0);
+                refetchChamps();
+              }}
               onMouseOver={() => handleRoleOver("Easy")}
               onMouseOut={handleRoleOut}
             >
@@ -511,6 +399,10 @@ export const HomeScreen = () => {
             </FilterButton>
             <FilterButton
               selectedRole={selectedRole}
+              onClick={() => {
+                getChampsByDifficulty(4);
+                refetchChamps();
+              }}
               onMouseOver={() => handleRoleOver("Medium")}
               onMouseOut={handleRoleOut}
             >
@@ -525,6 +417,10 @@ export const HomeScreen = () => {
             </FilterButton>
             <FilterButton
               selectedRole={selectedRole}
+              onClick={() => {
+                getChampsByDifficulty(8);
+                refetchChamps();
+              }}
               onMouseOver={() => handleRoleOver("Hard")}
               onMouseOut={handleRoleOut}
             >
@@ -547,52 +443,104 @@ export const HomeScreen = () => {
           </LogoutButton>
         </SideBar>
         <SideBarDivider />
-        {/* <ChampsCardsContainer> */}
-        {/* {Object.values(champsFiltered).map((champ) => {
-            return <ChampCardWithHover champ={champ} champSplash={() => getChampsSplash(champ.data.data.data.id)} />;
-          })} */}
-
-        {/* {Object.values(champsFiltered).map((champ) => {
-            const champSplashPromise = getChampsSplash(champ.data.data.data.id);
+        <ChampsCardsContainer>
+          {champsFiltered.map((champ) => {
+            const champSplash = getChampsSplash(champ.id);
             return (
-              <ChampCardWithHover
-                champ={champ}
-                champSplash={champSplashPromise}
-                key={champ.data.data.data.id}
+              // <ChampCardWithHover
+              //   champ={champ}
+              //   champSplash={champSplash}
+              //   isFetching={isFetchingChamps}
+              // />
+              <LazyChamps
+                champs={champ}
+                champSplash={champSplash}
+                isFetching={isFetchingChamps}
               />
             );
-          })} */}
-        {/* {champData.map(({ champ, champSplash }) => (
-            <ChampCardWithHover
-              champ={champ}
-              champSplash={champSplash}
-              key={champ.data.data.data.id}
-            />
-          ))} */}
-
-        {/* {champDataPromise.then((champData) =>
-            champData.map(({ champ, champSplash }) => (
-              <ChampCardWithHover
-                champ={champ}
-                champSplash={champSplash}
-                key={champ.data.data.data.id}
-              />
-            ))
-          )} */}
-        {/* <>
-          {async () => {
-            const champCards = await renderChampCards();
-            return champCards;
-          }}
-        </> */}
-        <>{renderChampCards()}</>
-        {/* <ChampRequestContainer>
-            <ChampCardRequest onClick={requestNewChamps}>
-              Show more
-            </ChampCardRequest>
-          </ChampRequestContainer> */}
-        {/* </ChampsCardsContainer> */}
+          })}
+        </ChampsCardsContainer>
       </HomeScreenBody>
     </HomeScreenContainer>
   );
 };
+export const LazyChamps = ({
+  champs,
+  champSplash,
+  isFetching,
+}: {
+  champs: Datum;
+  champSplash: string;
+  isFetching: boolean;
+}) => {
+  const [isIntersecting, setIsIntersecting] = useState(false);
+  const elementRef = useRef();
+
+  useEffect(() => {
+    const element = elementRef.current;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsIntersecting(entry.isIntersecting);
+        });
+      },
+      {
+        threshold: 0.5,
+      }
+    );
+
+    if (element) {
+      observer.observe(element);
+    }
+  }, []);
+
+  const [show, setShow] = useState(false);
+  const navigate = useNavigate();
+
+  const navigateToChampionDetail = () => {
+    navigate(`/champ-detail/${champs.name}`, {
+      state: { championId: champs.id },
+    });
+  };
+
+  const handleMouseOver = () => {
+    setShow(true);
+  };
+
+  const handleMouseOut = () => {
+    setShow(false);
+  };
+
+  const champCardStyle = champs
+    ? {
+        backgroundImage: `url(${champSplash})`,
+      }
+    : { alignItems: "center" };
+
+  return (
+    <ChampCardContainer
+      className={`card_champ ${isIntersecting ? "show" : "hidden"}`}
+      ref={elementRef as any}
+    >
+      <ChampCard
+        show={isIntersecting}
+        // show={isIntersecting ? "show" : "hidden"}
+        className="card_champ_img"
+        style={champCardStyle}
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}
+        onClick={navigateToChampionDetail}
+      >
+        {isFetching ? (
+          <Loader />
+        ) : (
+          <ChampNameDiv show={show}>
+            <ChampName>{champs.name}</ChampName>
+          </ChampNameDiv>
+        )}
+      </ChampCard>
+    </ChampCardContainer>
+  );
+};
+
+export default HomeScreen;

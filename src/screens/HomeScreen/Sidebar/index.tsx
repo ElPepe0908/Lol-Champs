@@ -161,7 +161,7 @@ export const Sidebar = () => {
       {(["left"] as const).map((anchor) => (
         <React.Fragment key={anchor}>
           <RolesMenuContainer onClick={toggleDrawer(anchor, true)}>
-            <FaBars size={25} fill={"#3a3a40"} />
+            <FaBars size={25} fill={"#3a3a40"} style={{ cursor: "pointer" }} />
           </RolesMenuContainer>
           <Drawer
             // className="Drawer"

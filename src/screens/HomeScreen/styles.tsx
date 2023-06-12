@@ -1,12 +1,25 @@
 import styled, { keyframes } from "styled-components";
 import { device } from "../../constants";
 import { AiOutlineSearch } from "react-icons/ai";
+import {
+  GiBroadsword,
+  GiCrossbow,
+  GiThorHammer,
+  GiFist,
+  GiSmallFire,
+} from "react-icons/gi";
+import { FaShieldAlt } from "react-icons/fa";
 import { MdClear } from "react-icons/md";
 type DeleteButtonProps = {
   show: boolean;
 };
 
 type ChampNameProps = {
+  show: boolean;
+};
+
+type CardProps = {
+  // show?: string;
   show: boolean;
 };
 
@@ -346,6 +359,38 @@ export const SelectFilterButton = styled.div<FilterButtonProps>`
   transition: opacity 0.3s ease-in-out;
 `;
 
+export const FilterContentDiv = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+`;
+
+export const FilterTankIcon = styled(GiThorHammer)`
+  font-size: 20px;
+  margin-left: 8px;
+`;
+export const FilterFighterIcon = styled(GiFist)`
+  font-size: 20px;
+  margin-left: 8px;
+`;
+export const FilterMageIcon = styled(GiSmallFire)`
+  font-size: 20px;
+  margin-left: 8px;
+`;
+export const FilterAssasinIcon = styled(GiBroadsword)`
+  font-size: 20px;
+  margin-left: 8px;
+`;
+export const FilterSupportIcon = styled(FaShieldAlt)`
+  font-size: 20px;
+  margin-left: 8px;
+`;
+export const FilterMarksmanIcon = styled(GiCrossbow)`
+  font-size: 20px;
+  margin-left: 8px;
+`;
+
 export const RolesFilterContainer = styled.div`
   width: 70%;
   display: flex;
@@ -441,23 +486,21 @@ export const ChampsCardsContainer = styled.div`
   }
 `;
 
-export const ChampCard = styled.div`
+export const ChampCard = styled.div<CardProps>`
   display: flex;
-  width: 30%;
-  height: 250px;
-  background: black;
   border-radius: 10px;
-  margin: 0 10px 20px 10px;
-  cursor: pointer;
   background-size: cover;
   background-position: center;
   align-items: end;
   justify-content: center;
+  width: 100%;
+  height: 100%;
+  opacity: ${(props) => (props.show ? "1" : "0.4")};
+  transition: opacity 0.5s linear;
 
   @media ${device.desktops_large} {
-    width: 45%;
-    height: 270px;
-    margin: 0 7px 15px 7px;
+    width: 100%;
+    height: 100%;
   }
   @media ${device.desktops} {
     width: 45%;
@@ -468,6 +511,40 @@ export const ChampCard = styled.div`
     height: 300px;
     // width: 45%;
     // height: 175px;
+  }
+  @media ${device.phones} {
+    width: 91%;
+    height: 300px;
+  }
+  @media ${device.old_phones} {
+    width: 91%;
+    height: 260px;
+  }
+  @media ${device.small_phones} {
+    width: 92%;
+    height: 200px;
+  }
+`;
+export const ChampCardContainer = styled.div`
+  display: flex;
+  width: 30%;
+  height: 250px;
+  background: #000;
+  border-radius: 10px;
+  margin: 0 10px 20px 10px;
+  cursor: pointer;
+
+  @media ${device.desktops_large} {
+    width: 100%;
+    height: 100%;
+  }
+  @media ${device.desktops} {
+    width: 45%;
+    height: 220px;
+  }
+  @media ${device.tablets} {
+    width: 90%;
+    height: 300px;
   }
   @media ${device.phones} {
     width: 91%;
@@ -494,6 +571,7 @@ export const ChampNameDiv = styled.div<ChampNameProps>`
   opacity: ${(props) => (props.show ? "0.8" : "0")};
   transition: opacity 0.2s ease-in-out;
 `;
+
 export const ChampName = styled.p`
   font-size: 17px;
   font-weight: 500;
@@ -504,11 +582,6 @@ export const ChampCardRequest = styled.p`
   cursor: pointer;
   margin: 0;
 `;
-
-// export const RequestButtonContainer = styled.div`
-//   width: 100%;
-//   display: flex;
-// `;
 
 export const ChampRequestContainer = styled.div`
   width: 100%;

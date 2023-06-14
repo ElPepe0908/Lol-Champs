@@ -112,18 +112,21 @@ const HomeScreen = () => {
     setSearchValue("");
     setChampsFiltered(originalChampsData);
   };
+  const searchChamp = searchValue.toLocaleLowerCase();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
     setSearchValue(e.target.value);
   };
-  const searchChamp = searchValue.trim().toLocaleLowerCase();
 
-  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (searchChamp === "") return;
+  useEffect(() => {
+    if (searchChamp === "") {
+      setChampsFiltered(originalChampsData);
+    }
+    console.log("searchChamp from useEffect", searchChamp);
     refetchChamps();
-    return getChampsByName(searchChamp);
-  };
+    getChampsByName(searchChamp);
+  }, [searchValue]);
 
   const getChamps = async () => {
     const url = `http://ddragon.leagueoflegends.com/cdn/13.10.1/data/en_US/champion.json`;
@@ -213,8 +216,8 @@ const HomeScreen = () => {
             <Sidebar />
           </MenuContainer>
 
-          <SearchBarContainer onSubmit={handleSearch}>
-            {searchValue !== "" ? (
+          <SearchBarContainer>
+            {searchChamp !== "" ? (
               <SearchIcon
                 style={{ cursor: "pointer" }}
                 onClick={() => {
@@ -447,11 +450,6 @@ const HomeScreen = () => {
           {champsFiltered.map((champ) => {
             const champSplash = getChampsSplash(champ.id);
             return (
-              // <ChampCardWithHover
-              //   champ={champ}
-              //   champSplash={champSplash}
-              //   isFetching={isFetchingChamps}
-              // />
               <LazyChamps
                 champs={champ}
                 champSplash={champSplash}
@@ -524,7 +522,6 @@ export const LazyChamps = ({
     >
       <ChampCard
         show={isIntersecting}
-        // show={isIntersecting ? "show" : "hidden"}
         className="card_champ_img"
         style={champCardStyle}
         onMouseOver={handleMouseOver}

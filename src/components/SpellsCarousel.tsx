@@ -4,13 +4,9 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import { ChampionElement, Skin } from "../interfaces/ChampDetailInterface";
-import { Champ } from "../interfaces/ChampsListInterface";
-import { useState } from "react";
 import {
   ChampSpellsVideo,
   ChampSpellsVideoPlayer,
-  CustomSwiperButton,
   LogoSpellCircle,
   LogoSpellIcon,
   LogoSpellVideo,
@@ -18,11 +14,9 @@ import {
   SkinName,
   SkinNameHover,
 } from "../screens/ChampDetailScreen/styles";
-import { ICarouselItem, NewICarouselItem } from "../constants";
-import { Champion } from "../interfaces/NewChampsDetailListResponse";
+import { ICarouselItem } from "../constants";
 
 interface Props {
-  // items: NewICarouselItem[];
   ChampStyles: any;
   breakpoints?: any;
   onMouseOver: (itemToShow: string) => void;
@@ -30,24 +24,19 @@ interface Props {
   itemToShow: string;
   onClickImage: (selectedImageSkin: string, videoName: string) => void;
   closeVideo: () => void;
-  // championSrc: Champion;
+  spells: ICarouselItem[];
 }
 
-const Carousel = ({
-  // items,
+const SpellsCarousel = ({
   ChampStyles,
   breakpoints,
   onMouseOver,
   onMouseOut,
-  itemToShow: itemToShow,
+  itemToShow,
   onClickImage,
   closeVideo,
-}: // championSrc,
-Props) => {
-  const navigationStyles = {
-    color: "black",
-    fontSize: "30px",
-  };
+  spells,
+}: Props) => {
   return (
     <Swiper
       style={{ ...ChampStyles.swiper }}
@@ -59,45 +48,41 @@ Props) => {
         prevEl: ".swiper-button-prev",
         nextEl: ".swiper-button-next",
       }}
-      // pagination={{ clickable: true }}
-      // scrollbar={{ draggable: true }}
     >
-      {/* {items.map((item, key) => {
+      {spells?.map((spells: ICarouselItem) => {
         return (
           <div>
             <SwiperSlide
-              key={item.imageUrl}
+              key={spells.name}
               style={{
                 ...ChampStyles.slide,
-                backgroundImage: `url(${item.imageUrl})`,
+                backgroundImage: `url(${spells.imageUrl})`,
                 display: "flex",
                 alignItems: "flex-end",
               }}
-              onMouseOver={() => onMouseOver(`${key}-${item.name}`)}
+              onMouseOver={() => onMouseOver(`${spells.name}`)}
               onMouseOut={onMouseOut}
-              onClick={() => onClickImage(item.videoUrl ?? item.imageUrl, "")}
+              onClick={() =>
+                onClickImage(spells.videoUrl ? spells.videoUrl : "", "")
+              }
             >
-              {item.imageUrl.includes("champion-abilities") ? (
+              {spells.imageUrl?.includes("champion-abilities") ? (
                 <LogoSpellCircle>
                   <LogoSpellIcon />
                 </LogoSpellCircle>
               ) : null}
               <SkinNameHover
-                key={key}
+                key={spells.name}
                 style={{
-                  opacity: itemToShow === `${key}-${item.name}` ? "0.8" : "0",
+                  opacity: itemToShow === `${spells.name}` ? "0.8" : "0",
                 }}
               >
-                <SkinName>{item.name}</SkinName>
+                <SkinName>{spells.name}</SkinName>
               </SkinNameHover>
             </SwiperSlide>
 
             <ChampSpellsVideo>
-              <ChampSpellsVideoPlayer
-                src={championSrc.champion_q.champion_q_video_mp4}
-                controls
-                autoPlay
-              />
+              <ChampSpellsVideoPlayer src={spells.videoUrl} controls autoPlay />
               <LogoSpellVideo onClick={closeVideo}>
                 <RemoveIcon />
               </LogoSpellVideo>
@@ -105,10 +90,10 @@ Props) => {
           </div>
         );
       })}
-      <div className="swiper-button-prev " style={navigationStyles} />
-      <div className="swiper-button-next" style={navigationStyles} /> */}
+      <div className="swiper-button-prev " style={{ color: "black" }} />
+      <div className="swiper-button-next" style={{ color: "black" }} />
     </Swiper>
   );
 };
 
-export default Carousel;
+export default SpellsCarousel;

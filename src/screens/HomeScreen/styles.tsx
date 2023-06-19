@@ -9,7 +9,7 @@ import {
   GiSmallFire,
 } from "react-icons/gi";
 import { FaShieldAlt } from "react-icons/fa";
-import { MdClear } from "react-icons/md";
+import { MdClear, MdDevicesFold } from "react-icons/md";
 type DeleteButtonProps = {
   show: boolean;
 };
@@ -19,7 +19,7 @@ type ChampNameProps = {
 };
 
 type CardProps = {
-  // show?: string;
+  isFetching: boolean;
   show: boolean;
 };
 
@@ -356,7 +356,7 @@ export const SelectFilterButton = styled.div<FilterButtonProps>`
   left: 0;
   border-radius: 4px 0 0 4px;
   opacity: ${(props) => (props.show ? 1 : 0)};
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 `;
 
 export const FilterContentDiv = styled.div`
@@ -469,7 +469,7 @@ export const SideBarDivider = styled.div`
   }
 `;
 
-export const ChampsCardsContainer = styled.div`
+export const CardsContainer = styled.div`
   width: 79vw;
   height: 82vh;
   display: flex;
@@ -495,35 +495,8 @@ export const ChampCard = styled.div<CardProps>`
   justify-content: center;
   width: 100%;
   height: 100%;
-  opacity: ${(props) => (props.show ? "1" : "0.4")};
+  opacity: ${(props) => (props.show && !props.isFetching ? "1" : "0.4")};
   transition: opacity 0.5s linear;
-
-  @media ${device.desktops_large} {
-    width: 100%;
-    height: 100%;
-  }
-  @media ${device.desktops} {
-    width: 45%;
-    height: 220px;
-  }
-  @media ${device.tablets} {
-    width: 90%;
-    height: 300px;
-    // width: 45%;
-    // height: 175px;
-  }
-  @media ${device.phones} {
-    width: 91%;
-    height: 300px;
-  }
-  @media ${device.old_phones} {
-    width: 91%;
-    height: 260px;
-  }
-  @media ${device.small_phones} {
-    width: 92%;
-    height: 200px;
-  }
 `;
 export const ChampCardContainer = styled.div`
   display: flex;
@@ -535,20 +508,20 @@ export const ChampCardContainer = styled.div`
   cursor: pointer;
 
   @media ${device.desktops_large} {
-    width: 100%;
-    height: 100%;
+    width: 43%;
+    height: 270px;
   }
   @media ${device.desktops} {
-    width: 45%;
-    height: 220px;
+    width: 43%;
+    height: 210px;
   }
   @media ${device.tablets} {
-    width: 90%;
-    height: 300px;
+    width: 43%;
+    height: 170px;
   }
   @media ${device.phones} {
-    width: 91%;
-    height: 300px;
+    width: 45%;
+    height: 185px;
   }
   @media ${device.old_phones} {
     width: 91%;
@@ -577,6 +550,13 @@ export const ChampName = styled.p`
   font-weight: 500;
   height: max-content;
   margin: 0;
+
+  @media ${device.tablets} {
+    font-size: 16px;
+  }
+  @media ${device.phones} {
+    font-size: 15px;
+  }
 `;
 export const ChampCardRequest = styled.p`
   cursor: pointer;

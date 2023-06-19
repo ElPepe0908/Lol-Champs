@@ -2,7 +2,7 @@ import React, { useState, useRef, LegacyRef } from "react";
 
 import {
   ChampCard,
-  ChampsCardsContainer,
+  CardsContainer,
   DifficultyFiltersContainer,
   FilterButton,
   HomeScreenBody,
@@ -76,11 +76,14 @@ const HomeScreen = () => {
   const [champsFiltered, setChampsFiltered] = useState<Datum[]>(
     new Array(initialChampsToRender).fill("")
   );
-  const [requestCount, setRequestCount] = useState(0);
   const [selectedRole, setselectedRole] = useState(null);
   const [showSelectedRole, setShowSelectedRole] = useState(false);
   const [originalChampsData, setOriginalChampsData] = useState<Datum[]>([]);
+  console.log("champs", champs);
+  console.log("champsFiltered", champsFiltered);
+  console.log("originalChampsData", originalChampsData);
 
+  const navigate = useNavigate();
   const { state } = useLocation();
 
   const handleRoleOver = (role: any) => {
@@ -91,27 +94,35 @@ const HomeScreen = () => {
     setselectedRole(null);
     setShowSelectedRole(false);
   };
-  const navigate = useNavigate();
 
   const navigateToLogin = () => {
-    navigate("/login");
+    navigate("/");
   };
   const navigateToLastChampDetail = () => {
-    if (state?.championId) {
+    if (state?.championName) {
       navigate(`/champ-detail/${state.championName}`, {
-        state: { championId: state.championId },
+        state: { championName: state.championName },
       });
     }
   };
 
   useEffect(() => {
-    if (champs) setChampsFiltered(Object.values(champs));
-  }, [champs]);
+    if (champs) return setChampsFiltered(Object.values(champs));
+  }, [champs, originalChampsData]);
 
   const handleDeleteButtonClick = () => {
     setSearchValue("");
     setChampsFiltered(originalChampsData);
   };
+
+  useEffect(() => {
+    if (searchChamp === "" && champs) {
+      setChampsFiltered(Object.values(champs));
+    }
+    refetchChamps();
+    getChampsByName(searchChamp);
+  }, [searchValue]);
+
   const searchChamp = searchValue.toLocaleLowerCase();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,20 +130,12 @@ const HomeScreen = () => {
     setSearchValue(e.target.value);
   };
 
-  useEffect(() => {
-    if (searchChamp === "") {
-      setChampsFiltered(originalChampsData);
-    }
-    console.log("searchChamp from useEffect", searchChamp);
-    refetchChamps();
-    getChampsByName(searchChamp);
-  }, [searchValue]);
-
   const getChamps = async () => {
     const url = `http://ddragon.leagueoflegends.com/cdn/13.10.1/data/en_US/champion.json`;
     try {
       const response = await axios.get<NewChampsListResponse>(url);
       const champsData = response.data.data;
+      console.log("champsData de matu", champsData);
       setOriginalChampsData(Object.values(champsData));
       return champsData;
     } catch (error) {}
@@ -179,7 +182,7 @@ const HomeScreen = () => {
   };
 
   const getChampsByName = async (name: string) => {
-    const filterNewChamp = originalChampsData?.filter((champ: Datum) =>
+    const filterNewChamp = originalChampsData.filter((champ: Datum) =>
       champ.name.toLocaleLowerCase().includes(name)
     );
     setChampsFiltered(filterNewChamp);
@@ -194,6 +197,7 @@ const HomeScreen = () => {
             alt="league-of-legends-logo"
             onClick={() => {
               setSearchValue("");
+              // setChampsFiltered(Object.values(champs as any));
               setChampsFiltered(originalChampsData);
               refetchChamps();
             }}
@@ -206,6 +210,7 @@ const HomeScreen = () => {
             alt="league-of-legends-logo"
             onClick={() => {
               setSearchValue("");
+              // setChampsFiltered(Object.values(champs as any));
               setChampsFiltered(originalChampsData);
               refetchChamps();
             }}
@@ -247,16 +252,26 @@ const HomeScreen = () => {
             )}
           </SearchBarContainer>
 
-          {state?.championId && (
-            <ArrowIconContainer>
-              <MdArrowForwardIos
-                onClick={navigateToLastChampDetail}
-                style={{ cursor: "pointer" }}
-                size={25}
-                fill="#3A3A40"
-              />
-            </ArrowIconContainer>
-          )}
+          <ArrowIconContainer>
+            <MdArrowForwardIos
+              onClick={
+                state?.championName ? navigateToLastChampDetail : undefined
+              }
+              // onClick={navigateToLastChampDetail}
+              style={
+                state?.championName
+                  ? { cursor: "pointer" }
+                  : {
+                      opacity: "0.5",
+                      cursor: "not-allowed",
+                      userSelect: "none",
+                    }
+              }
+              // style={{ cursor: "pointer" }}
+              size={25}
+              fill="#3A3A40"
+            />
+          </ArrowIconContainer>
         </SeachArrowContainer>
       </HomeScreenHeader>
 
@@ -446,7 +461,7 @@ const HomeScreen = () => {
           </LogoutButton>
         </SideBar>
         <SideBarDivider />
-        <ChampsCardsContainer>
+        <CardsContainer>
           {champsFiltered.map((champ) => {
             const champSplash = getChampsSplash(champ.id);
             return (
@@ -457,7 +472,7 @@ const HomeScreen = () => {
               />
             );
           })}
-        </ChampsCardsContainer>
+        </CardsContainer>
       </HomeScreenBody>
     </HomeScreenContainer>
   );
@@ -497,7 +512,7 @@ export const LazyChamps = ({
 
   const navigateToChampionDetail = () => {
     navigate(`/champ-detail/${champs.name}`, {
-      state: { championId: champs.id },
+      state: { championName: champs.name },
     });
   };
 
@@ -516,11 +531,9 @@ export const LazyChamps = ({
     : { alignItems: "center" };
 
   return (
-    <ChampCardContainer
-      className={`card_champ ${isIntersecting ? "show" : "hidden"}`}
-      ref={elementRef as any}
-    >
+    <ChampCardContainer ref={elementRef as any}>
       <ChampCard
+        isFetching={isFetching}
         show={isIntersecting}
         className="card_champ_img"
         style={champCardStyle}

@@ -28,7 +28,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useQuery } from "react-query";
 import { Loader } from "../../components/Loader";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const LoginScreen = () => {
   const { data, isLoading, isError, error } = useQuery(["userInfo"], () => {
@@ -56,8 +56,6 @@ const LoginScreen = () => {
     } else {
       navigate("/home");
     }
-    console.log("Email:", email);
-    console.log("Password:", password);
   };
 
   useEffect(() => {

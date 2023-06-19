@@ -67,44 +67,65 @@ import { useQuery } from "react-query";
 import { Loader } from "../../components/Loader";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Carousel from "../../components/Carousel";
-import { ICarouselItem, NewICarouselItem } from "../../constants";
 import {
   Champion,
   NewChampsDetailListResponse,
 } from "../../interfaces/NewChampsDetailListResponse";
+import { ChampDetailResponse } from "../../interfaces/ChampDetailInterface";
+import SkinsCarousel from "../../components/SkinsCarousel";
+import SpellsCarousel from "../../components/SpellsCarousel";
 
 const ChampDetailScreen = () => {
   const { state, pathname } = useLocation();
 
-  console.log({ state: state?.championId });
+  console.log("championName", { state: state?.championName });
 
-  const {
-    data: championDetail,
-    isError,
-    isFetching,
-  } = useQuery(
-    ["championDetail", state?.championId],
+  const { data: championDetail, isFetching: isChampionFetching } = useQuery(
+    ["championDetail", state?.championName],
     () => getDetail(pathNameChamp),
     {
       refetchOnWindowFocus: false,
     }
   );
+  const { data: championData, isFetching: isDataFetching } = useQuery(
+    ["championData", state?.championName],
+    () => getChampionData(pathNameChamp),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  console.log("championDetail", championDetail);
+  console.log(
+    "championData",
+    championData?.champion[0].champion_r.champion_r_video_mp4
+  );
+  const [champDetailInfo, setChampDetailInfo] = useState<Champion>();
   const [itemToShow, setItemToShow] = useState<string>("none");
   const [spellToShow, setSpellToShow] = useState<string>("none");
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [videoToShow, setVideoToShow] = useState(null);
   const [selectedImageSkin, setSelectedImageSkin] = useState("");
+  // const [imageSkinNumber, setImageSkinNumber] = useState<Number>(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // useEffect(() => {
-  //   if (championDetail) {
-  //     setSelectedImageSkin(championDetail?.skins[0].imageUrl); // setSelectedImageSkin with the DEFAULT image skin of the champ
-  //   }
-  // }, [championDetail]);
+  useEffect(() => {
+    if (champDetailInfo) {
+      // setSelectedImageSkin(champDetailInfo?.name); // setSelectedImageSkin with the DEFAULT image skin of the champ
+      setSelectedImageSkin(
+        `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${state.championName}_0.jpg`
+      );
+    }
+  }, [champDetailInfo]);
+
+  useEffect(() => {
+    if (championDetail)
+      return setChampDetailInfo(Object.values(championDetail)[0] as any);
+  }, [championDetail]);
 
   const selectNewSkin = (selectedImage: string) => {
     setSelectedImageSkin(selectedImage);
+    console.log("selectedImageSkin", selectedImageSkin);
   };
 
   const handleSelectedSpell = (spellToShow: string) => {
@@ -142,8 +163,7 @@ const ChampDetailScreen = () => {
   const handleNavigate = () => {
     navigate("/home", {
       state: {
-        championId: championDetail?.champion.id,
-        championName: championDetail?.champion.name,
+        championName: champDetailInfo?.name,
       },
     });
   };
@@ -159,11 +179,25 @@ const ChampDetailScreen = () => {
     // };
     const url = `http://ddragon.leagueoflegends.com/cdn/13.11.1/data/en_US/champion/${name}.json`;
     try {
-      const response = await axios.request<NewChampsDetailListResponse>(
-        url as any
-      );
-      console.log("response.data.data.champion", response.data.data);
+      const response = await axios.get<NewChampsDetailListResponse>(url);
+      console.log("response.data", response.data);
       return response.data.data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  const getChampionData = async (name: string) => {
+    const url = `https://league-of-legends-champions.p.rapidapi.com/champions/en-us/${name}`;
+    const headers = {
+      "X-RapidAPI-Key": "36d0f53ee9msh3a618e1e5aecca5p1906b1jsn2172de59bbcd",
+      "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
+    };
+    try {
+      const response = await axios.get<ChampDetailResponse>(url, { headers });
+      console.log("response.data", response.data);
+      return response.data;
     } catch (error) {
       console.log(error);
       throw error;
@@ -174,33 +208,35 @@ const ChampDetailScreen = () => {
     return strCapitalized;
   };
   const champPassive = {
-    // name: `P - ${championDetail?.champion_passive.champion_passive_name}`,
-    // imageUrl: championDetail?.champion_passive.champion_passive_video_poster,
-    // videoUrl: championDetail?.champion_passive.champion_passive_video_mp4,
+    name: `Passive - ${championData?.champion[0].champion_passive.champion_passive_name}`,
+    imageUrl:
+      championData?.champion[0].champion_passive.champion_passive_video_poster,
+    videoUrl:
+      championData?.champion[0].champion_passive.champion_passive_video_mp4,
   };
   const champQ = {
-    // name: `Q - ${championDetail?.champion_q.champion_q_name}`,
-    // imageUrl: championDetail?.champion_q.champion_q_video_poster,
-    // videoUrl: championDetail?.champion_q.champion_q_video_mp4,
+    name: `Q - ${championData?.champion[0].champion_q.champion_q_name}`,
+    imageUrl: championData?.champion[0].champion_q.champion_q_video_poster,
+    videoUrl: championData?.champion[0].champion_q.champion_q_video_mp4,
   };
   const champW = {
-    // name: `W - ${championDetail?.champion_w.champion_w_name}`,
-    // imageUrl: championDetail?.champion_w.champion_w_video_poster,
-    // videoUrl: championDetail?.champion_w.champion_w_video_mp4,
+    name: `W - ${championData?.champion[0].champion_w.champion_w_name}`,
+    imageUrl: championData?.champion[0].champion_w.champion_w_video_poster,
+    videoUrl: championData?.champion[0].champion_w.champion_w_video_mp4,
   };
   const champE = {
-    // name: `E - ${championDetail?.champion_e.champion_e_name}`,
-    // imageUrl: championDetail?.champion_e.champion_e_video_poster,
-    // videoUrl: championDetail?.champion_e.champion_e_video_mp4,
+    name: `E - ${championData?.champion[0].champion_e.champion_e_name}`,
+    imageUrl: championData?.champion[0].champion_e.champion_e_video_poster,
+    videoUrl: championData?.champion[0].champion_e.champion_e_video_mp4,
   };
   const champR = {
-    // name: `R - ${championDetail?.champion_r.champion_r_name}`,
-    // imageUrl: championDetail?.champion_r.champion_r_video_poster,
-    // videoUrl: championDetail?.champion_r.champion_r_video_mp4,
+    name: `R - ${championData?.champion[0].champion_r.champion_r_name}`,
+    imageUrl: championData?.champion[0].champion_r.champion_r_video_poster,
+    videoUrl: championData?.champion[0].champion_r.champion_r_video_mp4,
   };
   const spells = [champPassive, champQ, champW, champE, champR];
 
-  const Spellstyles = {
+  const SpellStyles = {
     swiper: {
       width: "100%",
       height: "100%",
@@ -303,20 +339,20 @@ const ChampDetailScreen = () => {
               <ArrowIconResp>
                 <ArrowBackInfo />
               </ArrowIconResp>
-              <ChampNameResp>{championDetail?.champion.name}</ChampNameResp>
+              <ChampNameResp>{champDetailInfo?.name as any}</ChampNameResp>
             </ChampNameDiv>
             <ChampTitleResp>
-              {championDetail?.champion.key} -
-              {championDetail &&
-                capitalizeFirstLetter(championDetail?.champion.title)}
+              {champDetailInfo?.key} -
+              {champDetailInfo?.title &&
+                capitalizeFirstLetter(champDetailInfo?.title)}
             </ChampTitleResp>
             <ChampStatsDivResp>
               <ChampStatsInfoResp>
-                {championDetail?.champion.tags[0]}
+                {champDetailInfo?.tags[0]}
               </ChampStatsInfoResp>
-              {championDetail?.champion.tags[1] ? (
+              {champDetailInfo?.tags[1] ? (
                 <ChampStatsInfoResp>
-                  {championDetail?.champion.tags[1]}
+                  {champDetailInfo?.tags[1]}
                 </ChampStatsInfoResp>
               ) : null}
             </ChampStatsDivResp>
@@ -335,48 +371,43 @@ const ChampDetailScreen = () => {
               <ArrowIcon>
                 <ArrowBackInfo onClick={handleNavigate} />
               </ArrowIcon>
-              <ChampName> {championDetail?.champion.name} </ChampName>
+              <ChampName>{champDetailInfo?.name}</ChampName>
             </ChampNameDiv>
             <ChampTitle>
-              {championDetail &&
-                capitalizeFirstLetter(championDetail?.champion.title)}
+              {champDetailInfo?.title &&
+                capitalizeFirstLetter(champDetailInfo?.title)}
             </ChampTitle>
             <ChampSeparation>
               <SeparationLine1 />
               <SeparationCircle />
               <SeparationLine2 />
             </ChampSeparation>
-            {championDetail?.champion.lore ? (
-              <ChampTextInfo>{championDetail?.champion.lore}</ChampTextInfo>
-            ) : (
-              <ChampTextInfo>Loading...</ChampTextInfo>
-            )}
-            <ChampId>{championDetail?.champion.key}</ChampId>
+            <ChampTextInfo>{champDetailInfo?.lore}</ChampTextInfo>
+            <ChampId>#{champDetailInfo?.key}</ChampId>
           </ChampInfoDiv>
           <ChampStatsDiv>
-            <ChampStatsInfo>{championDetail?.champion.tags[0]}</ChampStatsInfo>
-            {championDetail?.champion.tags[1] ? (
-              <ChampStatsInfo>
-                {championDetail?.champion.tags[1]}
-              </ChampStatsInfo>
+            <ChampStatsInfo>{champDetailInfo?.tags[0]}</ChampStatsInfo>
+            {champDetailInfo?.tags[1] ? (
+              <ChampStatsInfo>{champDetailInfo?.tags[1]}</ChampStatsInfo>
             ) : null}
           </ChampStatsDiv>
         </ChampDetailDiv>
 
         <ChampInfoSkinsDiv>
           <ChampSkinDiv
-            style={{ backgroundImage: `url(${selectedImageSkin})` }}
+            style={{
+              backgroundImage: `url(${selectedImageSkin})`,
+            }}
           />
-          <Carousel
-            // items={championDetail?.champion.skins as ICarouselItem[]} //TODO:  Create a skinSplash constant and call here
+          <SkinsCarousel
             ChampStyles={{ ...SkinStyles }}
             breakpoints={skinBreakpoints}
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
             itemToShow={itemToShow}
             onClickImage={selectNewSkin}
-            closeVideo={handleCloseVideo}
-            // championSrc={championDetail as Champion} //TODO: Call championDetail as "Champion" instead "Data"
+            skins={champDetailInfo?.skins}
+            champion={champDetailInfo?.id}
           />
         </ChampInfoSkinsDiv>
       </UpperGeneralDiv>
@@ -389,16 +420,15 @@ const ChampDetailScreen = () => {
         </GeneralSpellsUpperDiv>
         <ChampCarrusellDiv>
           <ChampCarrusellInner>
-            <Carousel
-              // items={championDetail?.champion.spells as NewICarouselItem[]} //TODO:  Create a spellSplash constant and call here
-              ChampStyles={{ ...Spellstyles }}
+            <SpellsCarousel
+              ChampStyles={{ ...SpellStyles }}
               breakpoints={spellBreakpoints}
               onMouseOver={handleMouseOver}
               onMouseOut={handleMouseOut}
               itemToShow={itemToShow}
-              onClickImage={handleOpenVideo}
+              onClickImage={selectNewSkin}
               closeVideo={handleCloseVideo}
-              // championSrc={championDetail as Champion} //TODO: Call championDetail as "Champion" instead "Data"
+              spells={spells}
             />
 
             {selectedVideo && (
@@ -419,8 +449,7 @@ const ChampDetailScreen = () => {
       </GeneralSpellsDiv>
     </>
   );
-
-  if (isFetching)
+  if (isChampionFetching)
     return (
       <LoaderContainer>
         <Loader />

@@ -32,11 +32,6 @@ export const initialChampsToRender = 10;
 
 export interface ICarouselItem {
   name: string;
-  imageUrl: string;
-  videoUrl?: string;
-}
-
-export interface NewICarouselItem {
-  Skin: Skin[];
-  Spell: Spell[];
+  imageUrl: string | undefined;
+  videoUrl?: string | undefined;
 }

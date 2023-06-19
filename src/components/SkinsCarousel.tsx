@@ -55,7 +55,7 @@ const SkinsCarousel = ({
               onMouseOut={onMouseOut}
               onClick={() =>
                 onClickImage(
-                  `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion}_${skin.num}.jpg)`,
+                  `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion}_${skin.num}.jpg`,
                   ""
                 )
               }

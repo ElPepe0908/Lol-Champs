@@ -22,7 +22,7 @@ interface Props {
   onMouseOver: (itemToShow: string) => void;
   onMouseOut: () => void;
   itemToShow: string;
-  onClickImage: (selectedImageSkin: string, videoName: string) => void;
+  onClickImage: (selectedVideoName: string, videoName: string) => void;
   closeVideo: () => void;
   spells: ICarouselItem[];
 }
@@ -63,7 +63,10 @@ const SpellsCarousel = ({
               onMouseOver={() => onMouseOver(`${spells.name}`)}
               onMouseOut={onMouseOut}
               onClick={() =>
-                onClickImage(spells.videoUrl ? spells.videoUrl : "", "")
+                onClickImage(
+                  spells.videoUrl ? spells.videoUrl : "",
+                  spells.name
+                )
               }
             >
               {spells.imageUrl?.includes("champion-abilities") ? (

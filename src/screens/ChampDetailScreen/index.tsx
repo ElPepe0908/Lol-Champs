@@ -111,7 +111,6 @@ const ChampDetailScreen = () => {
 
   useEffect(() => {
     if (champDetailInfo) {
-      // setSelectedImageSkin(champDetailInfo?.name); // setSelectedImageSkin with the DEFAULT image skin of the champ
       setSelectedImageSkin(
         `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${state.championName}_0.jpg`
       );
@@ -426,7 +425,7 @@ const ChampDetailScreen = () => {
               onMouseOver={handleMouseOver}
               onMouseOut={handleMouseOut}
               itemToShow={itemToShow}
-              onClickImage={selectNewSkin}
+              onClickImage={handleOpenVideo}
               closeVideo={handleCloseVideo}
               spells={spells}
             />

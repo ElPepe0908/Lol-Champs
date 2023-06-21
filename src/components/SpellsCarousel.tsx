@@ -15,6 +15,7 @@ import {
   SkinNameHover,
 } from "../screens/ChampDetailScreen/styles";
 import { ICarouselItem } from "../constants";
+import { Loader } from "./Loader";
 
 interface Props {
   ChampStyles: any;
@@ -25,6 +26,7 @@ interface Props {
   onClickImage: (selectedVideoName: string, videoName: string) => void;
   closeVideo: () => void;
   spells: ICarouselItem[];
+  isFetching: boolean;
 }
 
 const SpellsCarousel = ({
@@ -36,6 +38,7 @@ const SpellsCarousel = ({
   onClickImage,
   closeVideo,
   spells,
+  isFetching,
 }: Props) => {
   return (
     <Swiper
@@ -54,12 +57,19 @@ const SpellsCarousel = ({
           <div>
             <SwiperSlide
               key={spells.name}
-              style={{
-                ...ChampStyles.slide,
-                backgroundImage: `url(${spells.imageUrl})`,
-                display: "flex",
-                alignItems: "flex-end",
-              }}
+              style={
+                isFetching
+                  ? {
+                      ...ChampStyles.slide,
+                      backgroundColor: "#000",
+                    }
+                  : {
+                      ...ChampStyles.slide,
+                      backgroundImage: `url(${spells.imageUrl})`,
+                      display: "flex",
+                      alignItems: "flex-end",
+                    }
+              }
               onMouseOver={() => onMouseOver(`${spells.name}`)}
               onMouseOut={onMouseOut}
               onClick={() =>
@@ -69,7 +79,9 @@ const SpellsCarousel = ({
                 )
               }
             >
-              {spells.imageUrl?.includes("champion-abilities") ? (
+              {isFetching ? (
+                <Loader />
+              ) : spells.imageUrl?.includes("champion-abilities") ? (
                 <LogoSpellCircle>
                   <LogoSpellIcon />
                 </LogoSpellCircle>

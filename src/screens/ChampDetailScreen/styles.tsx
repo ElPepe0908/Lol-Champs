@@ -49,10 +49,10 @@ export const ChampDetailDiv = styled("div")({
   borderRadius: 10,
   display: "flex",
   flexDirection: "column",
-  width: "20%",
+  width: "22%",
 
   [`@media ${device.desktops_large}`]: {
-    width: "24%",
+    width: "27%",
   },
   [`@media ${device.desktops}`]: {
     width: "28%",
@@ -139,7 +139,7 @@ export const ChampInfoDiv = styled("div")({
   },
 });
 
-export const ChampNameDiv = styled("div")({
+export const ChampNameContainer = styled("div")({
   display: "flex",
   width: "100%",
   fontSize: 25,
@@ -149,8 +149,13 @@ export const ChampNameDiv = styled("div")({
   justifyContent: "center",
 });
 
+export const ChampNameDiv = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+});
 export const ChampName = styled("h1")({
-  fontSize: 40,
+  fontSize: 32,
   fontWeight: "600",
   alignSelf: "center",
   marginBottom: 0,
@@ -181,24 +186,29 @@ export const ArrowIconResp = styled("div")({
   },
 });
 
-export const ArrowIcon = styled("div")({
+export const BackContainer = styled("div")({
   display: "flex",
-  alignSelf: "center",
-  position: "absolute",
-  left: "70px",
-
-  [`@media ${device.desktops_large}`]: {
-    left: "60px",
-  },
-  [`@media ${device.desktops}`]: {
-    left: "45px",
-  },
+  width: "100%",
+  padding: "10px 0",
+  backgroundColor: "#27272D",
+  borderRadius: 10,
+  justifyContent: "center",
+  alignItems: "center",
+  marginBottom: 10,
 
   [`@media ${device.tablets}`]: {
     display: "none",
   },
 });
 
+export const GoBackText = styled("div")({
+  fontSize: 14,
+});
+
+export const NavigateBackDiv = styled("div")({
+  display: "flex",
+  cursor: "pointer",
+});
 export const ChampTitle = styled("p")({
   color: "#A8A8B3",
   marginBottom: 0,
@@ -369,11 +379,11 @@ export const ChampInfoSkinsDiv = styled("div")({
   marginLeft: 10,
   borderRadius: 10,
   display: "flex",
-  width: "80%",
+  width: "78%",
 
   [`@media ${device.desktops_large}`]: {
     flexDirection: "column",
-    width: "76%",
+    width: "73%",
   },
   [`@media ${device.desktops}`]: {
     width: "72%",
@@ -382,9 +392,6 @@ export const ChampInfoSkinsDiv = styled("div")({
     marginTop: 10,
     width: "100%",
     marginLeft: 0,
-  },
-  [`@media ${device.old_phones}`]: {
-    padding: "10px 0",
   },
 });
 
@@ -404,13 +411,11 @@ export const ChampSkinDiv = styled("div")({
 
   [`@media ${device.tablets}`]: {
     margin: 0,
-    height: "350px",
+    height: "400px",
   },
 
   [`@media ${device.old_phones}`]: {
     height: "300px",
-    width: "96%",
-    margin: "0 2%",
   },
 
   "&:not(:first-child).hidden": {
@@ -750,7 +755,7 @@ export const Container = styled("div")({
 });
 
 export const ArrowBackInfo = styled(MdKeyboardArrowLeft)`
-  font-size: 30px;
+  font-size: 20px;
   cursor: pointer;
 `;
 

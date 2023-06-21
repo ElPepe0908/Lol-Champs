@@ -15,8 +15,7 @@ import {
   GoBackDiv,
   ChampInfoResp,
   ChampInfoDiv,
-  ChampNameDiv,
-  ArrowIcon,
+  ChampNameDiv as ChampNameContainer,
   ArrowIconResp,
   ChampName,
   ChampNameResp,
@@ -60,6 +59,10 @@ import {
   SkinName,
   SkinNameHover,
   CustomSwiperButton,
+  ChampNameDiv,
+  BackContainer,
+  GoBackText,
+  NavigateBackDiv,
 } from "./styles";
 
 import axios from "axios";
@@ -77,12 +80,13 @@ import SpellsCarousel from "../../components/SpellsCarousel";
 
 const ChampDetailScreen = () => {
   const { state, pathname } = useLocation();
-
-  console.log("championName", { state: state?.championName });
+  const championName = state?.championName;
+  console.log("championName", championName);
+  console.log("pathName", pathname);
 
   const { data: championDetail, isFetching: isChampionFetching } = useQuery(
     ["championDetail", state?.championName],
-    () => getDetail(pathNameChamp),
+    () => getDetail(championName),
     {
       refetchOnWindowFocus: false,
     }
@@ -94,12 +98,6 @@ const ChampDetailScreen = () => {
       refetchOnWindowFocus: false,
     }
   );
-
-  console.log("championDetail", championDetail);
-  console.log(
-    "championData",
-    championData?.champion[0].champion_r.champion_r_video_mp4
-  );
   const [champDetailInfo, setChampDetailInfo] = useState<Champion>();
   const [itemToShow, setItemToShow] = useState<string>("none");
   const [spellToShow, setSpellToShow] = useState<string>("none");
@@ -108,6 +106,9 @@ const ChampDetailScreen = () => {
   const [selectedImageSkin, setSelectedImageSkin] = useState("");
   // const [imageSkinNumber, setImageSkinNumber] = useState<Number>(0);
   const videoRef = useRef<HTMLVideoElement>(null);
+  console.log("championData", championData);
+  console.log("championDetail", championDetail);
+  console.log("champDetailInfo", champDetailInfo);
 
   useEffect(() => {
     if (champDetailInfo) {
@@ -125,10 +126,6 @@ const ChampDetailScreen = () => {
   const selectNewSkin = (selectedImage: string) => {
     setSelectedImageSkin(selectedImage);
     console.log("selectedImageSkin", selectedImageSkin);
-  };
-
-  const handleSelectedSpell = (spellToShow: string) => {
-    setSpellToShow(spellToShow);
   };
 
   const handleMouseOver = (itemToShow: string) => {
@@ -158,6 +155,7 @@ const ChampDetailScreen = () => {
   let champId = "";
   const navigate = useNavigate();
   const pathNameChamp = pathname.split("/")[2];
+  console.log("pathNameChamp", pathNameChamp);
 
   const handleNavigate = () => {
     navigate("/home", {
@@ -168,14 +166,6 @@ const ChampDetailScreen = () => {
   };
 
   const getDetail = async (name: string) => {
-    // const options = {
-    //   method: "GET",
-    //   url: `https://league-of-legends-champions.p.rapidapi.com/champions/en-us/${name}`,
-    //   headers: {
-    //     "X-RapidAPI-Key": "36d0f53ee9msh3a618e1e5aecca5p1906b1jsn2172de59bbcd",
-    //     "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
-    //   },
-    // };
     const url = `http://ddragon.leagueoflegends.com/cdn/13.11.1/data/en_US/champion/${name}.json`;
     try {
       const response = await axios.get<NewChampsDetailListResponse>(url);
@@ -271,16 +261,14 @@ const ChampDetailScreen = () => {
       swiper: {
         width: "100%",
         height: "25%",
-        paddingTop: "15px",
+        marginTop: "15px",
       },
-      slide: {
-        height: "50%",
-      },
+      slide: {},
     },
   };
 
   const spellBreakpoints = {
-    250: {
+    200: {
       slidesPerView: 1,
     },
     415: {
@@ -300,7 +288,7 @@ const ChampDetailScreen = () => {
     },
   };
   const skinBreakpoints = {
-    320: {
+    200: {
       slidesPerView: 1,
       direction: "horizontal",
     },
@@ -317,12 +305,17 @@ const ChampDetailScreen = () => {
       direction: "horizontal",
     },
     992: {
+      slidesPerView: 2,
+      direction: "horizontal",
+    },
+    1200: {
       slidesPerView: 3,
       direction: "horizontal",
     },
     1450: {
       slidesPerView: 3,
       direction: "vertical",
+      autoHeight: true,
     },
   };
 
@@ -334,12 +327,12 @@ const ChampDetailScreen = () => {
             <ArrowBackInfo onClick={handleNavigate} />
           </GoBackDiv>
           <ChampInfoResp>
-            <ChampNameDiv>
+            <ChampNameContainer>
               <ArrowIconResp>
                 <ArrowBackInfo />
               </ArrowIconResp>
               <ChampNameResp>{champDetailInfo?.name as any}</ChampNameResp>
-            </ChampNameDiv>
+            </ChampNameContainer>
             <ChampTitleResp>
               {champDetailInfo?.key} -
               {champDetailInfo?.title &&
@@ -365,13 +358,25 @@ const ChampDetailScreen = () => {
     <>
       <UpperGeneralDiv>
         <ChampDetailDiv>
+          <BackContainer>
+            <NavigateBackDiv
+              style={{ display: "flex", cursor: "pointer" }}
+              onClick={handleNavigate}
+            >
+              <ArrowBackInfo />
+              <GoBackText>GO BACK</GoBackText>
+            </NavigateBackDiv>
+          </BackContainer>
           <ChampInfoDiv>
-            <ChampNameDiv>
-              <ArrowIcon>
-                <ArrowBackInfo onClick={handleNavigate} />
-              </ArrowIcon>
-              <ChampName>{champDetailInfo?.name}</ChampName>
-            </ChampNameDiv>
+            <ChampNameContainer>
+              <ChampNameDiv>
+                <ChampName>{champDetailInfo?.name}</ChampName>
+                {/* <ChampName>{champDetailInfo?.name?.split(" ")[0]}</ChampName>
+                {champDetailInfo?.name?.split(" ")[1] && (
+                  <ChampName>{champDetailInfo?.name?.split(" ")[1]}</ChampName>
+                )} */}
+              </ChampNameDiv>
+            </ChampNameContainer>
             <ChampTitle>
               {champDetailInfo?.title &&
                 capitalizeFirstLetter(champDetailInfo?.title)}
@@ -399,7 +404,6 @@ const ChampDetailScreen = () => {
             }}
           />
           <SkinsCarousel
-            ChampStyles={{ ...SkinStyles }}
             breakpoints={skinBreakpoints}
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
@@ -428,6 +432,7 @@ const ChampDetailScreen = () => {
               onClickImage={handleOpenVideo}
               closeVideo={handleCloseVideo}
               spells={spells}
+              isFetching={isDataFetching}
             />
 
             {selectedVideo && (

@@ -115,18 +115,16 @@ const HomeScreen = () => {
     setChampsFiltered(originalChampsData);
   };
 
+  const searchChamp = searchValue.toLocaleLowerCase();
   useEffect(() => {
     if (searchChamp === "" && champs) {
       setChampsFiltered(Object.values(champs));
     }
     refetchChamps();
     getChampsByName(searchChamp);
-  }, [searchValue]);
-
-  const searchChamp = searchValue.toLocaleLowerCase();
+  }, [searchChamp]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
     setSearchValue(e.target.value);
   };
 
@@ -183,9 +181,10 @@ const HomeScreen = () => {
 
   const getChampsByName = async (name: string) => {
     const filterNewChamp = originalChampsData.filter((champ: Datum) =>
-      champ.name.toLocaleLowerCase().includes(name)
+      champ?.name?.toLocaleLowerCase().includes(name)
     );
     setChampsFiltered(filterNewChamp);
+    console.log("filterNewChamp", filterNewChamp);
   };
 
   return (
@@ -462,7 +461,7 @@ const HomeScreen = () => {
         </SideBar>
         <SideBarDivider />
         <CardsContainer>
-          {champsFiltered.map((champ) => {
+          {champsFiltered.map((champ: Datum) => {
             const champSplash = getChampsSplash(champ.id);
             return (
               <LazyChamps
@@ -511,8 +510,9 @@ export const LazyChamps = ({
   const navigate = useNavigate();
 
   const navigateToChampionDetail = () => {
-    navigate(`/champ-detail/${champs.name}`, {
-      state: { championName: champs.name },
+    const championPath = champs.name.replace(/\s/g, "-");
+    navigate(`/champ-detail/${championPath}`, {
+      state: { championName: champs.id },
     });
   };
 

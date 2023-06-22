@@ -31,7 +31,6 @@ export const Dot = styled.div<DotAnimationProps>`
   height: 10px;
   border-radius: 50%;
   margin: 0 5px;
-  // background-color: #5e5e77;
   background-color: #27272d;
   animation: ${dotPulse} 1s ease-in-out infinite;
   animation-delay: ${(props) => props.delay}s;

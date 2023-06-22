@@ -1,13 +1,12 @@
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
-import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { SkinName, SkinNameHover } from "../screens/ChampDetailScreen/styles";
-import { Champion, Skin } from "../interfaces/NewChampsDetailListResponse";
-import { StyledSwiper, StyledSwiperSlide } from "./styles";
-import styled from "styled-components";
+import { Skin } from "../interfaces/NewChampsDetailListResponse";
+import { LoaderContainer, StyledSwiper, StyledSwiperSlide } from "./styles";
+import { Loader } from "./Loader";
 
 interface Props {
   breakpoints?: any;
@@ -39,6 +38,13 @@ const SkinsCarousel = ({
       }}
     >
       {skins?.map((skin: Skin) => {
+        {
+          !skins && (
+            <LoaderContainer>
+              <Loader />
+            </LoaderContainer>
+          );
+        }
         return (
           <StyledSwiperSlide
             key={skin.num}
@@ -46,6 +52,7 @@ const SkinsCarousel = ({
               backgroundImage: `url(http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion}_${skin.num}.jpg)`,
               display: "flex",
               alignItems: "flex-end",
+              backgroundColor: "#27272D",
             }}
             onMouseOver={() => onMouseOver(`${skin.name}`)}
             onMouseOut={onMouseOut}
@@ -59,7 +66,7 @@ const SkinsCarousel = ({
             <SkinNameHover
               key={skin.num}
               style={{
-                opacity: itemToShow === `${skin.name}` ? "0.8" : "0",
+                opacity: itemToShow === `${skin.name}` ? "0.7" : "0",
               }}
             >
               <SkinName>{skin.name}</SkinName>
@@ -67,7 +74,7 @@ const SkinsCarousel = ({
           </StyledSwiperSlide>
         );
       })}
-      <div className="swiper-button-prev " style={{ color: "black" }} />
+      <div className="swiper-button-prev " style={{ color: "#27272d" }} />
       <div className="swiper-button-next" style={{ color: "black" }} />
     </StyledSwiper>
   );

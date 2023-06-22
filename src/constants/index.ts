@@ -1,5 +1,3 @@
-import { Skin, Spell } from "../interfaces/NewChampsDetailListResponse";
-
 export type RolesType =
   | "ASSASIN"
   | "MAGE"

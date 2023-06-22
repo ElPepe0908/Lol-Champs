@@ -1,15 +1,10 @@
 import styled from "styled-components";
 import { device } from "../../constants";
-import { Navigation } from "swiper";
 import { MdClear, MdKeyboardArrowLeft } from "react-icons/md";
 import { MdPlayArrow } from "react-icons/md";
 
 type BackgroundImageProps = {
   backgroundImage: string;
-};
-
-type BackgroundVideoProps = {
-  backgroundVideo: string;
 };
 
 export const LoaderContainer = styled.div`
@@ -431,7 +426,7 @@ export const SkinNameHover = styled.div`
   height: 40px;
   background-color: #070707;
   border-radius: 0px 0px 10px 10px;
-  transition: opacity 0.2s ease-in-out;
+  transition: opacity 0.4s ease-in-out;
 `;
 export const SkinName = styled.p`
   font-size: 17px;

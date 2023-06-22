@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { device } from "../../constants";
 import { AiOutlineSearch } from "react-icons/ai";
 import {
@@ -9,7 +9,7 @@ import {
   GiSmallFire,
 } from "react-icons/gi";
 import { FaShieldAlt } from "react-icons/fa";
-import { MdClear, MdDevicesFold } from "react-icons/md";
+import { MdClear } from "react-icons/md";
 type DeleteButtonProps = {
   show: boolean;
 };
@@ -160,14 +160,6 @@ export const SearchBarContainer = styled.form`
 
 export const SearchIconResponsive = styled.div`
   display: none;
-
-  // @media ${device.old_phones} {
-  //   display: flex;
-  //   width: 50px;
-  //   height: 50px;
-  //   justify-content: center;
-  //   align-items: center;
-  // }
 `;
 
 export const SearchIcon = styled(AiOutlineSearch)`
@@ -541,7 +533,7 @@ export const ChampNameDiv = styled.div<ChampNameProps>`
   height: 40px;
   background-color: #070707;
   border-radius: 0px 0px 10px 10px;
-  opacity: ${(props) => (props.show ? "0.8" : "0")};
+  opacity: ${(props) => (props.show ? "0.7" : "0")};
   transition: opacity 0.2s ease-in-out;
 `;
 
@@ -606,18 +598,3 @@ export const DeleteButton = styled.div<DeleteButtonProps>`
     height: 28px;
   }
 `;
-
-// export const FloatingText = styled.div`
-//   position: absolute;
-//   // top: 60px;
-//   // left: 500px;
-//   top: 115px;
-//   left: 34%;
-//   background-color: #27272d;
-//   opacity: 0.8;
-//   font-size: 13px;
-//   color: #fff;
-//   padding: 7px;
-//   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-//   border-radius: 5px;
-// `;

@@ -1,4 +1,4 @@
-import React, { useState, useRef, LegacyRef } from "react";
+import React, { useState, useRef } from "react";
 
 import {
   ChampCard,
@@ -20,10 +20,7 @@ import {
   LogoContainerResponsive,
   ArrowIconContainer,
   SeachArrowContainer,
-  SearchIconResponsive,
-  SideBarResponsive,
   RolesFilter,
-  FiltersContainer,
   RolesFilterContainer,
   DifficultyFilter,
   DeleteButton,
@@ -31,9 +28,6 @@ import {
   DeleteTextButton,
   ChampName,
   ChampNameDiv,
-  LoaderContainer,
-  ChampRequestContainer,
-  ChampCardRequest,
   SelectFilterButton,
   FilterContentDiv,
   FilterTankIcon,
@@ -79,9 +73,6 @@ const HomeScreen = () => {
   const [selectedRole, setselectedRole] = useState(null);
   const [showSelectedRole, setShowSelectedRole] = useState(false);
   const [originalChampsData, setOriginalChampsData] = useState<Datum[]>([]);
-  console.log("champs", champs);
-  console.log("champsFiltered", champsFiltered);
-  console.log("originalChampsData", originalChampsData);
 
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -106,16 +97,20 @@ const HomeScreen = () => {
     }
   };
 
-  useEffect(() => {
-    if (champs) return setChampsFiltered(Object.values(champs));
-  }, [champs, originalChampsData]);
-
   const handleDeleteButtonClick = () => {
     setSearchValue("");
     setChampsFiltered(originalChampsData);
   };
 
-  const searchChamp = searchValue.toLocaleLowerCase();
+  const searchChamp = searchValue.toLocaleLowerCase().trim();
+  useEffect(() => {
+    if (champs) {
+      if (searchChamp.trim() === "") {
+        setChampsFiltered(Object.values(champs));
+      }
+    }
+  }, [champs, searchChamp]);
+
   useEffect(() => {
     if (searchChamp === "" && champs) {
       setChampsFiltered(Object.values(champs));
@@ -133,7 +128,6 @@ const HomeScreen = () => {
     try {
       const response = await axios.get<NewChampsListResponse>(url);
       const champsData = response.data.data;
-      console.log("champsData de matu", champsData);
       setOriginalChampsData(Object.values(champsData));
       return champsData;
     } catch (error) {}
@@ -184,7 +178,6 @@ const HomeScreen = () => {
       champ?.name?.toLocaleLowerCase().includes(name)
     );
     setChampsFiltered(filterNewChamp);
-    console.log("filterNewChamp", filterNewChamp);
   };
 
   return (
@@ -196,7 +189,6 @@ const HomeScreen = () => {
             alt="league-of-legends-logo"
             onClick={() => {
               setSearchValue("");
-              // setChampsFiltered(Object.values(champs as any));
               setChampsFiltered(originalChampsData);
               refetchChamps();
             }}
@@ -209,7 +201,6 @@ const HomeScreen = () => {
             alt="league-of-legends-logo"
             onClick={() => {
               setSearchValue("");
-              // setChampsFiltered(Object.values(champs as any));
               setChampsFiltered(originalChampsData);
               refetchChamps();
             }}
@@ -256,7 +247,6 @@ const HomeScreen = () => {
               onClick={
                 state?.championName ? navigateToLastChampDetail : undefined
               }
-              // onClick={navigateToLastChampDetail}
               style={
                 state?.championName
                   ? { cursor: "pointer" }
@@ -266,7 +256,6 @@ const HomeScreen = () => {
                       userSelect: "none",
                     }
               }
-              // style={{ cursor: "pointer" }}
               size={25}
               fill="#3A3A40"
             />
@@ -541,7 +530,7 @@ export const LazyChamps = ({
         onMouseOut={handleMouseOut}
         onClick={navigateToChampionDetail}
       >
-        {isFetching ? (
+        {!champs ? (
           <Loader />
         ) : (
           <ChampNameDiv show={show}>

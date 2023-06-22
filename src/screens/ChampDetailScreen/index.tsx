@@ -1,11 +1,8 @@
-import React, { useState, useRef, useCallback } from "react";
+import { useState, useRef } from "react";
 
-import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Pagination, Navigation } from "swiper";
-import { NavigationOptions } from "swiper/types";
 
 import {
   GeneralDiv,
@@ -15,7 +12,7 @@ import {
   GoBackDiv,
   ChampInfoResp,
   ChampInfoDiv,
-  ChampNameDiv as ChampNameContainer,
+  ChampNameContainer,
   ArrowIconResp,
   ChampName,
   ChampNameResp,
@@ -33,32 +30,18 @@ import {
   ChampStatsInfoResp,
   ChampInfoSkinsDiv,
   ChampSkinDiv,
-  CarouselInner,
-  CarouselFlex,
-  CarouselFlexResp,
-  CarouselFlexSpells,
-  CarouselDiv,
-  CarouselItem,
   GeneralSpellsDiv,
   GeneralSpellsUpperDiv,
   SpellSeparationLine,
   SpellSeparationText,
   ChampCarrusellDiv,
   ChampCarrusellInner,
-  ChampCarrusellSpellDiv,
-  SwiperContainer,
-  Container,
   LoaderContainer,
   ArrowBackInfo,
-  LogoSpellCircle,
-  LogoSpellIcon,
   ChampSpellsVideo,
   LogoSpellVideo,
   ChampSpellsVideoPlayer,
   RemoveIcon,
-  SkinName,
-  SkinNameHover,
-  CustomSwiperButton,
   ChampNameDiv,
   BackContainer,
   GoBackText,
@@ -81,8 +64,6 @@ import SpellsCarousel from "../../components/SpellsCarousel";
 const ChampDetailScreen = () => {
   const { state, pathname } = useLocation();
   const championName = state?.championName;
-  console.log("championName", championName);
-  console.log("pathName", pathname);
 
   const { data: championDetail, isFetching: isChampionFetching } = useQuery(
     ["championDetail", state?.championName],
@@ -93,7 +74,7 @@ const ChampDetailScreen = () => {
   );
   const { data: championData, isFetching: isDataFetching } = useQuery(
     ["championData", state?.championName],
-    () => getChampionData(pathNameChamp),
+    () => getChampionData(championPathName),
     {
       refetchOnWindowFocus: false,
     }
@@ -104,11 +85,7 @@ const ChampDetailScreen = () => {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [videoToShow, setVideoToShow] = useState(null);
   const [selectedImageSkin, setSelectedImageSkin] = useState("");
-  // const [imageSkinNumber, setImageSkinNumber] = useState<Number>(0);
   const videoRef = useRef<HTMLVideoElement>(null);
-  console.log("championData", championData);
-  console.log("championDetail", championDetail);
-  console.log("champDetailInfo", champDetailInfo);
 
   useEffect(() => {
     if (champDetailInfo) {
@@ -125,7 +102,6 @@ const ChampDetailScreen = () => {
 
   const selectNewSkin = (selectedImage: string) => {
     setSelectedImageSkin(selectedImage);
-    console.log("selectedImageSkin", selectedImageSkin);
   };
 
   const handleMouseOver = (itemToShow: string) => {
@@ -155,7 +131,14 @@ const ChampDetailScreen = () => {
   let champId = "";
   const navigate = useNavigate();
   const pathNameChamp = pathname.split("/")[2];
-  console.log("pathNameChamp", pathNameChamp);
+
+  const championPathName: string = (() => {
+    if (pathNameChamp.includes("'")) {
+      const modifiedPathName = pathNameChamp.replace(/'/g, "-");
+      return modifiedPathName;
+    }
+    return pathNameChamp;
+  })();
 
   const handleNavigate = () => {
     navigate("/home", {
@@ -169,7 +152,6 @@ const ChampDetailScreen = () => {
     const url = `http://ddragon.leagueoflegends.com/cdn/13.11.1/data/en_US/champion/${name}.json`;
     try {
       const response = await axios.get<NewChampsDetailListResponse>(url);
-      console.log("response.data", response.data);
       return response.data.data;
     } catch (error) {
       console.log(error);
@@ -185,7 +167,6 @@ const ChampDetailScreen = () => {
     };
     try {
       const response = await axios.get<ChampDetailResponse>(url, { headers });
-      console.log("response.data", response.data);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -371,10 +352,6 @@ const ChampDetailScreen = () => {
             <ChampNameContainer>
               <ChampNameDiv>
                 <ChampName>{champDetailInfo?.name}</ChampName>
-                {/* <ChampName>{champDetailInfo?.name?.split(" ")[0]}</ChampName>
-                {champDetailInfo?.name?.split(" ")[1] && (
-                  <ChampName>{champDetailInfo?.name?.split(" ")[1]}</ChampName>
-                )} */}
               </ChampNameDiv>
             </ChampNameContainer>
             <ChampTitle>

@@ -4,11 +4,20 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { SkinName, SkinNameHover } from "../screens/ChampDetailScreen/styles";
-import { Skin } from "../interfaces/NewChampsDetailListResponse";
-import { LoaderContainer, StyledSwiper, StyledSwiperSlide } from "./styles";
+import { Champion, Skin } from "../interfaces/NewChampsDetailListResponse";
+import {
+  LoaderContainer,
+  SkinsNextArrow,
+  SkinsPrevArrow,
+  StyledSwiper,
+  StyledSwiperSlide,
+} from "./styles";
 import { Loader } from "./Loader";
+import { baseUrl } from "../constants";
+import { useState } from "react";
 
 interface Props {
+  champDetailInfo: Champion | undefined;
   breakpoints?: any;
   onMouseOver: (itemToShow: string) => void;
   onMouseOut: () => void;
@@ -16,9 +25,11 @@ interface Props {
   onClickImage: (selectedImageSkin: string, videoName: string) => void;
   skins: Skin[] | undefined;
   champion: string | undefined;
+  skinSelected: string;
 }
 
 const SkinsCarousel = ({
+  champDetailInfo,
   breakpoints,
   onMouseOver,
   onMouseOut,
@@ -26,7 +37,26 @@ const SkinsCarousel = ({
   onClickImage,
   champion,
   skins,
+  skinSelected,
 }: Props) => {
+  const [isSlideClicked, setIsSlideClicked] = useState(false);
+
+  const handleSlideClick = (skin: Skin) => {
+    setIsSlideClicked(true);
+    onClickImage(`${baseUrl}${champion}_${skin.num}.jpg`, "");
+    onMouseOver(skin.name);
+  };
+
+  const handleMouseOut = (skin: Skin) => {
+    if (
+      !isSlideClicked &&
+      skinSelected !== `${baseUrl}${champion}_${skin.num}.jpg`
+    ) {
+      onMouseOut();
+    }
+    setIsSlideClicked(false);
+  };
+
   return (
     <StyledSwiper
       modules={[Navigation, Pagination, Scrollbar, A11y]}
@@ -48,34 +78,35 @@ const SkinsCarousel = ({
         return (
           <StyledSwiperSlide
             key={skin.num}
-            style={{
-              backgroundImage: `url(http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion}_${skin.num}.jpg)`,
-              display: "flex",
-              alignItems: "flex-end",
-              backgroundColor: "#27272D",
-            }}
-            onMouseOver={() => onMouseOver(`${skin.name}`)}
-            onMouseOut={onMouseOut}
-            onClick={() =>
-              onClickImage(
-                `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion}_${skin.num}.jpg`,
-                ""
-              )
+            isSelected={
+              skinSelected === `${baseUrl}${champion}_${skin.num}.jpg`
             }
+            style={{
+              backgroundImage: `url(${baseUrl}${champion}_${skin.num}.jpg)`,
+            }}
+            onMouseOver={() => onMouseOver(skin.name)}
+            onMouseOut={() => handleMouseOut(skin)}
+            onClick={() => handleSlideClick(skin)}
           >
             <SkinNameHover
               key={skin.num}
               style={{
-                opacity: itemToShow === `${skin.name}` ? "0.7" : "0",
+                opacity:
+                  itemToShow === `${skin.name}` ||
+                  skinSelected === `${baseUrl}${champion}_${skin.num}.jpg`
+                    ? "0.7"
+                    : "0",
               }}
             >
-              <SkinName>{skin.name}</SkinName>
+              <SkinName>
+                {skin.name === "default" ? champDetailInfo?.name : skin.name}
+              </SkinName>
             </SkinNameHover>
           </StyledSwiperSlide>
         );
       })}
-      <div className="swiper-button-prev " style={{ color: "#27272d" }} />
-      <div className="swiper-button-next" style={{ color: "black" }} />
+      <SkinsPrevArrow className="swiper-button-prev" />
+      <SkinsNextArrow className="swiper-button-next" />
     </StyledSwiper>
   );
 };

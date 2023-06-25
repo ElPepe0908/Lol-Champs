@@ -45,7 +45,7 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { initialChampsToRender } from "../../constants/index";
+import { baseUrl, initialChampsToRender } from "../../constants/index";
 import { Loader } from "../../components/Loader";
 import {
   NewChampsListResponse,
@@ -70,16 +70,22 @@ const HomeScreen = () => {
   const [champsFiltered, setChampsFiltered] = useState<Datum[]>(
     new Array(initialChampsToRender).fill("")
   );
-  const [selectedRole, setselectedRole] = useState(null);
+  const [selectedRole, setselectedRole] = useState(null); //
   const [showSelectedRole, setShowSelectedRole] = useState(false);
   const [originalChampsData, setOriginalChampsData] = useState<Datum[]>([]);
+  const [selectFilter, setSelectFilter] = useState(false);
 
   const navigate = useNavigate();
   const { state } = useLocation();
 
+  const handleClickFilter = () => {
+    //
+    setSelectFilter(true);
+  };
   const handleRoleOver = (role: any) => {
     setselectedRole(role);
-    setShowSelectedRole(true);
+    setShowSelectedRole(true); //
+    setSelectFilter(true);
   };
   const handleRoleOut = () => {
     setselectedRole(null);
@@ -118,6 +124,14 @@ const HomeScreen = () => {
     refetchChamps();
     getChampsByName(searchChamp);
   }, [searchChamp]);
+
+  useEffect(() => {
+    if (champs) {
+      const champsData = Object.values(champs);
+      setOriginalChampsData(champsData);
+      setChampsFiltered(champsData);
+    }
+  }, [champs]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
@@ -163,8 +177,6 @@ const HomeScreen = () => {
 
   const getChampsSplash = (id: string) => {
     try {
-      const baseUrl =
-        "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/";
       const imageUrl = `${baseUrl}${id}_0.jpg`;
       return imageUrl;
     } catch (error) {
@@ -270,13 +282,14 @@ const HomeScreen = () => {
 
             <FilterButton
               onClick={() => {
+                handleClickFilter();
                 getChampsByTag("Assassin" as Tag);
                 refetchChamps();
               }}
               onMouseOver={() => handleRoleOver("Assassin")}
               onMouseOut={handleRoleOut}
             >
-              {selectedRole === "Assassin" ? (
+              {selectFilter && selectedRole === "Assassin" ? (
                 <>
                   <SelectFilterButton show={showSelectedRole} />
                   <FilterContentDiv>

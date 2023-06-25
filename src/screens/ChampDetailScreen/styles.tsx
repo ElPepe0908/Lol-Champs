@@ -753,7 +753,3 @@ export const ArrowBackInfo = styled(MdKeyboardArrowLeft)`
   font-size: 20px;
   cursor: pointer;
 `;
-
-export const CustomSwiperButton = styled.div`
-  color: #bfbfbf;
-`;

@@ -2,8 +2,6 @@ import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
 import {
   ChampSpellsVideo,
   ChampSpellsVideoPlayer,
@@ -16,6 +14,8 @@ import {
 } from "../screens/ChampDetailScreen/styles";
 import { ICarouselItem } from "../constants";
 import { Loader } from "./Loader";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import { SpellsNextArrow, SpellsPrevArrow } from "./styles";
 
 interface Props {
   ChampStyles: any;
@@ -43,13 +43,13 @@ const SpellsCarousel = ({
   return (
     <Swiper
       style={{ ...ChampStyles.swiper }}
-      modules={[Navigation, Pagination, Scrollbar, A11y]}
+      modules={[Navigation]}
       spaceBetween={20}
       slidesPerView={4}
       breakpoints={breakpoints}
       navigation={{
-        prevEl: ".swiper-button-prev",
         nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
       }}
     >
       {spells?.map((spells: ICarouselItem) => {
@@ -105,8 +105,9 @@ const SpellsCarousel = ({
           </div>
         );
       })}
-      <div className="swiper-button-prev " style={{ color: "black" }} />
-      <div className="swiper-button-next" style={{ color: "black" }} />
+
+      <SpellsPrevArrow className="swiper-button-prev" />
+      <SpellsNextArrow className="swiper-button-next" />
     </Swiper>
   );
 };

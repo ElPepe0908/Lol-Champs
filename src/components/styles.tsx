@@ -1,6 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { device } from "../constants";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
 type DotAnimationProps = {
   delay: number;
@@ -47,40 +48,75 @@ export const CarouselImage2 = styled.div`
   background: red;
 `;
 
-export const StyledSwiper = styled(Swiper)({
-  width: "25%",
-  height: "100%",
-  [`@media ${device.desktops_large}`]: {
-    width: "100%",
-    height: "27%",
-    marginTop: "15px",
-  },
-  [`@media ${device.desktops}`]: {
-    width: "100%",
-    height: "36%",
-  },
-  [`@media ${device.tablets}`]: {
-    width: "100%",
-    height: "190px",
-  },
-  [`@media ${device.old_phones}`]: {
-    width: "100%",
-    height: "140px",
-  },
-});
+export const StyledSwiper = styled(Swiper)`
+  width: 25%;
+  height: 100%;
 
-export const StyledSwiperSlide = styled(SwiperSlide)({
-  width: "100%",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  borderRadius: 10,
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  cursor: "pointer",
+  @media ${device.desktops_large} {
+    width: 100%;
+    height: 27%;
+    margin-top: 15px;
+  }
 
-  [`@media ${device.desktops_large}`]: {
-    width: "32%",
-    height: "100%",
-  },
-});
+  @media ${device.desktops} {
+    width: 100%;
+    height: 36%;
+  }
+
+  @media ${device.tablets} {
+    width: 100%;
+    height: 190px;
+  }
+
+  @media ${device.old_phones} {
+    width: 100%;
+    height: 140px;
+  }
+`;
+
+export const StyledSwiperSlide = styled(SwiperSlide)<{ isSelected: boolean }>`
+  width: 100%;
+  display: flex;
+  alignItems: "flex-end",
+  backgroundColor: "#000",
+  justify-content: center;
+  align-items: end;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  // border: ${({ isSelected }) => (isSelected ? "10px solid" : "none")};
+
+  @media ${device.desktops_large} {
+    width: 32%;
+    height: 100%;
+  }
+`;
+
+export const SpellsPrevArrow = styled(MdKeyboardArrowLeft)`
+  cursor: pointer;
+  fill: #bfbfbf;
+  width: 44px;
+  left: 25px;
+`;
+
+export const SpellsNextArrow = styled(MdKeyboardArrowRight)`
+  cursor: pointer;
+  fill: #bfbfbf;
+  width: 44px;
+  right: 25px;
+`;
+
+export const SkinsPrevArrow = styled(MdKeyboardArrowLeft)`
+  cursor: pointer;
+  fill: #bfbfbf;
+  width: 44px;
+  left: 10px;
+`;
+
+export const SkinsNextArrow = styled(MdKeyboardArrowRight)`
+  cursor: pointer;
+  fill: #bfbfbf;
+  width: 44px;
+  right: 10px;
+`;

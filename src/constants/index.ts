@@ -28,6 +28,9 @@ export const device = {
 };
 export const initialChampsToRender = 10;
 
+export const baseUrl =
+  "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/";
+
 export interface ICarouselItem {
   name: string;
   imageUrl: string | undefined;

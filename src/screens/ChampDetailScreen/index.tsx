@@ -60,6 +60,7 @@ import {
 import { ChampDetailResponse } from "../../interfaces/ChampDetailInterface";
 import SkinsCarousel from "../../components/SkinsCarousel";
 import SpellsCarousel from "../../components/SpellsCarousel";
+import { baseUrl } from "../../constants";
 
 const ChampDetailScreen = () => {
   const { state, pathname } = useLocation();
@@ -81,29 +82,51 @@ const ChampDetailScreen = () => {
   );
   const [champDetailInfo, setChampDetailInfo] = useState<Champion>();
   const [itemToShow, setItemToShow] = useState<string>("none");
-  const [spellToShow, setSpellToShow] = useState<string>("none");
+  const [skinToShow, setSkinToShow] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
-  const [videoToShow, setVideoToShow] = useState(null);
   const [selectedImageSkin, setSelectedImageSkin] = useState("");
+  const [imageSkin, setImageSkin] = useState<string>(
+    `${baseUrl}${state.championName}_0.jpg`
+  );
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     if (champDetailInfo) {
-      setSelectedImageSkin(
-        `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${state.championName}_0.jpg`
-      );
+      setSelectedImageSkin(`${baseUrl}${state.championName}_0.jpg`);
     }
   }, [champDetailInfo]);
+  useEffect(() => {
+    if (selectedImageSkin !== "") {
+      setImageSkin(selectedImageSkin);
+    }
+  }, [selectedImageSkin]);
 
   useEffect(() => {
     if (championDetail)
       return setChampDetailInfo(Object.values(championDetail)[0] as any);
   }, [championDetail]);
 
+  useEffect(() => {
+    const videoElement = videoRef.current;
+    if (selectedVideo && videoElement) {
+      videoElement.play();
+    } else if (!selectedVideo && videoElement) {
+      videoElement?.pause();
+    }
+  }, [selectedVideo]);
+
+  console.log("champDetailInfo", champDetailInfo);
+  console.log("championData", championData);
+  console.log("selectedImageSkin", selectedImageSkin);
+  console.log("imageSkin", imageSkin);
+
   const selectNewSkin = (selectedImage: string) => {
     setSelectedImageSkin(selectedImage);
   };
 
+  const handleSkinToShow = () => {
+    setSkinToShow(true);
+  };
   const handleMouseOver = (itemToShow: string) => {
     setItemToShow(itemToShow);
   };
@@ -119,15 +142,6 @@ const ChampDetailScreen = () => {
     setSelectedVideo(null);
   };
 
-  useEffect(() => {
-    const videoElement = videoRef.current;
-    if (selectedVideo && videoElement) {
-      videoElement.play();
-    } else if (!selectedVideo && videoElement) {
-      videoElement?.pause();
-    }
-  }, [selectedVideo]);
-
   let champId = "";
   const navigate = useNavigate();
   const pathNameChamp = pathname.split("/")[2];
@@ -135,6 +149,15 @@ const ChampDetailScreen = () => {
   const championPathName: string = (() => {
     if (pathNameChamp.includes("'")) {
       const modifiedPathName = pathNameChamp.replace(/'/g, "-");
+      return modifiedPathName;
+    }
+    if (pathNameChamp.includes(".")) {
+      const modifiedPathName = pathNameChamp.replace(/\./g, "");
+      return modifiedPathName;
+    }
+    if (pathNameChamp.includes("&")) {
+      const champId = champDetailInfo?.id ?? "Nunu";
+      const modifiedPathName = pathNameChamp.replace(pathNameChamp, champId);
       return modifiedPathName;
     }
     return pathNameChamp;
@@ -381,6 +404,7 @@ const ChampDetailScreen = () => {
             }}
           />
           <SkinsCarousel
+            champDetailInfo={champDetailInfo}
             breakpoints={skinBreakpoints}
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
@@ -388,6 +412,7 @@ const ChampDetailScreen = () => {
             onClickImage={selectNewSkin}
             skins={champDetailInfo?.skins}
             champion={champDetailInfo?.id}
+            skinSelected={imageSkin}
           />
         </ChampInfoSkinsDiv>
       </UpperGeneralDiv>

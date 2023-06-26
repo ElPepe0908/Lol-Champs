@@ -115,11 +115,6 @@ const ChampDetailScreen = () => {
     }
   }, [selectedVideo]);
 
-  console.log("champDetailInfo", champDetailInfo);
-  console.log("championData", championData);
-  console.log("selectedImageSkin", selectedImageSkin);
-  console.log("imageSkin", imageSkin);
-
   const selectNewSkin = (selectedImage: string) => {
     setSelectedImageSkin(selectedImage);
   };

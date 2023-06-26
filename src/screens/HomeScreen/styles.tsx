@@ -30,7 +30,7 @@ type DivWithBackground = {
 
 type FilterButtonProps = {
   show?: boolean;
-  selectedRole?: any;
+  showClickedRole?: any;
 };
 
 export const LoaderContainer = styled.div`
@@ -347,7 +347,7 @@ export const SelectFilterButton = styled.div<FilterButtonProps>`
   position: absolute;
   left: 0;
   border-radius: 4px 0 0 4px;
-  opacity: ${(props) => (props.show ? 1 : 0)};
+  opacity: ${(props) => (props.show || props.showClickedRole ? 1 : 0)};
   transition: opacity 0.5s ease-in-out;
 `;
 

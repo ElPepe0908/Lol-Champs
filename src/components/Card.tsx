@@ -29,8 +29,6 @@ export const Card: React.FC<CardProps> = ({ url }) => {
     getSkin();
   }, []);
 
-  console.log({ ChampSkin });
-
   return (
     <ChampionCard>
       <img

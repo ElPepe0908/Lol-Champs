@@ -42,28 +42,9 @@ export type Classes = {
 };
 
 export const Sidebar = () => {
-  // const [Champs, setChamps] = useState<ChampionElement[]>([]);
   const [state, setState] = useState({
     left: false,
   });
-  // const getChampsByRole = async (role: any) => {
-  //   const url = `https://league-of-legends-champions.p.rapidapi.com/champions/en-us?page=1&size=10`;
-  //   const headers = {
-  //     "X-RapidAPI-Key": "36d0f53ee9msh3a618e1e5aecca5p1906b1jsn2172de59bbcd",
-  //     "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
-  //   };
-
-  //   try {
-  //     const response = await axios.get<ChampsListResponse>(url, { headers });
-  //     const RoleChamps = response.data.champions.filter((champ) =>
-  //       champ.node.recommended_roles.includes(role)
-  //     );
-  //     setChamps(RoleChamps);
-  //     console.log(RoleChamps);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   const toggleDrawer =
     (anchor: Anchor, open: boolean) =>
     (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -77,14 +58,6 @@ export const Sidebar = () => {
 
       setState({ ...state, [anchor]: open });
     };
-
-  // const handleChampFilter = async (role: any) => {
-  //   const RoleChamps = await getChampsByRole(role);
-  //   console.log(RoleChamps);
-  //   if (RoleChamps) {
-  //     setChamps(RoleChamps);
-  //   }
-  // };
 
   const list = (anchor: Anchor) => (
     <Box
@@ -122,54 +95,16 @@ export const Sidebar = () => {
 
   return (
     <>
-      {/* <SideBar>
-        <FiltersContainer>
-          <RolesFilterContainer>
-            <RolesFilter>Roles</RolesFilter>
-            <FilterButton onClick={() => getChampsByRole("Assassin")}>
-              Assassin
-            </FilterButton>
-            <FilterButton onClick={() => getChampsByRole("Tank")}>
-              Tank
-            </FilterButton>
-            <FilterButton onClick={() => getChampsByRole("Mage")}>
-              Mage
-            </FilterButton>
-            <FilterButton onClick={() => getChampsByRole("Fighter")}>
-              Fighter
-            </FilterButton>
-            <FilterButton onClick={() => getChampsByRole("Marksman")}>
-              Marksman
-            </FilterButton>
-            <FilterButton onClick={() => getChampsByRole("Support")}>
-              Support
-            </FilterButton>
-          </RolesFilterContainer>
-          <DifficultyFiltersContainer>
-            <DifficultyFilter>Difficulty</DifficultyFilter>
-            <FilterButton>Easy</FilterButton>
-            <FilterButton>Medium</FilterButton>
-            <FilterButton>Hard</FilterButton>
-          </DifficultyFiltersContainer>
-          <LogoutButton>
-            <MdOutlineLogout />
-            <LogoutText>Log Out</LogoutText>
-          </LogoutButton>
-        </FiltersContainer>
-      </SideBar> */}
-
       {(["left"] as const).map((anchor) => (
         <React.Fragment key={anchor}>
           <RolesMenuContainer onClick={toggleDrawer(anchor, true)}>
             <FaBars size={25} fill={"#3a3a40"} style={{ cursor: "pointer" }} />
           </RolesMenuContainer>
           <Drawer
-            // className="Drawer"
             anchor={anchor}
             open={state[anchor]}
             onClose={toggleDrawer(anchor, false)}
           >
-            {/* Falta filtrar el rol de los campeones */}
             <SideBarResponsive>
               <FiltersContainer>
                 <RolesFilterContainer>

@@ -85,7 +85,6 @@ export const StyledSwiperSlide = styled(SwiperSlide)<{ isSelected: boolean }>`
   background-size: cover;
   background-position: center;
   cursor: pointer;
-  // border: ${({ isSelected }) => (isSelected ? "10px solid" : "none")};
 
   @media ${device.desktops_large} {
     width: 32%;

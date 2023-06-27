@@ -80,9 +80,15 @@ const HomeScreen = () => {
   const { state } = useLocation();
 
   const handleClickFilter = (role: any) => {
-    setSelectFilter(role);
-    setShowClickedRole(true);
+    if (selectFilter === role) {
+      setSelectFilter(null);
+      setShowClickedRole(false);
+    } else {
+      setSelectFilter(role);
+      setShowClickedRole(true);
+    }
   };
+
   const handleRoleOver = (role: any) => {
     setSelectedRole(role);
     setShowSelectedRole(true);
@@ -109,13 +115,12 @@ const HomeScreen = () => {
   };
 
   const searchChamp = searchValue.toLocaleLowerCase().trim();
+
   useEffect(() => {
-    if (champs) {
-      if (searchChamp.trim() === "") {
-        setChampsFiltered(Object.values(champs));
-      }
+    if (!selectFilter && searchChamp.trim() === "") {
+      setChampsFiltered(originalChampsData);
     }
-  }, [champs, searchChamp]);
+  }, [selectFilter, originalChampsData, searchChamp]);
 
   useEffect(() => {
     if (searchChamp === "" && champs) {
@@ -124,14 +129,6 @@ const HomeScreen = () => {
     refetchChamps();
     getChampsByName(searchChamp);
   }, [searchChamp]);
-
-  useEffect(() => {
-    if (champs) {
-      const champsData = Object.values(champs);
-      setOriginalChampsData(champsData);
-      setChampsFiltered(champsData);
-    }
-  }, [champs]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);

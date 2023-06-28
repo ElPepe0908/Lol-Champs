@@ -115,7 +115,12 @@ const HomeScreen = () => {
   };
   const navigateToLastChampDetail = () => {
     if (state?.championName) {
-      navigate(`/champ-detail/${state.championName}`, {
+      console.log("championName from home", state.championName);
+      console.log("champsFiltered[0].id", champsFiltered[0].id);
+      const championPath = state.championName.includes(" ")
+        ? state.championName.replace(/\s/g, "-")
+        : state.championName.replace(/'/g, "-");
+      navigate(`/champ-detail/${championPath}`, {
         state: { championName: state.championName },
       });
     }
@@ -442,7 +447,9 @@ export const LazyChamps = ({
   const navigate = useNavigate();
 
   const navigateToChampionDetail = () => {
-    const championPath = champs.name.replace(/\s/g, "-");
+    const championPath = champs.name.includes(" ")
+      ? champs.name.replace(/\s/g, "-")
+      : champs.name.replace(/'/g, "-");
     navigate(`/champ-detail/${championPath}`, {
       state: { championName: champs.id },
     });

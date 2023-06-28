@@ -57,7 +57,10 @@ import {
   Champion,
   NewChampsDetailListResponse,
 } from "../../interfaces/NewChampsDetailListResponse";
-import { ChampDetailResponse } from "../../interfaces/ChampDetailInterface";
+import {
+  ChampDetailResponse,
+  ChampionElement,
+} from "../../interfaces/ChampDetailInterface";
 import SkinsCarousel from "../../components/SkinsCarousel";
 import SpellsCarousel from "../../components/SpellsCarousel";
 import { baseUrl } from "../../constants";
@@ -65,10 +68,22 @@ import { baseUrl } from "../../constants";
 const ChampDetailScreen = () => {
   const { state, pathname } = useLocation();
   const championName = state?.championName;
+  const modifiedChampionName = championName.includes(" ")
+    ? championName.replace(/\s/g, "")
+    : championName.includes("'")
+    ? championName
+        .replace(/'/g, "")
+        .replace(
+          /(\b\w+)/,
+          (match: any, word: any) =>
+            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        )
+    : championName;
+  console.log("modifiedChampionName", modifiedChampionName);
 
   const { data: championDetail, isFetching: isChampionFetching } = useQuery(
     ["championDetail", state?.championName],
-    () => getDetail(championName),
+    () => getDetail(modifiedChampionName),
     {
       refetchOnWindowFocus: false,
     }
@@ -76,25 +91,38 @@ const ChampDetailScreen = () => {
   const { data: championData, isFetching: isDataFetching } = useQuery(
     ["championData", state?.championName],
     () => getChampionData(championPathName),
+    // () => getChampionData(championName),
     {
       refetchOnWindowFocus: false,
     }
   );
-  const [champDetailInfo, setChampDetailInfo] = useState<Champion>();
+  const [championDetailInfo, setChampionDetailInfo] = useState<Champion>();
+  const [championDataInfo, setChampionDataInfo] = useState<ChampionElement>();
   const [itemToShow, setItemToShow] = useState<string>("none");
   const [skinToShow, setSkinToShow] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [selectedImageSkin, setSelectedImageSkin] = useState("");
   const [imageSkin, setImageSkin] = useState<string>(
-    `${baseUrl}${state.championName}_0.jpg`
+    `${baseUrl}${modifiedChampionName}_0.jpg`
   );
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // console.log("championData", championData);
+  // console.log("championDetail", championDetail);
+
+  console.log("championDataInfo", championDataInfo?.champion_name);
+  console.log("championDetailInfo", championDetailInfo);
+  // useEffect(() => {
+  //   if (championData) {
+  //     return setChampionDataInfo(Object.values(championData.champion)[0]);
+  //   }
+  // }, [championData]);
+
   useEffect(() => {
-    if (champDetailInfo) {
-      setSelectedImageSkin(`${baseUrl}${state.championName}_0.jpg`);
+    if (championDetailInfo) {
+      setSelectedImageSkin(`${baseUrl}${modifiedChampionName}_0.jpg`);
     }
-  }, [champDetailInfo]);
+  }, [championDetailInfo]);
   useEffect(() => {
     if (selectedImageSkin !== "") {
       setImageSkin(selectedImageSkin);
@@ -103,7 +131,7 @@ const ChampDetailScreen = () => {
 
   useEffect(() => {
     if (championDetail)
-      return setChampDetailInfo(Object.values(championDetail)[0] as any);
+      return setChampionDetailInfo(Object.values(championDetail)[0]);
   }, [championDetail]);
 
   useEffect(() => {
@@ -151,17 +179,19 @@ const ChampDetailScreen = () => {
       return modifiedPathName;
     }
     if (pathNameChamp.includes("&")) {
-      const champId = champDetailInfo?.id ?? "Nunu";
+      const champId = championDetailInfo?.id ?? "Nunu";
       const modifiedPathName = pathNameChamp.replace(pathNameChamp, champId);
       return modifiedPathName;
     }
+    console.log("championName", championName);
+    console.log("pathNameChamp", pathNameChamp);
     return pathNameChamp;
   })();
 
   const handleNavigate = () => {
     navigate("/home", {
       state: {
-        championName: champDetailInfo?.name,
+        championName: championDetailInfo?.name,
       },
     });
   };
@@ -195,10 +225,12 @@ const ChampDetailScreen = () => {
     const strCapitalized = word.charAt(0).toUpperCase() + word.slice(1);
     return strCapitalized;
   };
+
   const champPassive = {
     name: `Passive - ${championData?.champion[0].champion_passive.champion_passive_name}`,
     imageUrl:
       championData?.champion[0].champion_passive.champion_passive_video_poster,
+    // imageUrl: championData?.champion[0].champion_passive.champion_passive_video_poster,
     videoUrl:
       championData?.champion[0].champion_passive.champion_passive_video_mp4,
   };
@@ -330,20 +362,20 @@ const ChampDetailScreen = () => {
               <ArrowIconResp>
                 <ArrowBackInfo />
               </ArrowIconResp>
-              <ChampNameResp>{champDetailInfo?.name as any}</ChampNameResp>
+              <ChampNameResp>{championDetailInfo?.name as any}</ChampNameResp>
             </ChampNameContainer>
             <ChampTitleResp>
-              {champDetailInfo?.key} -
-              {champDetailInfo?.title &&
-                capitalizeFirstLetter(champDetailInfo?.title)}
+              {championDetailInfo?.key} -
+              {championDetailInfo?.title &&
+                capitalizeFirstLetter(championDetailInfo?.title)}
             </ChampTitleResp>
             <ChampStatsDivResp>
               <ChampStatsInfoResp>
-                {champDetailInfo?.tags[0]}
+                {championDetailInfo?.tags[0]}
               </ChampStatsInfoResp>
-              {champDetailInfo?.tags[1] ? (
+              {championDetailInfo?.tags[1] ? (
                 <ChampStatsInfoResp>
-                  {champDetailInfo?.tags[1]}
+                  {championDetailInfo?.tags[1]}
                 </ChampStatsInfoResp>
               ) : null}
             </ChampStatsDivResp>
@@ -369,25 +401,25 @@ const ChampDetailScreen = () => {
           <ChampInfoDiv>
             <ChampNameContainer>
               <ChampNameDiv>
-                <ChampName>{champDetailInfo?.name}</ChampName>
+                <ChampName>{championDetailInfo?.name}</ChampName>
               </ChampNameDiv>
             </ChampNameContainer>
             <ChampTitle>
-              {champDetailInfo?.title &&
-                capitalizeFirstLetter(champDetailInfo?.title)}
+              {championDetailInfo?.title &&
+                capitalizeFirstLetter(championDetailInfo?.title)}
             </ChampTitle>
             <ChampSeparation>
               <SeparationLine1 />
               <SeparationCircle />
               <SeparationLine2 />
             </ChampSeparation>
-            <ChampTextInfo>{champDetailInfo?.lore}</ChampTextInfo>
-            <ChampId>#{champDetailInfo?.key}</ChampId>
+            <ChampTextInfo>{championDetailInfo?.lore}</ChampTextInfo>
+            <ChampId>#{championDetailInfo?.key}</ChampId>
           </ChampInfoDiv>
           <ChampStatsDiv>
-            <ChampStatsInfo>{champDetailInfo?.tags[0]}</ChampStatsInfo>
-            {champDetailInfo?.tags[1] ? (
-              <ChampStatsInfo>{champDetailInfo?.tags[1]}</ChampStatsInfo>
+            <ChampStatsInfo>{championDetailInfo?.tags[0]}</ChampStatsInfo>
+            {championDetailInfo?.tags[1] ? (
+              <ChampStatsInfo>{championDetailInfo?.tags[1]}</ChampStatsInfo>
             ) : null}
           </ChampStatsDiv>
         </ChampDetailDiv>
@@ -399,14 +431,14 @@ const ChampDetailScreen = () => {
             }}
           />
           <SkinsCarousel
-            champDetailInfo={champDetailInfo}
+            champDetailInfo={championDetailInfo}
             breakpoints={skinBreakpoints}
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
             itemToShow={itemToShow}
             onClickImage={selectNewSkin}
-            skins={champDetailInfo?.skins}
-            champion={champDetailInfo?.id}
+            skins={championDetailInfo?.skins}
+            champion={championDetailInfo?.id}
             skinSelected={imageSkin}
           />
         </ChampInfoSkinsDiv>

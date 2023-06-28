@@ -32,7 +32,6 @@ export const champsReducer = (
     case "setDifficultyFilterSelected":
       return {
         ...state,
-        difficultyFilterSelected: action.payload,
       };
     default:
       return state;

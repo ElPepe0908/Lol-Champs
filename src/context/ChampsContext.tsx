@@ -8,14 +8,12 @@ export interface ChampsState {
   champs: Champ[];
   champSelected: ChampionElement | undefined;
   rolFilterSelected: RolesType;
-  difficultyFilterSelected: DifficultyType;
 }
 
 export const champsInitialState: ChampsState = {
   champs: [],
   champSelected: undefined,
   rolFilterSelected: "ALL",
-  difficultyFilterSelected: "ALL",
 };
 
 export interface ChampsContextProps {

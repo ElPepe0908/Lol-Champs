@@ -7,7 +7,9 @@ export type RolesType =
   | "MARKSMAN"
   | "ALL";
 
-export type DifficultyType = "EASY" | "MEDIUM" | "HARD" | "ALL";
+export type DifficultyType = "Easy" | "Medium" | "Hard";
+
+export const difficultyNumber = [0, 4, 8];
 
 const SCREEN_SIZES = {
   small_phones: "415px",
@@ -36,3 +38,5 @@ export interface ICarouselItem {
   imageUrl: string | undefined;
   videoUrl?: string | undefined;
 }
+
+export const champStats = ["Easy", "Medium", "Hard"];

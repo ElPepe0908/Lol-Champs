@@ -45,12 +45,19 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { baseUrl, initialChampsToRender } from "../../constants/index";
+import {
+  DifficultyType,
+  baseUrl,
+  champStats,
+  difficultyNumber,
+  initialChampsToRender,
+} from "../../constants/index";
 import { Loader } from "../../components/Loader";
 import {
   NewChampsListResponse,
   Tag,
   Datum,
+  ChampTags,
 } from "../../interfaces/NewChampsListResponse";
 
 const HomeScreen = () => {
@@ -90,8 +97,13 @@ const HomeScreen = () => {
   };
 
   const handleRoleOver = (role: any) => {
-    setSelectedRole(role);
-    setShowSelectedRole(true);
+    if (selectFilter === role) {
+      setSelectedRole(null);
+      setShowSelectedRole(false);
+    } else {
+      setSelectedRole(role);
+      setShowSelectedRole(true);
+    }
   };
   const handleRoleOut = () => {
     setSelectedRole(null);
@@ -143,7 +155,7 @@ const HomeScreen = () => {
       return champsData;
     } catch (error) {}
   };
-  const getChampsByTag = (tag: Tag = Tag.Assassin) => {
+  const getChampsByTag = (tag: any) => {
     const filterNewChamp = originalChampsData?.filter((champ: Datum) =>
       champ.tags.includes(tag)
     );
@@ -276,208 +288,100 @@ const HomeScreen = () => {
         <SideBar>
           <RolesFilterContainer>
             <RolesFilter>Roles</RolesFilter>
-
-            <FilterButton
-              onClick={() => {
-                handleClickFilter("Assassin");
-                getChampsByTag("Assassin" as Tag);
-                refetchChamps();
-              }}
-              onMouseOver={() => handleRoleOver("Assassin")}
-              onMouseOut={handleRoleOut}
-            >
-              {selectedRole === "Assassin" || selectFilter === "Assassin" ? (
-                <>
-                  <SelectFilterButton
-                    show={showSelectedRole}
-                    showClickedRole={showClickedRole}
-                  />
-                  <FilterContentDiv>
-                    <p style={{ color: "#fff", margin: 0 }}>Assassin</p>
-                    <FilterAssasinIcon />
-                  </FilterContentDiv>
-                </>
-              ) : (
-                <p style={{ color: "#808080", margin: 0 }}>Assassin</p>
-              )}
-            </FilterButton>
-            <FilterButton
-              onClick={() => {
-                handleClickFilter("Tank");
-                getChampsByTag("Tank" as Tag);
-                refetchChamps();
-              }}
-              onMouseOver={() => handleRoleOver("Tank")}
-              onMouseOut={handleRoleOut}
-            >
-              {selectedRole === "Tank" || selectFilter === "Tank" ? (
-                <>
-                  <SelectFilterButton
-                    show={showSelectedRole}
-                    showClickedRole={showClickedRole}
-                  />
-                  <p style={{ color: "#fff", margin: 0 }}>Tank</p>
-                  <FilterTankIcon />
-                </>
-              ) : (
-                <p style={{ color: "#808080", margin: 0 }}>Tank</p>
-              )}
-            </FilterButton>
-            <FilterButton
-              onClick={() => {
-                handleClickFilter("Mage");
-                getChampsByTag("Mage" as Tag);
-                refetchChamps();
-              }}
-              onMouseOver={() => handleRoleOver("Mage")}
-              onMouseOut={handleRoleOut}
-            >
-              {selectedRole === "Mage" || selectFilter === "Mage" ? (
-                <>
-                  <SelectFilterButton
-                    show={showSelectedRole}
-                    showClickedRole={showClickedRole}
-                  />
-                  <p style={{ color: "#fff", margin: 0 }}>Mage</p>
-                  <FilterMageIcon />
-                </>
-              ) : (
-                <p style={{ color: "#808080", margin: 0 }}>Mage</p>
-              )}
-            </FilterButton>
-            <FilterButton
-              onClick={() => {
-                handleClickFilter("Fighter");
-                getChampsByTag("Fighter" as Tag);
-                refetchChamps();
-              }}
-              onMouseOver={() => handleRoleOver("Fighter")}
-              onMouseOut={handleRoleOut}
-            >
-              {selectedRole === "Fighter" || selectFilter === "Fighter" ? (
-                <>
-                  <SelectFilterButton
-                    show={showSelectedRole}
-                    showClickedRole={showClickedRole}
-                  />
-                  <p style={{ color: "#fff", margin: 0 }}>Fighter</p>
-                  <FilterFighterIcon />
-                </>
-              ) : (
-                <p style={{ color: "#808080", margin: 0 }}>Fighter</p>
-              )}
-            </FilterButton>
-            <FilterButton
-              onClick={() => {
-                handleClickFilter("Marksman");
-                getChampsByTag("Marksman" as Tag);
-                refetchChamps();
-              }}
-              onMouseOver={() => handleRoleOver("Marksman")}
-              onMouseOut={handleRoleOut}
-            >
-              {selectedRole === "Marksman" || selectFilter === "Marksman" ? (
-                <>
-                  <SelectFilterButton
-                    show={showSelectedRole}
-                    showClickedRole={showClickedRole}
-                  />
-                  <p style={{ color: "#fff", margin: 0 }}>Marksman</p>
-                  <FilterMarksmanIcon />
-                </>
-              ) : (
-                <p style={{ color: "#808080", margin: 0 }}>Marksman</p>
-              )}
-            </FilterButton>
-            <FilterButton
-              onClick={() => {
-                handleClickFilter("Support");
-                getChampsByTag("Support" as Tag);
-                refetchChamps();
-              }}
-              onMouseOver={() => handleRoleOver("Support")}
-              onMouseOut={handleRoleOut}
-            >
-              {selectedRole === "Support" || selectFilter === "Support" ? (
-                <>
-                  <SelectFilterButton
-                    show={showSelectedRole}
-                    showClickedRole={showClickedRole}
-                  />
-                  <p style={{ color: "#fff", margin: 0 }}>Support</p>
-                  <FilterSupportIcon />
-                </>
-              ) : (
-                <p style={{ color: "#808080", margin: 0 }}>Support</p>
-              )}
-            </FilterButton>
+            {Array.from(
+              new Set(originalChampsData?.flatMap((champ: Datum) => champ.tags))
+            ).map((tag: string) => {
+              return (
+                <FilterButton
+                  key={tag}
+                  onClick={() => {
+                    handleClickFilter(tag);
+                    getChampsByTag(tag);
+                    refetchChamps();
+                  }}
+                  style={{
+                    borderColor: "white",
+                    borderLeft: `${
+                      selectFilter === tag || selectedRole === tag
+                        ? "6px"
+                        : "0px"
+                    } solid white`,
+                    transition: "all .1s ease",
+                  }}
+                  onMouseOver={() => handleRoleOver(tag)}
+                  onMouseOut={handleRoleOut}
+                >
+                  <>
+                    <p
+                      style={{
+                        margin: 0,
+                        transition: "all .2s ease",
+                        color:
+                          selectedRole === tag ||
+                          (showClickedRole && selectFilter === tag)
+                            ? "#fff"
+                            : "#808080",
+                      }}
+                    >
+                      {tag}
+                    </p>
+                    <FilterFighterIcon
+                      style={{
+                        opacity:
+                          selectedRole === tag ||
+                          (showClickedRole && selectFilter === tag)
+                            ? "1"
+                            : "0",
+                        transition: "all .2s ease",
+                      }}
+                    />
+                  </>
+                </FilterButton>
+              );
+            })}
           </RolesFilterContainer>
 
           <DifficultyFiltersContainer>
             <DifficultyFilter>Difficulty</DifficultyFilter>
-            <FilterButton
-              onClick={() => {
-                handleClickFilter("Easy");
-                getChampsByDifficulty(0);
-                refetchChamps();
-              }}
-              onMouseOver={() => handleRoleOver("Easy")}
-              onMouseOut={handleRoleOut}
-            >
-              {selectedRole === "Easy" || selectFilter === "Easy" ? (
-                <>
-                  <SelectFilterButton
-                    show={showSelectedRole}
-                    showClickedRole={showClickedRole}
-                  />
-                  <p style={{ color: "#fff", margin: 0 }}>Easy</p>
-                </>
-              ) : (
-                <p style={{ color: "#808080", margin: 0 }}>Easy</p>
-              )}
-            </FilterButton>
-            <FilterButton
-              onClick={() => {
-                handleClickFilter("Medium");
-                getChampsByDifficulty(4);
-                refetchChamps();
-              }}
-              onMouseOver={() => handleRoleOver("Medium")}
-              onMouseOut={handleRoleOut}
-            >
-              {selectedRole === "Medium" || selectFilter === "Medium" ? (
-                <>
-                  <SelectFilterButton
-                    show={showSelectedRole}
-                    showClickedRole={showClickedRole}
-                  />
-                  <p style={{ color: "#fff", margin: 0 }}>Medium</p>
-                </>
-              ) : (
-                <p style={{ color: "#808080", margin: 0 }}>Medium</p>
-              )}
-            </FilterButton>
-            <FilterButton
-              onClick={() => {
-                handleClickFilter("Hard");
-                getChampsByDifficulty(8);
-                refetchChamps();
-              }}
-              onMouseOver={() => handleRoleOver("Hard")}
-              onMouseOut={handleRoleOut}
-            >
-              {selectedRole === "Hard" || selectFilter === "Hard" ? (
-                <>
-                  <SelectFilterButton
-                    show={showSelectedRole}
-                    showClickedRole={showClickedRole}
-                  />
-                  <p style={{ color: "#fff", margin: 0 }}>Hard</p>
-                </>
-              ) : (
-                <p style={{ color: "#808080", margin: 0 }}>Hard</p>
-              )}
-            </FilterButton>
+            {champStats.map((stats, index) => {
+              return (
+                <FilterButton
+                  key={stats}
+                  onClick={() => {
+                    handleClickFilter(stats);
+                    getChampsByDifficulty(difficultyNumber[index]);
+                    refetchChamps();
+                  }}
+                  style={{
+                    borderColor: "white",
+                    borderLeft: `${
+                      selectFilter === stats || selectedRole === stats
+                        ? "6px"
+                        : "0px"
+                    } solid white`,
+                    transition: "all .1s ease",
+                  }}
+                  onMouseOver={() => handleRoleOver(stats)}
+                  onMouseOut={handleRoleOut}
+                >
+                  <>
+                    <p
+                      style={{
+                        margin: 0,
+                        transition: "all .2s ease",
+                        color:
+                          selectedRole === stats ||
+                          (showClickedRole && selectFilter === stats)
+                            ? "#fff"
+                            : "#808080",
+                      }}
+                    >
+                      {stats}
+                    </p>
+                  </>
+                </FilterButton>
+              );
+            })}
           </DifficultyFiltersContainer>
           <LogoutButton>
             <MdOutlineLogout

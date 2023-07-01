@@ -15,7 +15,12 @@ import {
 import { ICarouselItem } from "../constants";
 import { Loader } from "./Loader";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
-import { SpellsNextArrow, SpellsPrevArrow } from "./styles";
+import {
+  SpellsNextArrow,
+  SpellsPrevArrow,
+  SpellsSwiper,
+  SpellsSwiperSlide,
+} from "./styles";
 
 interface Props {
   ChampStyles: any;
@@ -41,8 +46,8 @@ const SpellsCarousel = ({
   isFetching,
 }: Props) => {
   return (
-    <Swiper
-      style={{ ...ChampStyles.swiper }}
+    <SpellsSwiper
+      // style={{ ...ChampStyles.swiper }}
       modules={[Navigation]}
       spaceBetween={20}
       slidesPerView={4}
@@ -55,16 +60,16 @@ const SpellsCarousel = ({
       {spells?.map((spells: ICarouselItem) => {
         return (
           <div>
-            <SwiperSlide
+            <SpellsSwiperSlide
               key={spells.name}
               style={
                 isFetching
                   ? {
-                      ...ChampStyles.slide,
+                      // ...ChampStyles.slide,
                       backgroundColor: "#000",
                     }
                   : {
-                      ...ChampStyles.slide,
+                      // ...ChampStyles.slide,
                       backgroundImage: `url(${spells.imageUrl})`,
                       display: "flex",
                       alignItems: "flex-end",
@@ -94,7 +99,7 @@ const SpellsCarousel = ({
               >
                 <SkinName>{spells.name}</SkinName>
               </SkinNameHover>
-            </SwiperSlide>
+            </SpellsSwiperSlide>
 
             <ChampSpellsVideo>
               <ChampSpellsVideoPlayer src={spells.videoUrl} controls autoPlay />
@@ -108,7 +113,7 @@ const SpellsCarousel = ({
 
       <SpellsPrevArrow className="swiper-button-prev" />
       <SpellsNextArrow className="swiper-button-next" />
-    </Swiper>
+    </SpellsSwiper>
   );
 };
 

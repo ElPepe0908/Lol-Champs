@@ -9,7 +9,8 @@ import {
   GiSmallFire,
 } from "react-icons/gi";
 import { FaShieldAlt } from "react-icons/fa";
-import { MdClear } from "react-icons/md";
+import { MdClear, MdArrowForwardIos, MdOutlineLogout } from "react-icons/md";
+
 type DeleteButtonProps = {
   show: boolean;
 };
@@ -23,9 +24,8 @@ type CardProps = {
   show: boolean;
 };
 
-type DivWithBackground = {
-  backgroundImage: string;
-  hoverBackgroundImage: string;
+type BackToArrowProps = {
+  championName: any;
 };
 
 type FilterButtonProps = {
@@ -165,6 +165,7 @@ export const SearchIconResponsive = styled.div`
 export const SearchIcon = styled(AiOutlineSearch)`
   font-size: 25px;
   fill: #3a3a40;
+  cursor: pointer;
 
   @media ${device.phones} {
     font-size: 23px;
@@ -229,6 +230,14 @@ export const ArrowIconContainer = styled.div`
     width: 40px;
     height: 40px;
   }
+`;
+
+export const BackToChampArrow = styled(MdArrowForwardIos)<BackToArrowProps>`
+  font-size: 25px;
+  fill: "#3A3A40";
+  cursor: ${(props) => (props.championName ? "pointer" : "not-allowed")};
+  opacity: ${(props) => (props.championName ? "1" : "0.5")};
+  user-select: ${(props) => (props.championName ? "initial" : "none")};
 `;
 
 export const SeachArrowContainer = styled.div`
@@ -301,7 +310,10 @@ export const FiltersContainer = styled.div`
 `;
 
 export const RolesFilter = styled.p`
-  display: none;
+  display: flex;
+  width: 100%;
+  align-self: flex-start;
+  margin-bottom: 5px;
 
   @media ${device.phones} {
     display: flex;
@@ -448,6 +460,10 @@ export const LogoutText = styled.p`
   @media ${device.tablets} {
     font-size: 14px;
   }
+`;
+
+export const NavToLoginIcon = styled(MdOutlineLogout)`
+  cursor: "pointer";
 `;
 
 export const SideBarDivider = styled.div`

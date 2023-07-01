@@ -9,8 +9,8 @@ import {
   LoaderContainer,
   SkinsNextArrow,
   SkinsPrevArrow,
-  StyledSwiper,
-  StyledSwiperSlide,
+  SkinsSwiper,
+  SkinsSwiperSlide,
 } from "./styles";
 import { Loader } from "./Loader";
 import { baseUrl } from "../constants";
@@ -58,7 +58,7 @@ const SkinsCarousel = ({
   };
 
   return (
-    <StyledSwiper
+    <SkinsSwiper
       modules={[Navigation, Pagination, Scrollbar, A11y]}
       spaceBetween={20}
       breakpoints={breakpoints}
@@ -76,11 +76,8 @@ const SkinsCarousel = ({
           );
         }
         return (
-          <StyledSwiperSlide
+          <SkinsSwiperSlide
             key={skin.num}
-            isSelected={
-              skinSelected === `${baseUrl}${champion}_${skin.num}.jpg`
-            }
             style={{
               backgroundImage: `url(${baseUrl}${champion}_${skin.num}.jpg)`,
             }}
@@ -102,12 +99,12 @@ const SkinsCarousel = ({
                 {skin.name === "default" ? champDetailInfo?.name : skin.name}
               </SkinName>
             </SkinNameHover>
-          </StyledSwiperSlide>
+          </SkinsSwiperSlide>
         );
       })}
       <SkinsPrevArrow className="swiper-button-prev" />
       <SkinsNextArrow className="swiper-button-next" />
-    </StyledSwiper>
+    </SkinsSwiper>
   );
 };
 

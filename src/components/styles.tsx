@@ -48,7 +48,7 @@ export const CarouselImage2 = styled.div`
   background: red;
 `;
 
-export const StyledSwiper = styled(Swiper)`
+export const SkinsSwiper = styled(Swiper)`
   width: 25%;
   height: 100%;
 
@@ -73,12 +73,10 @@ export const StyledSwiper = styled(Swiper)`
     height: 140px;
   }
 `;
-
-export const StyledSwiperSlide = styled(SwiperSlide)<{ isSelected: boolean }>`
+export const SkinsSwiperSlide = styled(SwiperSlide)`
   width: 100%;
   display: flex;
-  alignItems: "flex-end",
-  backgroundColor: "#000",
+  background-color: #000;
   justify-content: center;
   align-items: end;
   border-radius: 10px;
@@ -90,6 +88,22 @@ export const StyledSwiperSlide = styled(SwiperSlide)<{ isSelected: boolean }>`
     width: 32%;
     height: 100%;
   }
+`;
+export const SpellsSwiper = styled(Swiper)`
+  width: 100%;
+  height: 100%;
+  padding: 0px 15px;
+`;
+
+export const SpellsSwiperSlide = styled(SwiperSlide)`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
 `;
 
 export const SpellsPrevArrow = styled(MdKeyboardArrowLeft)`
@@ -110,12 +124,30 @@ export const SkinsPrevArrow = styled(MdKeyboardArrowLeft)`
   cursor: pointer;
   fill: #bfbfbf;
   width: 44px;
-  left: 10px;
+  transform: rotate(90deg);
+  top: var(--swiper-navigation-top-offset, 5%);
+  left: 43.5%;
+
+  @media ${device.desktops_large} {
+    top: 50%;
+    width: 44px;
+    left: 15px;
+    transform: rotate(0deg);
+  }
 `;
 
 export const SkinsNextArrow = styled(MdKeyboardArrowRight)`
   cursor: pointer;
   fill: #bfbfbf;
   width: 44px;
-  right: 10px;
+  transform: rotate(90deg);
+  top: var(--swiper-navigation-top-offset, 95%);
+  right: 43.5%;
+
+  @media ${device.desktops_large} {
+    top: 50%;
+    width: 44px;
+    right: 15px;
+    transform: rotate(0deg);
+  }
 `;

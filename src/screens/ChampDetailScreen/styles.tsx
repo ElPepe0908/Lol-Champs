@@ -375,6 +375,7 @@ export const ChampInfoSkinsDiv = styled("div")({
   borderRadius: 10,
   display: "flex",
   width: "78%",
+  minHeight: "585px",
 
   [`@media ${device.desktops_large}`]: {
     flexDirection: "column",
@@ -535,6 +536,7 @@ export const GeneralSpellsDiv = styled("div")({
   fontWeight: "semibold",
   flexDirection: "column",
   height: "none",
+  minHeight: "37.5vh",
 
   [`@media ${device.tablets}`]: {
     marginTop: 10,
@@ -585,22 +587,22 @@ export const ChampCarrusellInner = styled("div")({
   flexWrap: "wrap",
   height: "250px",
   [`@media ${device.desktops_large}`]: {
-    height: "230px",
+    minHeight: "230px",
   },
   [`@media ${device.desktops}`]: {
-    height: "200px",
+    minHeight: "200px",
   },
   [`@media ${device.tablets}`]: {
-    height: "220px",
+    minHeight: "220px",
   },
   [`@media ${device.phones}`]: {
-    height: "210px",
+    minHeight: "210px",
   },
   [`@media ${device.old_phones}`]: {
-    height: "170px",
+    minHeight: "170px",
   },
   [`@media ${device.small_phones}`]: {
-    height: "180px",
+    minHeight: "180px",
   },
 });
 
@@ -752,4 +754,8 @@ export const Container = styled("div")({
 export const ArrowBackInfo = styled(MdKeyboardArrowLeft)`
   font-size: 20px;
   cursor: pointer;
+
+  @media ${device.tablets} {
+    font-size: 40px;
+  }
 `;

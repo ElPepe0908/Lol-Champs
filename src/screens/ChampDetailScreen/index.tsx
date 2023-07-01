@@ -79,7 +79,6 @@ const ChampDetailScreen = () => {
             word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
         )
     : championName;
-  console.log("modifiedChampionName", modifiedChampionName);
 
   const { data: championDetail, isFetching: isChampionFetching } = useQuery(
     ["championDetail", state?.championName],
@@ -106,17 +105,6 @@ const ChampDetailScreen = () => {
     `${baseUrl}${modifiedChampionName}_0.jpg`
   );
   const videoRef = useRef<HTMLVideoElement>(null);
-
-  // console.log("championData", championData);
-  // console.log("championDetail", championDetail);
-
-  console.log("championDataInfo", championDataInfo?.champion_name);
-  console.log("championDetailInfo", championDetailInfo);
-  // useEffect(() => {
-  //   if (championData) {
-  //     return setChampionDataInfo(Object.values(championData.champion)[0]);
-  //   }
-  // }, [championData]);
 
   useEffect(() => {
     if (championDetailInfo) {
@@ -183,8 +171,6 @@ const ChampDetailScreen = () => {
       const modifiedPathName = pathNameChamp.replace(pathNameChamp, champId);
       return modifiedPathName;
     }
-    console.log("championName", championName);
-    console.log("pathNameChamp", pathNameChamp);
     return pathNameChamp;
   })();
 
@@ -230,7 +216,6 @@ const ChampDetailScreen = () => {
     name: `Passive - ${championData?.champion[0].champion_passive.champion_passive_name}`,
     imageUrl:
       championData?.champion[0].champion_passive.champion_passive_video_poster,
-    // imageUrl: championData?.champion[0].champion_passive.champion_passive_video_poster,
     videoUrl:
       championData?.champion[0].champion_passive.champion_passive_video_mp4,
   };
@@ -271,30 +256,6 @@ const ChampDetailScreen = () => {
       backgroundSize: "cover",
       backgroundPosition: "center",
       cursor: "pointer",
-    },
-  };
-  const SkinStyles = {
-    swiper: {
-      width: "25%",
-      height: "66vh",
-    },
-    slide: {
-      width: "100%",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: 10,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      cursor: "pointer",
-    },
-    "@media screen and (max-width: 1450px)": {
-      swiper: {
-        width: "100%",
-        height: "25%",
-        marginTop: "15px",
-      },
-      slide: {},
     },
   };
 
@@ -430,6 +391,7 @@ const ChampDetailScreen = () => {
               backgroundImage: `url(${selectedImageSkin})`,
             }}
           />
+
           <SkinsCarousel
             champDetailInfo={championDetailInfo}
             breakpoints={skinBreakpoints}

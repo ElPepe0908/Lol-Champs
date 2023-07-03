@@ -6,7 +6,6 @@ import {
   ChampNameDiv,
   ChampName,
 } from "../screens/HomeScreen/styles";
-import { getChampsSplash } from "../utils/champInfo";
 import { Loader } from "./Loader";
 
 export const LazyChamps = ({ champDetail }: { champDetail: Datum }) => {
@@ -20,22 +19,17 @@ export const LazyChamps = ({ champDetail }: { champDetail: Datum }) => {
     champs,
     show,
   } = useChampsData();
-  const champCardStyle = champDetail
-    ? {
-        backgroundImage: `url(${getChampsSplash(champDetail.id)})`,
-      }
-    : { alignItems: "center" };
   return (
     <ChampCardContainer ref={elementRef as any}>
       <ChampCard
+        champDetail={champDetail}
         isFetching={isFetchingChamps}
         show={isIntersecting}
-        style={champCardStyle}
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
         onClick={navigateToChampionDetail}
       >
-        {!champs ? (
+        {!champDetail ? (
           <Loader />
         ) : (
           <ChampNameDiv show={show}>

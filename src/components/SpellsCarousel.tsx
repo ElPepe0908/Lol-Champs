@@ -47,7 +47,6 @@ const SpellsCarousel = ({
 }: Props) => {
   return (
     <SpellsSwiper
-      // style={{ ...ChampStyles.swiper }}
       modules={[Navigation]}
       spaceBetween={20}
       slidesPerView={4}
@@ -65,11 +64,9 @@ const SpellsCarousel = ({
               style={
                 isFetching
                   ? {
-                      // ...ChampStyles.slide,
                       backgroundColor: "#000",
                     }
                   : {
-                      // ...ChampStyles.slide,
                       backgroundImage: `url(${spells.imageUrl})`,
                       display: "flex",
                       alignItems: "flex-end",

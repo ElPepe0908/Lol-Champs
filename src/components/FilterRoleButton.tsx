@@ -1,6 +1,14 @@
-import { useEffect, useState } from "react";
 import { Datum, Tag } from "../interfaces/NewChampsListResponse";
-import { FilterButton, FilterFighterIcon } from "../screens/HomeScreen/styles";
+import {
+  FilterButton,
+  FilterIconFighter,
+  FilterButtonText,
+  FilterIconTank,
+  FilterIconMage,
+  FilterIconAssasin,
+  FilterIconSupport,
+  FilterIconMarksman,
+} from "../screens/HomeScreen/styles";
 import { useChampsData } from "../hooks/useChampsData";
 
 export const FilterRoleButton = () => {
@@ -13,55 +21,51 @@ export const FilterRoleButton = () => {
     handleRoleOver,
     handleRoleOut,
     showClickedRole,
+    refetchChamps,
   } = useChampsData();
+  const roleIcons = {
+    Tank: FilterIconTank,
+    Fighter: FilterIconFighter,
+    Mage: FilterIconMage,
+    Assassin: FilterIconAssasin,
+    Support: FilterIconSupport,
+    Marksman: FilterIconMarksman,
+  };
 
   return (
     <>
       {Array.from(
         new Set(originalChampsData?.flatMap((champ: Datum) => champ.tags))
       ).map((tag: Tag) => {
+        const IconComponent = roleIcons[tag];
         return (
           <FilterButton
             key={tag}
+            selectFilter={selectFilter}
+            selectedRole={selectedRole}
+            tag={tag}
             onClick={() => {
               handleClickFilter(tag);
               getChampsByTag(tag);
-            }}
-            style={{
-              borderColor: "white",
-              borderLeft: `${
-                selectFilter === tag || selectedRole === tag ? "6px" : "0px"
-              } solid white`,
-              transition: "all .1s ease",
+              refetchChamps();
             }}
             onMouseOver={() => handleRoleOver(tag)}
             onMouseOut={handleRoleOut}
           >
-            <>
-              <p
-                style={{
-                  margin: 0,
-                  transition: "all .2s ease",
-                  color:
-                    selectedRole === tag ||
-                    (showClickedRole && selectFilter === tag)
-                      ? "#fff"
-                      : "#808080",
-                }}
-              >
-                {tag}
-              </p>
-              <FilterFighterIcon
-                style={{
-                  opacity:
-                    selectedRole === tag ||
-                    (showClickedRole && selectFilter === tag)
-                      ? "1"
-                      : "0",
-                  transition: "all .2s ease",
-                }}
-              />
-            </>
+            <FilterButtonText
+              showClickedRole={showClickedRole}
+              selectFilter={selectFilter}
+              selectedRole={selectedRole}
+              tag={tag}
+            >
+              {tag}
+            </FilterButtonText>
+            <IconComponent
+              showClickedRole={showClickedRole}
+              selectFilter={selectFilter}
+              selectedRole={selectedRole}
+              tag={tag}
+            />
           </FilterButton>
         );
       })}

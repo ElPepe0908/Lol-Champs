@@ -90,7 +90,6 @@ const ChampDetailScreen = () => {
   const { data: championData, isFetching: isDataFetching } = useQuery(
     ["championData", state?.championName],
     () => getChampionData(championPathName),
-    // () => getChampionData(championName),
     {
       refetchOnWindowFocus: false,
     }

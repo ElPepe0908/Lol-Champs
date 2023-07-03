@@ -1,10 +1,6 @@
-import React, { useState, useRef } from "react";
-
 import {
-  ChampCard,
   CardsContainer,
   DifficultyFiltersContainer,
-  FilterButton,
   HomeScreenBody,
   HomeScreenContainer,
   HomeScreenHeader,
@@ -26,64 +22,24 @@ import {
   DeleteButton,
   SearchIcon,
   DeleteTextButton,
-  ChampName,
-  ChampNameDiv,
-  SelectFilterButton,
-  FilterContentDiv,
-  FilterTankIcon,
-  FilterAssasinIcon,
-  FilterMageIcon,
-  FilterFighterIcon,
-  FilterMarksmanIcon,
-  FilterSupportIcon,
-  ChampCardContainer,
   BackToChampArrow,
   NavToLoginIcon,
 } from "./styles";
-import { MdArrowForwardIos, MdOutlineLogout } from "react-icons/md";
 import lolLogo from "../../assets/lol-logo.png";
 import { Sidebar } from "./Sidebar";
-import axios from "axios";
-import { useQuery } from "react-query";
-import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import {
-  DifficultyType,
-  baseUrl,
-  champStats,
-  difficultyNumber,
-  initialChampsToRender,
-} from "../../constants/index";
-import { Loader } from "../../components/Loader";
-import {
-  NewChampsListResponse,
-  Tag,
-  Datum,
-  ChampTags,
-} from "../../interfaces/NewChampsListResponse";
+import { Datum } from "../../interfaces/NewChampsListResponse";
 import { FilterRoleButton } from "../../components/FilterRoleButton";
 import { useChampsData } from "../../hooks/useChampsData";
-import { getChampsSplash } from "../../utils/champInfo";
 import { LazyChamps } from "../../components/LazyChamps";
 import { FilterDifficultyButton } from "../../components/FilterDifficultyButton";
 
 const HomeScreen = () => {
   const {
-    refetchChamps,
-    showClickedRole,
-    selectedRole,
-    selectFilter,
     searchChamp,
     handleInputChange,
-    handleClickFilter,
-    handleRoleOver,
-    handleRoleOut,
     handleDeleteButtonClick,
     backToOriginalChamps,
-    getChampsByTag,
-    getChampsByDifficulty,
     searchValue,
-    originalChampsData,
     champsFiltered,
     navigateToLastChampDetail,
     state,
@@ -125,11 +81,12 @@ const HomeScreen = () => {
               onChange={handleInputChange}
               autoComplete="off"
             />
-            {searchChamp !== "" && (
-              <DeleteButton show={true} onClick={handleDeleteButtonClick}>
-                <DeleteTextButton />
-              </DeleteButton>
-            )}
+            <DeleteButton
+              searchChamp={searchChamp}
+              onClick={handleDeleteButtonClick}
+            >
+              <DeleteTextButton />
+            </DeleteButton>
           </SearchBarContainer>
 
           <ArrowIconContainer>

@@ -8,11 +8,13 @@ import {
   GiFist,
   GiSmallFire,
 } from "react-icons/gi";
-import { FaShieldAlt } from "react-icons/fa";
+import { FaBars, FaShieldAlt } from "react-icons/fa";
 import { MdClear, MdArrowForwardIos, MdOutlineLogout } from "react-icons/md";
+import { Datum, Tag } from "../../interfaces/NewChampsListResponse";
+import { getChampsSplash } from "../../utils/champInfo";
 
 type DeleteButtonProps = {
-  show: boolean;
+  searchChamp: string;
 };
 
 type ChampNameProps = {
@@ -22,6 +24,7 @@ type ChampNameProps = {
 type CardProps = {
   isFetching: boolean;
   show: boolean;
+  champDetail: Datum;
 };
 
 type BackToArrowProps = {
@@ -30,7 +33,16 @@ type BackToArrowProps = {
 
 type FilterButtonProps = {
   show?: boolean;
-  showClickedRole?: any;
+  showClickedRole?: boolean;
+  selectFilter?: null;
+  selectedRole?: null;
+  tag?: string;
+};
+type FilterButtonElementsProps = {
+  showClickedRole?: boolean;
+  selectFilter?: null;
+  selectedRole?: null;
+  tag?: string;
 };
 
 export const LoaderContainer = styled.div`
@@ -278,6 +290,12 @@ export const SideBar = styled.div`
   }
 `;
 
+export const FaBarIcon = styled(FaBars)`
+  fill: #3a3a40;
+  font-size: 25px;
+  cursor: pointer;
+`;
+
 export const SidebarContainer = styled.div`
   display: flex;
 
@@ -327,6 +345,12 @@ export const FilterButton = styled.button<FilterButtonProps>`
   height: 50px;
   border-radius: 4px;
   border: none;
+  border-left: ${(props) =>
+      props.selectFilter === props.tag || props.selectedRole === props.tag
+        ? "6px"
+        : "0px"}
+    solid white;
+  transition: all 0.1s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -351,6 +375,16 @@ export const FilterButton = styled.button<FilterButtonProps>`
   }
 `;
 
+export const FilterButtonText = styled.p<FilterButtonElementsProps>`
+  margin: 0;
+  transition: all 0.2s ease;
+  color: ${(props) =>
+    props.selectedRole === props.tag ||
+    (props.showClickedRole && props.selectFilter === props.tag)
+      ? "#fff"
+      : "#808080"};
+`;
+
 export const SelectFilterButton = styled.div<FilterButtonProps>`
   display: flex;
   background-color: #ffffff;
@@ -370,29 +404,67 @@ export const FilterContentDiv = styled.div`
   justify-content: center;
 `;
 
-export const FilterTankIcon = styled(GiThorHammer)`
+export const FilterIconTank = styled(GiThorHammer)<FilterButtonElementsProps>`
   font-size: 20px;
   margin-left: 8px;
+  transition: all 0.2s ease;
+  opacity: ${(props) =>
+    props.selectedRole === props.tag ||
+    (props.showClickedRole && props.selectFilter === props.tag)
+      ? "1"
+      : "0"};
 `;
-export const FilterFighterIcon = styled(GiFist)`
+export const FilterIconFighter = styled(GiFist)<FilterButtonElementsProps>`
   font-size: 20px;
   margin-left: 8px;
+  transition: all 0.2s ease;
+  opacity: ${(props) =>
+    props.selectedRole === props.tag ||
+    (props.showClickedRole && props.selectFilter === props.tag)
+      ? "1"
+      : "0"};
 `;
-export const FilterMageIcon = styled(GiSmallFire)`
+export const FilterIconMage = styled(GiSmallFire)<FilterButtonElementsProps>`
   font-size: 20px;
   margin-left: 8px;
+  transition: all 0.2s ease;
+  opacity: ${(props) =>
+    props.selectedRole === props.tag ||
+    (props.showClickedRole && props.selectFilter === props.tag)
+      ? "1"
+      : "0"};
 `;
-export const FilterAssasinIcon = styled(GiBroadsword)`
+export const FilterIconAssasin = styled(
+  GiBroadsword
+)<FilterButtonElementsProps>`
   font-size: 20px;
   margin-left: 8px;
+  transition: all 0.2s ease;
+  opacity: ${(props) =>
+    props.selectedRole === props.tag ||
+    (props.showClickedRole && props.selectFilter === props.tag)
+      ? "1"
+      : "0"};
 `;
-export const FilterSupportIcon = styled(FaShieldAlt)`
+export const FilterIconSupport = styled(FaShieldAlt)<FilterButtonElementsProps>`
   font-size: 20px;
   margin-left: 8px;
+  transition: all 0.2s ease;
+  opacity: ${(props) =>
+    props.selectedRole === props.tag ||
+    (props.showClickedRole && props.selectFilter === props.tag)
+      ? "1"
+      : "0"};
 `;
-export const FilterMarksmanIcon = styled(GiCrossbow)`
+export const FilterIconMarksman = styled(GiCrossbow)<FilterButtonElementsProps>`
   font-size: 20px;
   margin-left: 8px;
+  transition: all 0.2s ease;
+  opacity: ${(props) =>
+    props.selectedRole === props.tag ||
+    (props.showClickedRole && props.selectFilter === props.tag)
+      ? "1"
+      : "0"};
 `;
 
 export const RolesFilterContainer = styled.div`
@@ -499,7 +571,11 @@ export const ChampCard = styled.div<CardProps>`
   border-radius: 10px;
   background-size: cover;
   background-position: center;
-  align-items: end;
+  background-image: ${(props) =>
+    props.champDetail
+      ? `url(${getChampsSplash(props.champDetail.id)})`
+      : "none"};
+  align-items: ${(props) => (props.champDetail ? "end" : "center")};
   justify-content: center;
   width: 100%;
   height: 100%;
@@ -592,7 +668,7 @@ export const DeleteButton = styled.div<DeleteButtonProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: ${(props) => (props.show ? "1" : "0")};
+  opacity: ${(props) => (props.searchChamp !== "" ? "1" : "0")};
   transition: opacity 0.5s ease-in-out;
   cursor: pointer;
 

@@ -39,7 +39,6 @@ export interface Data {
   type: Type;
   format: string;
   version: Version;
-  // data: Datum;
   data: { [key: string]: Datum };
 }
 

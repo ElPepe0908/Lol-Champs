@@ -148,7 +148,6 @@ export const useChampsData = () => {
     console.log("new value of champsFiltered 5", filterNewChamp);
     setChampsFiltered(filterNewChamp);
   };
-  //   // console.log("champsFiltered from Hook", champsFiltered);
 
   const getChampsByDifficulty = (difficulty: number) => {
     let minDifficulty = 0;

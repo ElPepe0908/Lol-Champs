@@ -4,6 +4,7 @@ import {
   Data,
   Datum,
   NewChampsListResponse,
+  Tag,
 } from "../interfaces/NewChampsListResponse";
 import axios from "axios";
 import { initialChampsToRender } from "../constants";
@@ -39,11 +40,14 @@ export const useChampsData = () => {
 
   useEffect(() => {
     if (!selectFilter && searchChamp.trim() === "" && champs) {
+      console.log("new value of champsFiltered 1", Object.values(champs));
       setChampsFiltered(Object.values(champs));
     }
   }, [selectFilter, searchChamp, champs]);
+
   useEffect(() => {
     if (searchChamp.trim() === "" && champs) {
+      console.log("new value of champsFiltered 2", Object.values(champs));
       setChampsFiltered(Object.values(champs));
     }
     refetchChamps();
@@ -116,16 +120,16 @@ export const useChampsData = () => {
 
   const handleDeleteButtonClick = () => {
     setSearchValue("");
+    console.log("new value of champsFiltered 3", originalChampsData);
     setChampsFiltered(originalChampsData);
   };
 
   const backToOriginalChamps = () => {
+    console.log("new value of champsFiltered 4", originalChampsData);
     setSearchValue("");
     setChampsFiltered(originalChampsData);
     refetchChamps();
   };
-
-  const matuChamp = "Aatrox";
 
   const getChamps = async () => {
     const url = `http://ddragon.leagueoflegends.com/cdn/13.10.1/data/en_US/champion.json`;
@@ -136,12 +140,15 @@ export const useChampsData = () => {
       return champsData;
     } catch (error) {}
   };
-  const getChampsByTag = (tag: any) => {
+
+  const getChampsByTag = (tag: Tag) => {
     const filterNewChamp = originalChampsData?.filter((champ: Datum) =>
       champ.tags.includes(tag)
     );
+    console.log("new value of champsFiltered 5", filterNewChamp);
     setChampsFiltered(filterNewChamp);
   };
+  //   // console.log("champsFiltered from Hook", champsFiltered);
 
   const getChampsByDifficulty = (difficulty: number) => {
     let minDifficulty = 0;
@@ -161,6 +168,7 @@ export const useChampsData = () => {
         champ.info.difficulty >= minDifficulty &&
         champ.info.difficulty <= maxDifficulty
     );
+    console.log("new value of champsFiltered 6", filterNewChamp);
     setChampsFiltered(filterNewChamp);
   };
 
@@ -168,6 +176,7 @@ export const useChampsData = () => {
     const filterNewChamp = originalChampsData.filter((champ: Datum) =>
       champ?.name?.toLocaleLowerCase().includes(name)
     );
+    console.log("new value of champsFiltered 7", filterNewChamp);
     setChampsFiltered(filterNewChamp);
   };
 

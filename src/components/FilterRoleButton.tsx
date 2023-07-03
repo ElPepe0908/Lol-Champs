@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Datum, Tag } from "../interfaces/NewChampsListResponse";
 import { FilterButton, FilterFighterIcon } from "../screens/HomeScreen/styles";
 import { useChampsData } from "../hooks/useChampsData";

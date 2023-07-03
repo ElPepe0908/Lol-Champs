@@ -9,7 +9,7 @@ import {
 import { getChampsSplash } from "../utils/champInfo";
 import { Loader } from "./Loader";
 
-export const LazyChamps = (champDetail: Datum) => {
+export const LazyChamps = ({ champDetail }: { champDetail: Datum }) => {
   const {
     elementRef,
     isFetchingChamps,

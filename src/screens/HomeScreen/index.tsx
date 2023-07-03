@@ -90,6 +90,7 @@ const HomeScreen = () => {
     navigateToLogin,
   } = useChampsData();
 
+  console.log("champsFiltered from homeScreen", champsFiltered);
   return (
     <HomeScreenContainer>
       <HomeScreenHeader>
@@ -158,8 +159,13 @@ const HomeScreen = () => {
         </SideBar>
         <SideBarDivider />
         <CardsContainer>
-          {champsFiltered.map((champDetail: Datum) => {
-            return <LazyChamps {...champDetail} />;
+          {champsFiltered.map((champDetail: Datum, index: number) => {
+            return (
+              <LazyChamps
+                key={`${champDetail.id} - ${index}`}
+                champDetail={champDetail}
+              />
+            );
           })}
         </CardsContainer>
       </HomeScreenBody>

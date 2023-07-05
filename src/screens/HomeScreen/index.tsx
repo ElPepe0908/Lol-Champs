@@ -39,7 +39,7 @@ import { useNavigate } from "react-router-dom";
 import { champStats, difficultyNumber } from "../../constants/index";
 import { Loader } from "../../components/Loader";
 import { Datum } from "../../interfaces/NewChampsListResponse";
-import { useHomeScreen } from "../../hooks/useChampsData";
+import { useHomeScreen } from "../../hooks/useHomeScreen";
 
 const HomeScreen = () => {
   const {

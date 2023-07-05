@@ -40,6 +40,8 @@ import { champStats, difficultyNumber } from "../../constants/index";
 import { Loader } from "../../components/Loader";
 import { Datum } from "../../interfaces/NewChampsListResponse";
 import { useHomeScreen } from "../../hooks/useHomeScreen";
+import { CustomButton } from "../../components/CustomButton";
+import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 
 const HomeScreen = () => {
   const {
@@ -67,6 +69,9 @@ const HomeScreen = () => {
     getChampsSplash,
     isFetchingChamps,
   } = useHomeScreen();
+  const champsFormatted = new Set(
+    originalChampsData?.flatMap((champ: Datum) => champ.tags)
+  );
 
   return (
     <HomeScreenContainer>
@@ -153,98 +158,30 @@ const HomeScreen = () => {
         <SideBar>
           <RolesFilterContainer>
             <RolesFilter>Roles</RolesFilter>
-            {Array.from(
-              new Set(originalChampsData?.flatMap((champ: Datum) => champ.tags))
-            ).map((tag: string) => {
-              return (
-                <FilterButton
-                  key={tag}
-                  onClick={() => {
-                    handleClickFilter(tag);
-                    getChampsByTag(tag);
-                    refetchChamps();
-                  }}
-                  style={{
-                    borderColor: "white",
-                    borderLeft: `${
-                      selectFilter === tag || selectedRole === tag
-                        ? "6px"
-                        : "0px"
-                    } solid white`,
-                    transition: "all .1s ease",
-                  }}
-                  onMouseOver={() => handleRoleOver(tag)}
-                  onMouseOut={handleRoleOut}
-                >
-                  <>
-                    <p
-                      style={{
-                        margin: 0,
-                        transition: "all .2s ease",
-                        color:
-                          selectedRole === tag ||
-                          (showClickedRole && selectFilter === tag)
-                            ? "#fff"
-                            : "#808080",
-                      }}
-                    >
-                      {tag}
-                    </p>
-                    <FilterFighterIcon
-                      style={{
-                        opacity:
-                          selectedRole === tag ||
-                          (showClickedRole && selectFilter === tag)
-                            ? "1"
-                            : "0",
-                        transition: "all .2s ease",
-                      }}
-                    />
-                  </>
-                </FilterButton>
-              );
-            })}
+            {Array.from(champsFormatted).map((tag: string) => (
+              <CustomButton
+                isHovered={false}
+                isSelected={false}
+                onClick={() => alert(`clickeaste ${tag}`)}
+                onMouseOut={() => console.log("onMouseOut")}
+                onMouseOver={() => console.log("onMouseOver")}
+                buttonTitle={tag}
+              />
+            ))}
           </RolesFilterContainer>
 
           <DifficultyFiltersContainer>
             <DifficultyFilter>Difficulty</DifficultyFilter>
             {champStats.map((stats, index) => {
               return (
-                <FilterButton
-                  key={stats}
-                  onClick={() => {
-                    handleClickFilter(stats);
-                    getChampsByDifficulty(difficultyNumber[index]);
-                    refetchChamps();
-                  }}
-                  style={{
-                    borderColor: "white",
-                    borderLeft: `${
-                      selectFilter === stats || selectedRole === stats
-                        ? "6px"
-                        : "0px"
-                    } solid white`,
-                    transition: "all .1s ease",
-                  }}
-                  onMouseOver={() => handleRoleOver(stats)}
-                  onMouseOut={handleRoleOut}
-                >
-                  <>
-                    <p
-                      style={{
-                        margin: 0,
-                        transition: "all .2s ease",
-                        color:
-                          selectedRole === stats ||
-                          (showClickedRole && selectFilter === stats)
-                            ? "#fff"
-                            : "#808080",
-                      }}
-                    >
-                      {stats}
-                    </p>
-                  </>
-                </FilterButton>
+                <CustomButton
+                  isHovered={false}
+                  isSelected={false}
+                  onClick={() => alert(`clickeaste ${stats}`)}
+                  onMouseOut={() => console.log("onMouseOut")}
+                  onMouseOver={() => console.log("onMouseOver")}
+                  buttonTitle={stats}
+                />
               );
             })}
           </DifficultyFiltersContainer>
@@ -256,6 +193,7 @@ const HomeScreen = () => {
             <LogoutText onClick={navigateToLogin}>Log Out</LogoutText>
           </LogoutButton>
         </SideBar>
+
         <SideBarDivider />
         <CardsContainer>
           {champsFiltered.map((champ: Datum) => {
@@ -273,6 +211,7 @@ const HomeScreen = () => {
     </HomeScreenContainer>
   );
 };
+
 export const LazyChamps = ({
   champs,
   champSplash,

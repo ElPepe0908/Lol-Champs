@@ -28,183 +28,45 @@ import {
   DeleteTextButton,
   ChampName,
   ChampNameDiv,
-  SelectFilterButton,
-  FilterContentDiv,
-  FilterTankIcon,
-  FilterAssasinIcon,
-  FilterMageIcon,
   FilterFighterIcon,
-  FilterMarksmanIcon,
-  FilterSupportIcon,
   ChampCardContainer,
 } from "./styles";
 import { MdArrowForwardIos, MdOutlineLogout } from "react-icons/md";
 import lolLogo from "../../assets/lol-logo.png";
 import { Sidebar } from "./Sidebar";
-import axios from "axios";
-import { useQuery } from "react-query";
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import {
-  DifficultyType,
-  baseUrl,
-  champStats,
-  difficultyNumber,
-  initialChampsToRender,
-} from "../../constants/index";
+import { useNavigate } from "react-router-dom";
+import { champStats, difficultyNumber } from "../../constants/index";
 import { Loader } from "../../components/Loader";
-import {
-  NewChampsListResponse,
-  Tag,
-  Datum,
-  ChampTags,
-} from "../../interfaces/NewChampsListResponse";
+import { Datum } from "../../interfaces/NewChampsListResponse";
+import { useHomeScreen } from "../../hooks/useChampsData";
 
 const HomeScreen = () => {
   const {
-    data: champs,
-    refetch: refetchChamps,
-    isFetched: isFetchedChamps,
-    isFetching: isFetchingChamps,
-  } = useQuery({
-    queryKey: ["champs"],
-    queryFn: async () => getChamps(),
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
-    cacheTime: Infinity,
-  });
-  const [searchValue, setSearchValue] = useState("" as string);
-  const [champsFiltered, setChampsFiltered] = useState<Datum[]>(
-    new Array(initialChampsToRender).fill("")
-  );
-  const [selectedRole, setSelectedRole] = useState(null);
-  const [showSelectedRole, setShowSelectedRole] = useState(false);
-  const [showClickedRole, setShowClickedRole] = useState(false);
-  const [originalChampsData, setOriginalChampsData] = useState<Datum[]>([]);
-  const [selectFilter, setSelectFilter] = useState(null);
-
-  const navigate = useNavigate();
-  const { state } = useLocation();
-
-  const handleClickFilter = (role: any) => {
-    if (selectFilter === role) {
-      setSelectFilter(null);
-      setShowClickedRole(false);
-    } else {
-      setSelectFilter(role);
-      setShowClickedRole(true);
-    }
-  };
-
-  const handleRoleOver = (role: any) => {
-    if (selectFilter === role) {
-      setSelectedRole(null);
-      setShowSelectedRole(false);
-    } else {
-      setSelectedRole(role);
-      setShowSelectedRole(true);
-    }
-  };
-  const handleRoleOut = () => {
-    setSelectedRole(null);
-    setShowSelectedRole(false);
-  };
-
-  const navigateToLogin = () => {
-    navigate("/");
-  };
-  const navigateToLastChampDetail = () => {
-    if (state?.championName) {
-      console.log("championName from home", state.championName);
-      console.log("champsFiltered[0].id", champsFiltered[0].id);
-      const championPath = state.championName.includes(" ")
-        ? state.championName.replace(/\s/g, "-")
-        : state.championName.replace(/'/g, "-");
-      navigate(`/champ-detail/${championPath}`, {
-        state: { championName: state.championName },
-      });
-    }
-  };
-
-  const handleDeleteButtonClick = () => {
-    setSearchValue("");
-    setChampsFiltered(originalChampsData);
-  };
-
-  const searchChamp = searchValue.toLocaleLowerCase().trim();
-
-  useEffect(() => {
-    if (!selectFilter && searchChamp.trim() === "") {
-      setChampsFiltered(originalChampsData);
-    }
-  }, [selectFilter, originalChampsData, searchChamp]);
-
-  useEffect(() => {
-    if (searchChamp === "" && champs) {
-      setChampsFiltered(Object.values(champs));
-    }
-    refetchChamps();
-    getChampsByName(searchChamp);
-  }, [searchChamp]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
-  };
-
-  const getChamps = async () => {
-    const url = `http://ddragon.leagueoflegends.com/cdn/13.10.1/data/en_US/champion.json`;
-    try {
-      const response = await axios.get<NewChampsListResponse>(url);
-      const champsData = response.data.data;
-      setOriginalChampsData(Object.values(champsData));
-      return champsData;
-    } catch (error) {}
-  };
-  const getChampsByTag = (tag: any) => {
-    const filterNewChamp = originalChampsData?.filter((champ: Datum) =>
-      champ.tags.includes(tag)
-    );
-    setChampsFiltered(filterNewChamp);
-  };
-
-  const getChampsByDifficulty = (difficulty: number) => {
-    let minDifficulty = 0;
-    let maxDifficulty = 10;
-
-    if (difficulty === 0) {
-      maxDifficulty = 3;
-    } else if (difficulty === 4) {
-      minDifficulty = 4;
-      maxDifficulty = 7;
-    } else if (difficulty === 8) {
-      minDifficulty = 8;
-      maxDifficulty = 10;
-    }
-
-    const filterNewChamp = originalChampsData?.filter(
-      (champ: Datum) =>
-        champ.info.difficulty >= minDifficulty &&
-        champ.info.difficulty <= maxDifficulty
-    );
-    setChampsFiltered(filterNewChamp);
-  };
-
-  const getChampsSplash = (id: string) => {
-    try {
-      const imageUrl = `${baseUrl}${id}_0.jpg`;
-      return imageUrl;
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  };
-
-  const getChampsByName = async (name: string) => {
-    const filterNewChamp = originalChampsData.filter((champ: Datum) =>
-      champ?.name?.toLocaleLowerCase().includes(name)
-    );
-    setChampsFiltered(filterNewChamp);
-  };
+    setSearchValue,
+    setChampsFiltered,
+    originalChampsData,
+    refetchChamps,
+    searchChamp,
+    getChampsByName,
+    searchValue,
+    handleInputChange,
+    handleDeleteButtonClick,
+    championName,
+    navigateToLastChampDetail,
+    handleClickFilter,
+    getChampsByTag,
+    selectFilter,
+    selectedRole,
+    handleRoleOver,
+    handleRoleOut,
+    showClickedRole,
+    getChampsByDifficulty,
+    navigateToLogin,
+    champsFiltered,
+    getChampsSplash,
+    isFetchingChamps,
+  } = useHomeScreen();
 
   return (
     <HomeScreenContainer>
@@ -270,11 +132,9 @@ const HomeScreen = () => {
 
           <ArrowIconContainer>
             <MdArrowForwardIos
-              onClick={
-                state?.championName ? navigateToLastChampDetail : undefined
-              }
+              onClick={championName ? navigateToLastChampDetail : undefined}
               style={
-                state?.championName
+                championName
                   ? { cursor: "pointer" }
                   : {
                       opacity: "0.5",

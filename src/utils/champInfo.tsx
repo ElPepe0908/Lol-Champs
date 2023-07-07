@@ -1,6 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
 import { baseUrl } from "../constants";
-import { useChampsData } from "../hooks/useChampsData";
 
 export const getChampsSplash = (id: string) => {
   try {

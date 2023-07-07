@@ -1,10 +1,8 @@
 import React from "react";
-import { useState } from "react";
 import Drawer from "@mui/material/Drawer";
 import {
   DifficultyFilter,
   DifficultyFiltersContainer,
-  FilterButton,
   FiltersContainer,
   LogoutButton,
   LogoutText,
@@ -13,36 +11,91 @@ import {
   SideBarResponsive,
   RolesMenuContainer,
   FaBarIcon,
+  NavToLoginIcon,
+  SideBar,
 } from "../styles";
-import { MdOutlineLogout } from "react-icons/md";
 import { FilterRoleButton } from "../../../components/FilterRoleButton";
 import { FilterDifficultyButton } from "../../../components/FilterDifficultyButton";
+import { Datum } from "../../../interfaces/NewChampsListResponse";
+import { champStats, difficultyNumber, roles } from "../../../constants";
 
 type Anchor = "left";
 
-export type Classes = {
-  Drawer: string;
-};
+interface Props {
+  champsFiltered: any;
+  selectFilter: any;
+  selectedRole: any;
+  showClickedRole: boolean;
+  handleClickFilter: (tag: string) => void;
+  getChampsByTag: (tag: string) => void;
+  handleRoleOver: (tag: string) => void;
+  handleRoleOut: () => void;
+  getChampsByDifficulty: (difficulty: number) => void;
+  originalChampsData: Datum[];
+  navigateToLogin: () => void;
+  toggleDrawer: (
+    anchor: Anchor,
+    open: boolean
+  ) => (event: React.KeyboardEvent | React.MouseEvent) => void;
+  drawerState: {
+    left: boolean;
+  };
+}
 
-export const Sidebar = () => {
-  const [state, setState] = useState({
-    left: false,
-  });
-  const toggleDrawer =
-    (anchor: Anchor, open: boolean) =>
-    (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === "keydown" &&
-        ((event as React.KeyboardEvent).key === "Tab" ||
-          (event as React.KeyboardEvent).key === "Shift")
-      ) {
-        return;
-      }
+export const Sidebar = ({
+  selectFilter,
+  selectedRole,
+  showClickedRole,
+  handleClickFilter,
+  getChampsByTag,
+  handleRoleOver,
+  handleRoleOut,
+  getChampsByDifficulty,
+  originalChampsData,
+  navigateToLogin,
+  toggleDrawer,
+  drawerState,
+}: Props) => {
+  const rolesComponent = () => {
+    return (
+      <>
+        {roles.map((tag: string) => (
+          <FilterRoleButton
+            isHovered={selectFilter === tag || selectedRole === tag}
+            isSelected={showClickedRole && selectedRole === tag}
+            onClick={() => {
+              handleClickFilter(tag);
+              getChampsByTag(tag);
+            }}
+            onMouseOver={() => handleRoleOver(tag)}
+            onMouseOut={handleRoleOut}
+            buttonTitle={tag}
+          />
+        ))}
+      </>
+    );
+  };
+  const difficultyComponent = () => {
+    return (
+      <>
+        {champStats.map((stats: string, index) => (
+          <FilterDifficultyButton
+            isHovered={selectFilter === stats || selectedRole === stats}
+            isSelected={showClickedRole && selectedRole === stats}
+            onClick={() => {
+              handleClickFilter(stats);
+              getChampsByDifficulty(difficultyNumber[index]);
+            }}
+            onMouseOver={() => handleRoleOver(stats)}
+            onMouseOut={handleRoleOut}
+            buttonTitle={stats}
+          />
+        ))}
+      </>
+    );
+  };
 
-      setState({ ...state, [anchor]: open });
-    };
-
-  return (
+  const mobileSideBar = (
     <>
       {(["left"] as const).map((anchor) => (
         <React.Fragment key={anchor}>
@@ -51,22 +104,22 @@ export const Sidebar = () => {
           </RolesMenuContainer>
           <Drawer
             anchor={anchor}
-            open={state[anchor]}
+            open={drawerState[anchor]}
             onClose={toggleDrawer(anchor, false)}
           >
             <SideBarResponsive>
               <FiltersContainer>
                 <RolesFilterContainer>
                   <RolesFilter>Roles</RolesFilter>
-                  <FilterRoleButton />
+                  {rolesComponent()}
                 </RolesFilterContainer>
                 <DifficultyFiltersContainer>
                   <DifficultyFilter>Difficulty</DifficultyFilter>
-                  <FilterDifficultyButton />
+                  {difficultyComponent()}
                 </DifficultyFiltersContainer>
                 <LogoutButton>
-                  <MdOutlineLogout />
-                  <LogoutText>Log Out</LogoutText>
+                  <NavToLoginIcon onClick={navigateToLogin} />
+                  <LogoutText onClick={navigateToLogin}>Log Out</LogoutText>
                 </LogoutButton>
               </FiltersContainer>
             </SideBarResponsive>
@@ -75,4 +128,25 @@ export const Sidebar = () => {
       ))}
     </>
   );
+
+  const desktopSideBar = (
+    <>
+      <SideBar>
+        <RolesFilterContainer>
+          <RolesFilter>Roles</RolesFilter>
+          {rolesComponent()}
+        </RolesFilterContainer>
+
+        <DifficultyFiltersContainer>
+          <DifficultyFilter>Difficulty</DifficultyFilter>
+          {difficultyComponent()}
+        </DifficultyFiltersContainer>
+        <LogoutButton>
+          <NavToLoginIcon onClick={navigateToLogin} />
+          <LogoutText onClick={navigateToLogin}>Log Out</LogoutText>
+        </LogoutButton>
+      </SideBar>
+    </>
+  );
+  return window.innerWidth > 768 ? desktopSideBar : mobileSideBar;
 };

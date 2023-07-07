@@ -1,37 +1,27 @@
 import {
   CardsContainer,
-  DifficultyFiltersContainer,
   HomeScreenBody,
   HomeScreenContainer,
   HomeScreenHeader,
   Logo,
   LogoContainer,
-  LogoutButton,
-  LogoutText,
   SearchBar,
   SearchBarContainer,
-  SideBar,
   SideBarDivider,
   MenuContainer,
   LogoContainerResponsive,
   ArrowIconContainer,
-  SeachArrowContainer,
-  RolesFilter,
-  RolesFilterContainer,
-  DifficultyFilter,
+  SearchArrowContainer,
   DeleteButton,
   SearchIcon,
   DeleteTextButton,
   BackToChampArrow,
-  NavToLoginIcon,
 } from "./styles";
 import lolLogo from "../../assets/lol-logo.png";
 import { Sidebar } from "./Sidebar";
 import { Datum } from "../../interfaces/NewChampsListResponse";
-import { FilterRoleButton } from "../../components/FilterRoleButton";
-import { useChampsData } from "../../hooks/useChampsData";
-import { LazyChamps } from "../../components/LazyChamps";
-import { FilterDifficultyButton } from "../../components/FilterDifficultyButton";
+import { ChampToRender } from "../../components/ChampToRender";
+import { useHomeScreen } from "../../hooks/useHomeScreen";
 
 const HomeScreen = () => {
   const {
@@ -42,11 +32,28 @@ const HomeScreen = () => {
     searchValue,
     champsFiltered,
     navigateToLastChampDetail,
-    state,
     navigateToLogin,
-  } = useChampsData();
+    championName,
+    originalChampsData,
+    selectFilter,
+    selectedRole,
+    showClickedRole,
+    handleClickFilter,
+    getChampsByTag,
+    handleRoleOver,
+    handleRoleOut,
+    getChampsByDifficulty,
+    toggleDrawer,
+    drawerState,
+    elementRef,
+    isIntersecting,
+    isFetchingChamps,
+    handleMouseOver,
+    handleMouseOut,
+    navigateToChampionDetail,
+    show,
+  } = useHomeScreen();
 
-  console.log("champsFiltered from homeScreen", champsFiltered);
   return (
     <HomeScreenContainer>
       <HomeScreenHeader>
@@ -65,10 +72,8 @@ const HomeScreen = () => {
             onClick={backToOriginalChamps}
           />
         </LogoContainer>
-        <SeachArrowContainer>
-          <MenuContainer>
-            <Sidebar />
-          </MenuContainer>
+        <SearchArrowContainer>
+          <MenuContainer />
 
           <SearchBarContainer>
             <SearchIcon />
@@ -91,36 +96,44 @@ const HomeScreen = () => {
 
           <ArrowIconContainer>
             <BackToChampArrow
-              championName={state?.championName}
+              championName={championName}
               onClick={navigateToLastChampDetail}
             />
           </ArrowIconContainer>
-        </SeachArrowContainer>
+        </SearchArrowContainer>
       </HomeScreenHeader>
 
       <HomeScreenBody>
-        <SideBar>
-          <RolesFilterContainer>
-            <RolesFilter>Roles</RolesFilter>
-            <FilterRoleButton />
-          </RolesFilterContainer>
+        <Sidebar
+          champsFiltered={champsFiltered}
+          originalChampsData={originalChampsData}
+          getChampsByDifficulty={getChampsByDifficulty}
+          getChampsByTag={getChampsByTag}
+          handleClickFilter={handleClickFilter}
+          handleRoleOut={handleRoleOut}
+          handleRoleOver={handleRoleOver}
+          selectFilter={selectFilter}
+          selectedRole={selectedRole}
+          showClickedRole={showClickedRole}
+          navigateToLogin={navigateToLogin}
+          toggleDrawer={toggleDrawer}
+          drawerState={drawerState}
+        />
 
-          <DifficultyFiltersContainer>
-            <DifficultyFilter>Difficulty</DifficultyFilter>
-            <FilterDifficultyButton />
-          </DifficultyFiltersContainer>
-          <LogoutButton>
-            <NavToLoginIcon onClick={navigateToLogin} />
-            <LogoutText onClick={navigateToLogin}>Log Out</LogoutText>
-          </LogoutButton>
-        </SideBar>
         <SideBarDivider />
         <CardsContainer>
           {champsFiltered.map((champDetail: Datum, index: number) => {
             return (
-              <LazyChamps
+              <ChampToRender
                 key={`${champDetail.id} - ${index}`}
                 champDetail={champDetail}
+                elementRef={elementRef}
+                isIntersecting={isIntersecting}
+                isFetchingChamps={isFetchingChamps}
+                handleMouseOver={handleMouseOver}
+                handleMouseOut={handleMouseOut}
+                navigateToChampionDetail={navigateToChampionDetail}
+                show={show}
               />
             );
           })}

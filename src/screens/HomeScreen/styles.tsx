@@ -10,7 +10,7 @@ import {
 } from "react-icons/gi";
 import { FaBars, FaShieldAlt } from "react-icons/fa";
 import { MdClear, MdArrowForwardIos, MdOutlineLogout } from "react-icons/md";
-import { Datum, Tag } from "../../interfaces/NewChampsListResponse";
+import { Datum } from "../../interfaces/NewChampsListResponse";
 import { getChampsSplash } from "../../utils/champInfo";
 
 type DeleteButtonProps = {
@@ -23,7 +23,7 @@ type ChampNameProps = {
 
 type CardProps = {
   isFetching: boolean;
-  show: boolean;
+  isIntersecting: boolean;
   champDetail: Datum;
 };
 
@@ -33,17 +33,20 @@ type BackToArrowProps = {
 
 type FilterButtonProps = {
   show?: boolean;
-  showClickedRole?: boolean;
-  selectFilter?: null;
-  selectedRole?: null;
-  tag?: string;
+  isSelected?: boolean;
+  isHovered?: boolean;
 };
 type FilterButtonElementsProps = {
-  showClickedRole?: boolean;
-  selectFilter?: null;
-  selectedRole?: null;
-  tag?: string;
+  isHovered?: boolean;
+  isSelected?: boolean;
 };
+
+export const Icon = styled.div<FilterButtonElementsProps>`
+  font-size: 20px;
+  margin-left: 8px;
+  transition: all 0.2s ease;
+  opacity: ${(props) => (props.isHovered || props.isSelected ? "1" : "0")};
+`;
 
 export const LoaderContainer = styled.div`
   display: flex;
@@ -63,12 +66,11 @@ export const HomeScreenHeader = styled.div`
   align-items: center;
 
   @media ${device.phones} {
-    height: 21.5vh;
+    height: max-content;
     flex-direction: column;
     margin-bottom: 40px;
   }
   @media ${device.small_phones} {
-    height: 19.5vh;
     margin-bottom: 30px;
   }
 `;
@@ -252,7 +254,7 @@ export const BackToChampArrow = styled(MdArrowForwardIos)<BackToArrowProps>`
   user-select: ${(props) => (props.championName ? "initial" : "none")};
 `;
 
-export const SeachArrowContainer = styled.div`
+export const SearchArrowContainer = styled.div`
   display: flex;
   width: 80vw;
   align-items: center;
@@ -292,8 +294,11 @@ export const SideBar = styled.div`
 
 export const FaBarIcon = styled(FaBars)`
   fill: #3a3a40;
-  font-size: 25px;
+  font-size: 30px;
   cursor: pointer;
+  position: absolute;
+  top: 142px;
+  left: 27px;
 `;
 
 export const SidebarContainer = styled.div`
@@ -346,9 +351,7 @@ export const FilterButton = styled.button<FilterButtonProps>`
   border-radius: 4px;
   border: none;
   border-left: ${(props) =>
-      props.selectFilter === props.tag || props.selectedRole === props.tag
-        ? "6px"
-        : "0px"}
+      props.isHovered || props.isSelected ? "6px" : "0px"}
     solid white;
   transition: all 0.1s ease;
   display: flex;
@@ -364,10 +367,10 @@ export const FilterButton = styled.button<FilterButtonProps>`
   }
   @media ${device.phones} {
     width: 100%;
-    height: 50px;
+    height: 48px;
     font-size: 13px;
     align-items: center;
-    margin: 8px 0;
+    margin: 6px 0;
   }
   @media ${device.small_phones} {
     height: 40px;
@@ -379,10 +382,8 @@ export const FilterButtonText = styled.p<FilterButtonElementsProps>`
   margin: 0;
   transition: all 0.2s ease;
   color: ${(props) =>
-    props.selectedRole === props.tag ||
-    (props.showClickedRole && props.selectFilter === props.tag)
-      ? "#fff"
-      : "#808080"};
+    props.isHovered || props.isSelected ? "#fff" : "#808080"};
+  font-size: 15px;
 `;
 
 export const SelectFilterButton = styled.div<FilterButtonProps>`
@@ -393,7 +394,7 @@ export const SelectFilterButton = styled.div<FilterButtonProps>`
   position: absolute;
   left: 0;
   border-radius: 4px 0 0 4px;
-  opacity: ${(props) => (props.show || props.showClickedRole ? 1 : 0)};
+  opacity: ${(props) => (props.show || props.isSelected ? 1 : 0)};
   transition: opacity 0.5s ease-in-out;
 `;
 
@@ -408,63 +409,39 @@ export const FilterIconTank = styled(GiThorHammer)<FilterButtonElementsProps>`
   font-size: 20px;
   margin-left: 8px;
   transition: all 0.2s ease;
-  opacity: ${(props) =>
-    props.selectedRole === props.tag ||
-    (props.showClickedRole && props.selectFilter === props.tag)
-      ? "1"
-      : "0"};
+  opacity: ${(props) => (props.isHovered || props.isSelected ? "1" : "0")};
 `;
 export const FilterIconFighter = styled(GiFist)<FilterButtonElementsProps>`
   font-size: 20px;
   margin-left: 8px;
   transition: all 0.2s ease;
-  opacity: ${(props) =>
-    props.selectedRole === props.tag ||
-    (props.showClickedRole && props.selectFilter === props.tag)
-      ? "1"
-      : "0"};
+  opacity: ${(props) => (props.isHovered || props.isSelected ? "1" : "0")};
 `;
 export const FilterIconMage = styled(GiSmallFire)<FilterButtonElementsProps>`
   font-size: 20px;
   margin-left: 8px;
   transition: all 0.2s ease;
-  opacity: ${(props) =>
-    props.selectedRole === props.tag ||
-    (props.showClickedRole && props.selectFilter === props.tag)
-      ? "1"
-      : "0"};
+  opacity: ${(props) => (props.isHovered || props.isSelected ? "1" : "0")};
 `;
-export const FilterIconAssasin = styled(
+export const FilterIconAssassin = styled(
   GiBroadsword
 )<FilterButtonElementsProps>`
   font-size: 20px;
   margin-left: 8px;
   transition: all 0.2s ease;
-  opacity: ${(props) =>
-    props.selectedRole === props.tag ||
-    (props.showClickedRole && props.selectFilter === props.tag)
-      ? "1"
-      : "0"};
+  opacity: ${(props) => (props.isHovered || props.isSelected ? "1" : "0")};
 `;
 export const FilterIconSupport = styled(FaShieldAlt)<FilterButtonElementsProps>`
   font-size: 20px;
   margin-left: 8px;
   transition: all 0.2s ease;
-  opacity: ${(props) =>
-    props.selectedRole === props.tag ||
-    (props.showClickedRole && props.selectFilter === props.tag)
-      ? "1"
-      : "0"};
+  opacity: ${(props) => (props.isHovered || props.isSelected ? "1" : "0")};
 `;
 export const FilterIconMarksman = styled(GiCrossbow)<FilterButtonElementsProps>`
   font-size: 20px;
   margin-left: 8px;
   transition: all 0.2s ease;
-  opacity: ${(props) =>
-    props.selectedRole === props.tag ||
-    (props.showClickedRole && props.selectFilter === props.tag)
-      ? "1"
-      : "0"};
+  opacity: ${(props) => (props.isHovered || props.isSelected ? "1" : "0")};
 `;
 
 export const RolesFilterContainer = styled.div`
@@ -472,6 +449,10 @@ export const RolesFilterContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media ${device.phones} {
+    width: 67%;
+  }
 
   @media ${device.old_phones} {
     width: 80%;
@@ -488,8 +469,8 @@ export const DifficultyFilter = styled.p`
 `;
 
 export const DifficultyFiltersContainer = styled.div`
-  margin-top: 40px;
-  width: 70%;
+  margin-top: 25px;
+  width: 67%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -514,7 +495,7 @@ export const LogoutButton = styled.div`
   }
   @media ${device.phones} {
     width: 70%;
-    margin-top: 60px;
+    margin-top: 25px;
   }
   @media ${device.old_phones} {
     width: 80%;
@@ -579,7 +560,7 @@ export const ChampCard = styled.div<CardProps>`
   justify-content: center;
   width: 100%;
   height: 100%;
-  opacity: ${(props) => (props.show && !props.isFetching ? "1" : "0.4")};
+  opacity: ${(props) => (props.isIntersecting ? "1" : "0.4")};
   transition: opacity 0.5s linear;
 `;
 export const ChampCardContainer = styled.div`

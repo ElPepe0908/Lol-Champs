@@ -1,49 +1,44 @@
-import { champStats, difficultyNumber } from "../constants";
-import { useChampsData } from "../hooks/useChampsData";
 import { FilterButton, FilterButtonText } from "../screens/HomeScreen/styles";
 
-export const FilterDifficultyButton = () => {
-  const {
-    handleClickFilter,
-    getChampsByDifficulty,
-    refetchChamps,
-    selectFilter,
-    selectedRole,
-    showClickedRole,
-    handleRoleOut,
-    handleRoleOver,
-  } = useChampsData();
+interface Props {
+  buttonTitle?: string;
+  isSelected?: boolean;
+  isHovered?: boolean;
+  onClick?: () => void;
+  onMouseOver?: () => void;
+  onMouseOut?: () => void;
+}
+
+export const FilterDifficultyButton = (
+  {
+    isSelected,
+    isHovered,
+    buttonTitle,
+    onMouseOut,
+    onMouseOver,
+    onClick,
+  }: Props
+) => {
 
   return (
     <>
-      {champStats.map((stats, index) => {
-        return (
           <FilterButton
-            key={stats}
-            selectFilter={selectFilter}
-            selectedRole={selectedRole}
-            tag={stats}
-            onClick={() => {
-              handleClickFilter(stats);
-              getChampsByDifficulty(difficultyNumber[index]);
-              refetchChamps();
-            }}
-            onMouseOver={() => handleRoleOver(stats)}
-            onMouseOut={handleRoleOut}
+            isSelected={isSelected}
+            isHovered={isHovered}
+            onClick={onClick}
+            onMouseOver={onMouseOver}
+            onMouseOut={onMouseOut}
           >
             <>
               <FilterButtonText
-                showClickedRole={showClickedRole}
-                selectFilter={selectFilter}
-                selectedRole={selectedRole}
-                tag={stats}
+                isHovered={isHovered}
+                isSelected={isSelected}
               >
-                {stats}
+                {buttonTitle}
               </FilterButtonText>
             </>
           </FilterButton>
-        );
-      })}
+
     </>
   );
 };

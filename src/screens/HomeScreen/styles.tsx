@@ -19,6 +19,8 @@ type DeleteButtonProps = {
 
 type ChampNameProps = {
   show: boolean;
+  hoveredChamp: any;
+  champDetail: Datum;
 };
 
 type CardProps = {
@@ -606,7 +608,8 @@ export const ChampNameDiv = styled.div<ChampNameProps>`
   height: 40px;
   background-color: #070707;
   border-radius: 0px 0px 10px 10px;
-  opacity: ${(props) => (props.show ? "0.7" : "0")};
+  opacity: ${(props) =>
+    props.show && props.hoveredChamp === props.champDetail.name ? "0.7" : "0"};
   transition: opacity 0.2s ease-in-out;
 `;
 

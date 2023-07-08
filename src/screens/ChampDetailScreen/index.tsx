@@ -97,7 +97,7 @@ const ChampDetailScreen = () => {
   const [championDetailInfo, setChampionDetailInfo] = useState<Champion>();
   const [championDataInfo, setChampionDataInfo] = useState<ChampionElement>();
   const [itemToShow, setItemToShow] = useState<string>("none");
-  const [skinToShow, setSkinToShow] = useState(false);
+  const [skinToShow, setSkinToShow] = useState("");
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [selectedImageSkin, setSelectedImageSkin] = useState("");
   const [imageSkin, setImageSkin] = useState<string>(
@@ -134,8 +134,11 @@ const ChampDetailScreen = () => {
     setSelectedImageSkin(selectedImage);
   };
 
-  const handleSkinToShow = () => {
-    setSkinToShow(true);
+  const handleSkinToShow = (tag: string) => {
+    if (skinToShow === tag) {
+      return setSkinToShow("");
+    }
+    setSkinToShow(tag);
   };
   const handleMouseOver = (itemToShow: string) => {
     setItemToShow(itemToShow);

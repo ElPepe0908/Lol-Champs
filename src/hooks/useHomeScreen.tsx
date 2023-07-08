@@ -33,7 +33,8 @@ export const useHomeScreen = () => {
   const [selectFilter, setSelectFilter] = useState(null);
   const [show, setShow] = useState(false);
   const [isIntersecting, setIsIntersecting] = useState(false);
-  const elementRef = useRef();
+  const [hoveredChamp, setHoveredChamp] = useState(null);
+  const elementRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
   const { state } = useLocation();
 
@@ -63,23 +64,21 @@ export const useHomeScreen = () => {
   }, [searchChamp]);
 
   useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        setIsIntersecting(entry.isIntersecting);
+      });
+    }, observerOptions);
+
     const element = elementRef.current;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          console.log("entry.isIntersecting", entry);
-          setIsIntersecting(entry.isIntersecting);
-        });
-      },
-      {
-        threshold: 0.5,
-      }
-    );
-    console.log("observer", observer);
-    console.log("element", element);
 
     if (element) {
-      console.log("inside if element");
       observer.observe(element);
     }
   }, []);
@@ -144,12 +143,15 @@ export const useHomeScreen = () => {
     setChampsFiltered(originalChampsData);
   };
 
-  const handleMouseOver = () => {
+  const handleMouseOver = (tag: any) => {
     setShow(true);
+    setHoveredChamp(tag);
+    console.log("hoveredChamp from hook", hoveredChamp);
   };
 
   const handleMouseOut = () => {
     setShow(false);
+    setHoveredChamp(null);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -257,5 +259,6 @@ export const useHomeScreen = () => {
     navigateToChampionDetail,
     toggleDrawer,
     drawerState,
+    hoveredChamp,
   };
 };

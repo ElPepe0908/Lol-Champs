@@ -45,13 +45,12 @@ const HomeScreen = () => {
     getChampsByDifficulty,
     toggleDrawer,
     drawerState,
-    elementRef,
-    isIntersecting,
     isFetchingChamps,
     handleMouseOver,
     handleMouseOut,
     navigateToChampionDetail,
     show,
+    hoveredChamp,
   } = useHomeScreen();
 
   return (
@@ -123,17 +122,17 @@ const HomeScreen = () => {
         <SideBarDivider />
         <CardsContainer>
           {champsFiltered.map((champDetail: Datum, index: number) => {
+            console.log(champDetail.id);
             return (
               <ChampToRender
                 key={`${champDetail.id} - ${index}`}
                 champDetail={champDetail}
-                elementRef={elementRef}
-                isIntersecting={isIntersecting}
                 isFetchingChamps={isFetchingChamps}
-                handleMouseOver={handleMouseOver}
+                handleMouseOver={() => handleMouseOver(champDetail.name)}
                 handleMouseOut={handleMouseOut}
                 navigateToChampionDetail={navigateToChampionDetail}
                 show={show}
+                hoveredChamp={hoveredChamp}
               />
             );
           })}

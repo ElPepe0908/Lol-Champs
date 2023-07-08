@@ -6,33 +6,30 @@ import {
   ChampName,
 } from "../screens/HomeScreen/styles";
 import { Loader } from "./Loader";
+import { useChampToRender } from "../hooks/useChampToRender";
 
 interface Props {
   champDetail: Datum;
-  elementRef: any;
   isFetchingChamps: boolean;
-  isIntersecting: boolean;
   handleMouseOver: any;
   handleMouseOut: any;
   navigateToChampionDetail: any;
   show: boolean;
+  hoveredChamp: any;
 }
+
 export const ChampToRender = ({
   champDetail,
-  elementRef,
   isFetchingChamps,
-  isIntersecting,
-  handleMouseOut,
   handleMouseOver,
+  handleMouseOut,
   navigateToChampionDetail,
   show,
+  hoveredChamp,
 }: Props) => {
-  console.log("elementRef", elementRef);
-  console.log(show);
-  if (isIntersecting)
-    console.log("isIntersecting from champtorender", isIntersecting);
+  const { elementRef, isIntersecting } = useChampToRender();
   return (
-    <ChampCardContainer ref={elementRef as any}>
+    <ChampCardContainer ref={elementRef}>
       <ChampCard
         champDetail={champDetail}
         isFetching={isFetchingChamps}
@@ -44,7 +41,11 @@ export const ChampToRender = ({
         {!champDetail ? (
           <Loader />
         ) : (
-          <ChampNameDiv show={show}>
+          <ChampNameDiv
+            show={show}
+            hoveredChamp={hoveredChamp}
+            champDetail={champDetail}
+          >
             <ChampName>{champDetail.name}</ChampName>
           </ChampNameDiv>
         )}

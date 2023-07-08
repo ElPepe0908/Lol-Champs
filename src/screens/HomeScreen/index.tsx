@@ -121,21 +121,18 @@ const HomeScreen = () => {
 
         <SideBarDivider />
         <CardsContainer>
-          {champsFiltered.map((champDetail: Datum, index: number) => {
-            console.log(champDetail.id);
-            return (
-              <ChampToRender
-                key={`${champDetail.id} - ${index}`}
-                champDetail={champDetail}
-                isFetchingChamps={isFetchingChamps}
-                handleMouseOver={() => handleMouseOver(champDetail.name)}
-                handleMouseOut={handleMouseOut}
-                navigateToChampionDetail={navigateToChampionDetail}
-                show={show}
-                hoveredChamp={hoveredChamp}
-              />
-            );
-          })}
+          {champsFiltered.map((champDetail: Datum, index: number) => (
+            <ChampToRender
+              key={`${champDetail.id} - ${index}`}
+              champDetail={champDetail}
+              isFetchingChamps={isFetchingChamps}
+              handleMouseOver={() => handleMouseOver(champDetail.name)}
+              handleMouseOut={handleMouseOut}
+              navigateToChampionDetail={navigateToChampionDetail}
+              show={show}
+              hoveredChamp={hoveredChamp}
+            />
+          ))}
         </CardsContainer>
       </HomeScreenBody>
     </HomeScreenContainer>

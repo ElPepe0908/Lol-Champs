@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Drawer from "@mui/material/Drawer";
 import {
   DifficultyFilter,
@@ -95,37 +95,49 @@ export const Sidebar = ({
     );
   };
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleWindowResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleWindowResize);
+
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  }, []);
+
+  console.log("windowWidth", windowWidth);
+
   const mobileSideBar = (
     <>
-      {(["left"] as const).map((anchor) => (
-        <React.Fragment key={anchor}>
-          <RolesMenuContainer onClick={toggleDrawer(anchor, true)}>
-            <FaBarIcon />
-          </RolesMenuContainer>
-          <Drawer
-            anchor={anchor}
-            open={drawerState[anchor]}
-            onClose={toggleDrawer(anchor, false)}
-          >
-            <SideBarResponsive>
-              <FiltersContainer>
-                <RolesFilterContainer>
-                  <RolesFilter>Roles</RolesFilter>
-                  {rolesComponent()}
-                </RolesFilterContainer>
-                <DifficultyFiltersContainer>
-                  <DifficultyFilter>Difficulty</DifficultyFilter>
-                  {difficultyComponent()}
-                </DifficultyFiltersContainer>
-                <LogoutButton>
-                  <NavToLoginIcon onClick={navigateToLogin} />
-                  <LogoutText onClick={navigateToLogin}>Log Out</LogoutText>
-                </LogoutButton>
-              </FiltersContainer>
-            </SideBarResponsive>
-          </Drawer>
-        </React.Fragment>
-      ))}
+      <RolesMenuContainer onClick={toggleDrawer("left", true)}>
+        <FaBarIcon />
+      </RolesMenuContainer>
+      <Drawer
+        anchor={"left"}
+        open={drawerState["left"]}
+        onClose={toggleDrawer("left", false)}
+      >
+        <SideBarResponsive>
+          <FiltersContainer>
+            <RolesFilterContainer>
+              <RolesFilter>Roles</RolesFilter>
+              {rolesComponent()}
+            </RolesFilterContainer>
+            <DifficultyFiltersContainer>
+              <DifficultyFilter>Difficulty</DifficultyFilter>
+              {difficultyComponent()}
+            </DifficultyFiltersContainer>
+            <LogoutButton>
+              <NavToLoginIcon onClick={navigateToLogin} />
+              <LogoutText onClick={navigateToLogin}>Log Out</LogoutText>
+            </LogoutButton>
+          </FiltersContainer>
+        </SideBarResponsive>
+      </Drawer>
     </>
   );
 
@@ -148,5 +160,5 @@ export const Sidebar = ({
       </SideBar>
     </>
   );
-  return window.innerWidth > 768 ? desktopSideBar : mobileSideBar;
+  return windowWidth > 768 ? desktopSideBar : mobileSideBar;
 };

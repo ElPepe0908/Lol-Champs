@@ -44,11 +44,6 @@ export const useHomeScreen = () => {
 
   const searchChamp = searchValue.toLocaleLowerCase().trim();
 
-  useEffect(
-    () => console.log("isIntersecting", isIntersecting),
-    [isIntersecting]
-  );
-
   useEffect(() => {
     if (!selectFilter && searchChamp.trim() === "") {
       setChampsFiltered(originalChampsData);

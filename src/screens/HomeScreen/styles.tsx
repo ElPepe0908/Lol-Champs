@@ -534,7 +534,7 @@ export const SideBarDivider = styled.div`
 
 export const CardsContainer = styled.div`
   width: 79vw;
-  height: 82vh;
+  height: 100vh;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

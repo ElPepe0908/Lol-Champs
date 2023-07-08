@@ -109,8 +109,6 @@ export const Sidebar = ({
     };
   }, []);
 
-  console.log("windowWidth", windowWidth);
-
   const mobileSideBar = (
     <>
       <RolesMenuContainer onClick={toggleDrawer("left", true)}>

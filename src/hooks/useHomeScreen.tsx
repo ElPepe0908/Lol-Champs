@@ -141,7 +141,6 @@ export const useHomeScreen = () => {
   const handleMouseOver = (tag: any) => {
     setShow(true);
     setHoveredChamp(tag);
-    console.log("hoveredChamp from hook", hoveredChamp);
   };
 
   const handleMouseOut = () => {
@@ -207,17 +206,26 @@ export const useHomeScreen = () => {
     );
     setChampsFiltered(filterNewChamp);
   };
+  console.log("champsFiltered", champsFiltered);
 
-  const navigateChampionPath = () => {
-    champsFiltered.map((champ) => {
-      champ.name.includes(" ")
-        ? champ.name.replace(/\s/g, "-")
-        : champ?.name.replace(/'/g, "-");
-    });
+  const champToNavigate = () => {
+    const clickedChampion = champsFiltered.find(
+      (champ) => champ.name === hoveredChamp
+    );
+    return clickedChampion;
+  };
+  const championPathName = () => {
+    if (champToNavigate()) {
+      return champToNavigate()?.name.replace(/\s/g, "-").replace(/'/g, "-");
+    }
   };
   const navigateToChampionDetail = () => {
-    navigate(`/champ-detail/${navigateChampionPath}`, {
-      state: { championName: champs?.data.id.id },
+    const championPath = championPathName();
+
+    console.log("navigateChampionPath", championPath);
+
+    navigate(`/champ-detail/${championPath}`, {
+      state: { championName: hoveredChamp },
     });
   };
 

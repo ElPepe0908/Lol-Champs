@@ -570,7 +570,7 @@ export const SpellSeparationText = styled("h2")({
   },
 });
 
-export const ChampCarrusellDiv = styled("div")({
+export const ChampCarouselDiv = styled("div")({
   borderRadius: 10,
   display: "flex",
   flexDirection: "row",
@@ -579,7 +579,7 @@ export const ChampCarrusellDiv = styled("div")({
   height: "none",
 });
 
-export const ChampCarrusellInner = styled("div")({
+export const ChampCarouselInner = styled("div")({
   width: "100%",
   display: "flex",
   justifyContent: "space-between",

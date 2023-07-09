@@ -222,8 +222,6 @@ export const useHomeScreen = () => {
   const navigateToChampionDetail = () => {
     const championPath = championPathName();
 
-    console.log("navigateChampionPath", championPath);
-
     navigate(`/champ-detail/${championPath}`, {
       state: { championName: hoveredChamp },
     });

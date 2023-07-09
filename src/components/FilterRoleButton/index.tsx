@@ -7,7 +7,7 @@ import {
   FilterIconMarksman,
   FilterIconSupport,
   FilterIconTank,
-} from "../screens/HomeScreen/styles";
+} from "./styles";
 interface Props {
   buttonTitle?: string;
   isSelected?: boolean;

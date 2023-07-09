@@ -18,7 +18,7 @@ import {
   BackToChampArrow,
 } from "./styles";
 import lolLogo from "../../assets/lol-logo.png";
-import { Sidebar } from "./Sidebar";
+import { Sidebar } from "../../components/Sidebar";
 import { Datum } from "../../interfaces/NewChampsListResponse";
 import { ChampToRender } from "../../components/ChampToRender";
 import { useHomeScreen } from "../../hooks/useHomeScreen";

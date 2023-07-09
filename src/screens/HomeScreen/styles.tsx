@@ -1,32 +1,10 @@
 import styled from "styled-components";
 import { device } from "../../constants";
 import { AiOutlineSearch } from "react-icons/ai";
-import {
-  GiBroadsword,
-  GiCrossbow,
-  GiThorHammer,
-  GiFist,
-  GiSmallFire,
-} from "react-icons/gi";
-import { FaBars, FaShieldAlt } from "react-icons/fa";
-import { MdClear, MdArrowForwardIos, MdOutlineLogout } from "react-icons/md";
-import { Datum } from "../../interfaces/NewChampsListResponse";
-import { getChampsSplash } from "../../utils/champInfo";
+import { MdClear, MdArrowForwardIos } from "react-icons/md";
 
 type DeleteButtonProps = {
   searchChamp: string;
-};
-
-type ChampNameProps = {
-  show: boolean;
-  hoveredChamp: any;
-  champDetail: Datum;
-};
-
-type CardProps = {
-  isFetching: boolean;
-  isIntersecting: boolean;
-  champDetail: Datum;
 };
 
 type BackToArrowProps = {
@@ -38,17 +16,6 @@ type FilterButtonProps = {
   isSelected?: boolean;
   isHovered?: boolean;
 };
-type FilterButtonElementsProps = {
-  isHovered?: boolean;
-  isSelected?: boolean;
-};
-
-export const Icon = styled.div<FilterButtonElementsProps>`
-  font-size: 20px;
-  margin-left: 8px;
-  transition: all 0.2s ease;
-  opacity: ${(props) => (props.isHovered || props.isSelected ? "1" : "0")};
-`;
 
 export const LoaderContainer = styled.div`
   display: flex;
@@ -279,113 +246,12 @@ export const HomeScreenBody = styled.div`
   }
 `;
 
-export const SideBar = styled.div`
-  width: 20vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-
-  @media ${device.desktops} {
-    width: 27vw;
-  }
-  @media ${device.phones} {
-    display: none;
-  }
-`;
-
-export const FaBarIcon = styled(FaBars)`
-  fill: #3a3a40;
-  font-size: 30px;
-  cursor: pointer;
-  position: absolute;
-  top: 142px;
-  left: 27px;
-`;
-
 export const SidebarContainer = styled.div`
   display: flex;
 
   @media ${device.phones} {
     display: none;
   }
-`;
-
-export const SideBarResponsive = styled.div`
-  display: none;
-  }
-  @media ${device.phones} {
-    background: #07121a;
-    width: 35vw;
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-    justify-content: center;
-  }
-  @media ${device.old_phones} {
-    width: 45vw;
-  }
-`;
-
-export const FiltersContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-export const RolesFilter = styled.p`
-  display: flex;
-  width: 100%;
-  align-self: flex-start;
-  margin-bottom: 5px;
-
-  @media ${device.phones} {
-    display: flex;
-    width: 100%;
-  }
-`;
-
-export const FilterButton = styled.button<FilterButtonProps>`
-  background-color: #27272d;
-  width: 100%;
-  height: 50px;
-  border-radius: 4px;
-  border: none;
-  border-left: ${(props) =>
-      props.isHovered || props.isSelected ? "6px" : "0px"}
-    solid white;
-  transition: all 0.1s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #808080;
-  margin: 6px 0;
-  cursor: pointer;
-  position: relative;
-
-  @media ${device.tablets} {
-    font-size: 14px;
-  }
-  @media ${device.phones} {
-    width: 100%;
-    height: 48px;
-    font-size: 13px;
-    align-items: center;
-    margin: 6px 0;
-  }
-  @media ${device.small_phones} {
-    height: 40px;
-    font-size: 12px;
-  }
-`;
-
-export const FilterButtonText = styled.p<FilterButtonElementsProps>`
-  margin: 0;
-  transition: all 0.2s ease;
-  color: ${(props) =>
-    props.isHovered || props.isSelected ? "#fff" : "#808080"};
-  font-size: 15px;
 `;
 
 export const SelectFilterButton = styled.div<FilterButtonProps>`
@@ -405,120 +271,6 @@ export const FilterContentDiv = styled.div`
   align-items: center;
   width: 100%;
   justify-content: center;
-`;
-
-export const FilterIconTank = styled(GiThorHammer)<FilterButtonElementsProps>`
-  font-size: 20px;
-  margin-left: 8px;
-  transition: all 0.2s ease;
-  opacity: ${(props) => (props.isHovered || props.isSelected ? "1" : "0")};
-`;
-export const FilterIconFighter = styled(GiFist)<FilterButtonElementsProps>`
-  font-size: 20px;
-  margin-left: 8px;
-  transition: all 0.2s ease;
-  opacity: ${(props) => (props.isHovered || props.isSelected ? "1" : "0")};
-`;
-export const FilterIconMage = styled(GiSmallFire)<FilterButtonElementsProps>`
-  font-size: 20px;
-  margin-left: 8px;
-  transition: all 0.2s ease;
-  opacity: ${(props) => (props.isHovered || props.isSelected ? "1" : "0")};
-`;
-export const FilterIconAssassin = styled(
-  GiBroadsword
-)<FilterButtonElementsProps>`
-  font-size: 20px;
-  margin-left: 8px;
-  transition: all 0.2s ease;
-  opacity: ${(props) => (props.isHovered || props.isSelected ? "1" : "0")};
-`;
-export const FilterIconSupport = styled(FaShieldAlt)<FilterButtonElementsProps>`
-  font-size: 20px;
-  margin-left: 8px;
-  transition: all 0.2s ease;
-  opacity: ${(props) => (props.isHovered || props.isSelected ? "1" : "0")};
-`;
-export const FilterIconMarksman = styled(GiCrossbow)<FilterButtonElementsProps>`
-  font-size: 20px;
-  margin-left: 8px;
-  transition: all 0.2s ease;
-  opacity: ${(props) => (props.isHovered || props.isSelected ? "1" : "0")};
-`;
-
-export const RolesFilterContainer = styled.div`
-  width: 70%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  @media ${device.phones} {
-    width: 67%;
-  }
-
-  @media ${device.old_phones} {
-    width: 80%;
-  }
-  @media ${device.small_phones} {
-    width: 75%;
-  }
-`;
-
-export const DifficultyFilter = styled.p`
-  display: flex;
-  margin-bottom: 5px;
-  width: 100%;
-`;
-
-export const DifficultyFiltersContainer = styled.div`
-  margin-top: 25px;
-  width: 67%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  @media ${device.old_phones} {
-    width: 80%;
-  }
-  @media ${device.small_phones} {
-    width: 75%;
-  }
-`;
-
-export const LogoutButton = styled.div`
-  width: 60%;
-  flex: 1;
-  display: flex;
-  align-items: center;
-  margin-top: 25px;
-
-  @media ${device.desktops_large} {
-    width: 70%;
-  }
-  @media ${device.phones} {
-    width: 70%;
-    margin-top: 25px;
-  }
-  @media ${device.old_phones} {
-    width: 80%;
-  }
-  @media ${device.small_phones} {
-    width: 75%;
-  }
-`;
-
-export const LogoutText = styled.p`
-  margin-bottom: 0px;
-  margin-left: 15px;
-  cursor: pointer;
-
-  @media ${device.tablets} {
-    font-size: 14px;
-  }
-`;
-
-export const NavToLoginIcon = styled(MdOutlineLogout)`
-  cursor: "pointer";
 `;
 
 export const SideBarDivider = styled.div`
@@ -549,83 +301,6 @@ export const CardsContainer = styled.div`
   }
 `;
 
-export const ChampCard = styled.div<CardProps>`
-  display: flex;
-  border-radius: 10px;
-  background-size: cover;
-  background-position: center;
-  background-image: ${(props) =>
-    props.champDetail
-      ? `url(${getChampsSplash(props.champDetail.id)})`
-      : "none"};
-  align-items: ${(props) => (props.champDetail ? "end" : "center")};
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  opacity: ${(props) => (props.isIntersecting ? "1" : "0.4")};
-  transition: opacity 0.5s linear;
-`;
-export const ChampCardContainer = styled.div`
-  display: flex;
-  width: 30%;
-  height: 250px;
-  background: #000;
-  border-radius: 10px;
-  margin: 0 10px 20px 10px;
-  cursor: pointer;
-
-  @media ${device.desktops_large} {
-    width: 43%;
-    height: 270px;
-  }
-  @media ${device.desktops} {
-    width: 43%;
-    height: 210px;
-  }
-  @media ${device.tablets} {
-    width: 43%;
-    height: 170px;
-  }
-  @media ${device.phones} {
-    width: 45%;
-    height: 185px;
-  }
-  @media ${device.old_phones} {
-    width: 91%;
-    height: 260px;
-  }
-  @media ${device.small_phones} {
-    width: 92%;
-    height: 200px;
-  }
-`;
-
-export const ChampNameDiv = styled.div<ChampNameProps>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 40px;
-  background-color: #070707;
-  border-radius: 0px 0px 10px 10px;
-  opacity: ${(props) =>
-    props.show && props.hoveredChamp === props.champDetail.name ? "0.7" : "0"};
-  transition: opacity 0.2s ease-in-out;
-`;
-
-export const ChampName = styled.p`
-  font-size: 17px;
-  font-weight: 500;
-  height: max-content;
-  margin: 0;
-
-  @media ${device.tablets} {
-    font-size: 16px;
-  }
-  @media ${device.phones} {
-    font-size: 15px;
-  }
-`;
 export const ChampCardRequest = styled.p`
   cursor: pointer;
   margin: 0;
@@ -638,13 +313,6 @@ export const ChampRequestContainer = styled.div`
   margin-bottom: 15px;
 `;
 
-export const RolesMenuContainer = styled.div`
-  display: none;
-
-  @media ${device.phones} {
-    display: flex;
-  }
-`;
 export const DeleteButton = styled.div<DeleteButtonProps>`
   width: 40px;
   height: 40px;

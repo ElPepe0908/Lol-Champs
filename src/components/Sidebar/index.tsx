@@ -13,11 +13,11 @@ import {
   FaBarIcon,
   NavToLoginIcon,
   SideBar,
-} from "../styles";
-import { FilterRoleButton } from "../../../components/FilterRoleButton";
-import { FilterDifficultyButton } from "../../../components/FilterDifficultyButton";
-import { Datum } from "../../../interfaces/NewChampsListResponse";
-import { champStats, difficultyNumber, roles } from "../../../constants";
+} from "./styles";
+import { FilterRoleButton } from "../FilterRoleButton";
+import { FilterDifficultyButton } from "../FilterDifficultyButton";
+import { Datum } from "../../interfaces/NewChampsListResponse";
+import { champStats, difficultyNumber, roles } from "../../constants";
 
 type Anchor = "left";
 

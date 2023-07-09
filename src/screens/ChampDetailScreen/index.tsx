@@ -56,7 +56,6 @@ const ChampDetailScreen = () => {
     handleNavigate,
     championDetailInfo,
     spells,
-    SpellStyles,
     spellBreakpoints,
     skinBreakpoints,
     capitalizeFirstLetter,
@@ -175,7 +174,6 @@ const ChampDetailScreen = () => {
         <ChampCarouselDiv>
           <ChampCarouselInner>
             <SpellsCarousel
-              ChampStyles={{ ...SpellStyles }}
               breakpoints={spellBreakpoints}
               onMouseOver={handleMouseOver}
               onMouseOut={handleMouseOut}

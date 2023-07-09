@@ -1,5 +1,4 @@
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 import {
@@ -11,10 +10,9 @@ import {
   RemoveIcon,
   SkinName,
   SkinNameHover,
-} from "../screens/ChampDetailScreen/styles";
-import { ICarouselItem } from "../constants";
-import { Loader } from "./Loader";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+} from "../../screens/ChampDetailScreen/styles";
+import { ICarouselItem } from "../../constants";
+import { Loader } from "../Loader";
 import {
   SpellsNextArrow,
   SpellsPrevArrow,
@@ -23,7 +21,6 @@ import {
 } from "./styles";
 
 interface Props {
-  ChampStyles: any;
   breakpoints?: any;
   onMouseOver: (itemToShow: string) => void;
   onMouseOut: () => void;
@@ -35,7 +32,6 @@ interface Props {
 }
 
 const SpellsCarousel = ({
-  ChampStyles,
   breakpoints,
   onMouseOver,
   onMouseOut,

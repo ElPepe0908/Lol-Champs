@@ -1,22 +1,5 @@
-import {
-  GiBroadsword,
-  GiCrossbow,
-  GiThorHammer,
-  GiFist,
-  GiSmallFire,
-} from "react-icons/gi";
-import { FaShieldAlt } from "react-icons/fa";
-import {
-  FilterIconAssassin,
-  FilterIconFighter,
-  FilterIconMage,
-  FilterIconMarksman,
-  FilterIconSupport,
-  FilterIconTank,
-} from "../screens/HomeScreen/styles";
-
 export type RolesType =
-  | "ASSASIN"
+  | "ASSASSIN"
   | "MAGE"
   | "TANK"
   | "SUPPORT"

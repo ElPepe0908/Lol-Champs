@@ -19,25 +19,28 @@ import {
   LoginOption,
   ForgotPasswordLink,
   LoginSubmitButton,
-  GoogleLoginButton,
   LoaderContainer,
+  AlertPasswordText,
+  RememberIcon,
+  ForgotPasswordLinkContainer,
+  ForgotPasswordToolTip,
 } from "./styles";
 import lolLogo from "../../assets/lol-logo.png";
 
-import CheckIcon from "@mui/icons-material/Check";
-import GoogleIcon from "@mui/icons-material/Google";
 import { useQuery } from "react-query";
 import { Loader } from "../../components/Loader";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const LoginScreen = () => {
-  const { data, isLoading, isError, error } = useQuery(["userInfo"], () => {
+  const { isLoading, isError, error } = useQuery(["userInfo"], () => {
     return;
   });
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fieldsFilled, setFieldsFilled] = useState(false);
+  const [isRememberIconClicked, setIsRememberIconClicked] = useState(false);
+  const [isPasswordForgotten, setIsPasswordForgotten] = useState(false);
 
   const navigate = useNavigate();
 
@@ -57,7 +60,6 @@ const LoginScreen = () => {
       navigate("/home");
     }
   };
-
   useEffect(() => {
     if (email.trim() !== "" && password.trim() !== "") {
       setFieldsFilled(true);
@@ -86,6 +88,11 @@ const LoginScreen = () => {
           <LoginHeader>
             <HeaderText>Welcome</HeaderText>
             <HeaderSubText>Please enter your detail</HeaderSubText>
+            <AlertPasswordText>
+              This is a fake log in.
+              <br />
+              Don't put your real password.
+            </AlertPasswordText>
           </LoginHeader>
 
           <LoginBody>
@@ -107,12 +114,29 @@ const LoginScreen = () => {
             </form>
             <LoginOptions>
               <RememberContainer>
-                <RememberDiv>
-                  <CheckIcon fontSize="small" />
+                <RememberDiv
+                  onClick={() =>
+                    setIsRememberIconClicked((prevState) => !prevState)
+                  }
+                >
+                  {isRememberIconClicked ? <RememberIcon /> : null}
                 </RememberDiv>
                 <LoginOption>Remember me</LoginOption>
               </RememberContainer>
-              <ForgotPasswordLink>Forgot password</ForgotPasswordLink>
+
+              <ForgotPasswordLinkContainer>
+                <ForgotPasswordLink
+                  onMouseOver={() => setIsPasswordForgotten(true)}
+                  onMouseOut={() => setIsPasswordForgotten(false)}
+                >
+                  Forgot password
+                </ForgotPasswordLink>
+                <ForgotPasswordToolTip
+                  isPasswordForgotten={isPasswordForgotten}
+                >
+                  I don't care
+                </ForgotPasswordToolTip>
+              </ForgotPasswordLinkContainer>
             </LoginOptions>
           </LoginBody>
 

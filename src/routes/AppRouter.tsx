@@ -1,6 +1,4 @@
-import React from "react";
-
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import HomeScreen from "../screens/HomeScreen/index";
 import ChampDetailScreen from "../screens/ChampDetailScreen/index";
 import LoginScreen from "../screens/LoginScreen/index";

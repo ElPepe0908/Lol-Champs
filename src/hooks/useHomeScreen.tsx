@@ -206,7 +206,6 @@ export const useHomeScreen = () => {
     );
     setChampsFiltered(filterNewChamp);
   };
-  console.log("champsFiltered", champsFiltered);
 
   const champToNavigate = () => {
     const clickedChampion = champsFiltered.find(

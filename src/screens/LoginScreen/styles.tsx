@@ -1,6 +1,11 @@
 import styled from "styled-components";
 
 import { device } from "../../constants";
+import CheckIcon from "@mui/icons-material/Check";
+
+type PasswordProps = {
+  isPasswordForgotten: boolean;
+};
 
 export const LoaderContainer = styled.div`
   display: flex;
@@ -68,7 +73,7 @@ export const LoginHeader = styled.div`
 `;
 
 export const HeaderText = styled.h1`
-  font-size: 35px;
+  font-size: 40px;
   font-weight: 400;
   color: #fff;
   margin-bottom: 5px;
@@ -92,10 +97,10 @@ export const LoginBody = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin-top: 70px;
+  margin-top: 30px;
 
   @media ${device.old_phones} {
-    margin-top: 50px;
+    margin-top: 20px;
   }
 `;
 
@@ -119,7 +124,7 @@ export const LoginButton = styled.input`
   padding: 0 25px;
   margin-bottom: 30px;
   color: #686868;
-  font-weight: 600;
+  font-weight: 500;
 
   @media ${device.small_phones} {
     height: 53px;
@@ -196,4 +201,34 @@ export const GoogleLoginButton = styled.input`
   display: flex;
   justify-content: center;
   margin-top: 25px;
+`;
+
+export const AlertPasswordText = styled.p`
+  font-size: 11px;
+  color: #fff;
+`;
+
+export const RememberIcon = styled(CheckIcon)`
+  font-size: 17px !important;
+  z-index: 1;
+`;
+
+export const ForgotPasswordLinkContainer = styled.div`
+  position: relative;
+`;
+
+export const ForgotPasswordToolTip = styled.div<PasswordProps>`
+  position: absolute;
+  top: -35px;
+  right: 0;
+  background: #676767;
+  color: #000;
+  font-size: 12px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 10px;
+  opacity: ${({ isPasswordForgotten }) => (isPasswordForgotten ? "0.6" : "0")};
+  transition: opacity 0.2s ease-in-out;
 `;

@@ -1,12 +1,12 @@
-import { Datum } from "../interfaces/NewChampsListResponse";
+import { Datum } from "../../interfaces/NewChampsListResponse";
 import {
   ChampCardContainer,
   ChampCard,
   ChampNameDiv,
   ChampName,
-} from "../screens/HomeScreen/styles";
-import { Loader } from "./Loader";
-import { useChampToRender } from "../hooks/useChampToRender";
+} from "./styles";
+import { Loader } from "../Loader";
+import { useChampToRender } from "../../hooks/useChampToRender";
 
 interface Props {
   champDetail: Datum;

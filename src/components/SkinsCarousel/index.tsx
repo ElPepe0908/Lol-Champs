@@ -3,8 +3,11 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import { SkinName, SkinNameHover } from "../screens/ChampDetailScreen/styles";
-import { Champion, Skin } from "../interfaces/NewChampsDetailListResponse";
+import {
+  SkinName,
+  SkinNameHover,
+} from "../../screens/ChampDetailScreen/styles";
+import { Champion, Skin } from "../../interfaces/NewChampsDetailListResponse";
 import {
   LoaderContainer,
   SkinsNextArrow,
@@ -12,8 +15,8 @@ import {
   SkinsSwiper,
   SkinsSwiperSlide,
 } from "./styles";
-import { Loader } from "./Loader";
-import { baseUrl } from "../constants";
+import { Loader } from "../Loader";
+import { baseUrl } from "../../constants";
 import { useState } from "react";
 
 interface Props {
@@ -68,13 +71,11 @@ const SkinsCarousel = ({
       }}
     >
       {skins?.map((skin: Skin) => {
-        {
-          !skins && (
-            <LoaderContainer>
-              <Loader />
-            </LoaderContainer>
-          );
-        }
+        !skins && (
+          <LoaderContainer>
+            <Loader />
+          </LoaderContainer>
+        );
         return (
           <SkinsSwiperSlide
             key={skin.num}

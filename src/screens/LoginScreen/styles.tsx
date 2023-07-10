@@ -166,6 +166,7 @@ export const LoginOption = styled.p`
   color: #fff;
   font-size: 13px;
   margin: 0 0 0 20px;
+  cursor: pointer;
 
   @media ${device.desktops_large} {
     font-size: 12px;

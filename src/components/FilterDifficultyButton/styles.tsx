@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { device } from "../../constants";
+import { AiTwotoneStar } from "react-icons/ai";
+import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
 
 type FilterButtonProps = {
   show?: boolean;
@@ -11,6 +13,7 @@ type FilterButtonElementsProps = {
   isSelected?: boolean;
 };
 export const FilterButton = styled.button<FilterButtonProps>`
+  position: relative;
   background-color: #27272d;
   width: 100%;
   height: 50px;
@@ -38,16 +41,59 @@ export const FilterButton = styled.button<FilterButtonProps>`
     align-items: center;
     margin: 6px 0;
   }
-  @media ${device.small_phones} {
-    height: 40px;
-    font-size: 12px;
-  }
 `;
 
 export const FilterButtonText = styled.p<FilterButtonElementsProps>`
-  margin: 0;
+  margin: 0px 8px 0 0;
   transition: all 0.2s ease;
   color: ${(props) =>
     props.isHovered || props.isSelected ? "#fff" : "#808080"};
   font-size: 15px;
+  position: absolute;
+
+  @media ${device.old_phones} {
+    font-size: 14px;
+  }
+  @media ${device.small_phones} {
+    font-size: 12px;
+  }
+`;
+
+export const FilterEasyIcon = styled(FaRegStar)<FilterButtonElementsProps>`
+  font-size: 16px;
+  transition: all 0.2s ease;
+  opacity: ${(props) => (props.isHovered || props.isSelected ? "1" : "0")};
+  position: relative;
+  right: -30px;
+
+  @media ${device.small_phones} {
+    font-size: 14px;
+  }
+`;
+
+export const FilterMediumIcon = styled(
+  FaStarHalfAlt
+)<FilterButtonElementsProps>`
+  font-size: 16px;
+  transition: all 0.2s ease;
+  opacity: ${(props) => (props.isHovered || props.isSelected ? "1" : "0")};
+  position: relative;
+  right: -46px;
+
+  @media ${device.small_phones} {
+    right: -40px;
+    font-size: 14px;
+  }
+`;
+export const FilterHardIcon = styled(FaStar)<FilterButtonElementsProps>`
+  font-size: 16px;
+  transition: all 0.2s ease;
+  opacity: ${(props) => (props.isHovered || props.isSelected ? "1" : "0")};
+  position: relative;
+  right: -35px;
+
+  @media ${device.small_phones} {
+    right: -30px;
+    font-size: 14px;
+  }
 `;

@@ -20,7 +20,7 @@ export const DifficultyFiltersContainer = styled.div`
     width: 80%;
   }
   @media ${device.small_phones} {
-    width: 75%;
+    width: 85%;
   }
 `;
 
@@ -83,12 +83,11 @@ export const RolesFilterContainer = styled.div`
   @media ${device.phones} {
     width: 67%;
   }
-
   @media ${device.old_phones} {
     width: 80%;
   }
   @media ${device.small_phones} {
-    width: 75%;
+    width: 85%;
   }
 `;
 export const SideBarResponsive = styled.div`
@@ -103,12 +102,16 @@ export const SideBarResponsive = styled.div`
     justify-content: center;
   }
   @media ${device.old_phones} {
-    width: 45vw;
+    width: 40vw;
+  }
+  @media ${device.small_phones} {
+    width: 50vw;
   }
 `;
 
 export const RolesMenuContainer = styled.div`
   display: none;
+  // position: relative;
 
   @media ${device.phones} {
     display: flex;
@@ -116,7 +119,7 @@ export const RolesMenuContainer = styled.div`
 `;
 
 export const NavToLoginIcon = styled(MdOutlineLogout)`
-  cursor: "pointer";
+  cursor: pointer;
 `;
 
 export const SideBar = styled.div`
@@ -141,4 +144,9 @@ export const FaBarIcon = styled(FaBars)`
   position: absolute;
   top: 142px;
   left: 27px;
+
+  @media ${device.small_phones} {
+    top: 130px;
+    left: 14px;
+  }
 `;

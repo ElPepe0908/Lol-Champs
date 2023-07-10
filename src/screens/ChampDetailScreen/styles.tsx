@@ -190,6 +190,7 @@ export const BackContainer = styled("div")({
   justifyContent: "center",
   alignItems: "center",
   marginBottom: 10,
+  cursor: "pointer",
 
   [`@media ${device.tablets}`]: {
     display: "none",

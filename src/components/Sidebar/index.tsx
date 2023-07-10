@@ -82,6 +82,7 @@ export const Sidebar = ({
           <FilterDifficultyButton
             isHovered={selectFilter === stats || selectedRole === stats}
             isSelected={showClickedRole && selectedRole === stats}
+            getChampsByDifficulty={getChampsByDifficulty}
             onClick={() => {
               handleClickFilter(stats);
               getChampsByDifficulty(difficultyNumber[index]);

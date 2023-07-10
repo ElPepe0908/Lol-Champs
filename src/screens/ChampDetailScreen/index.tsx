@@ -112,8 +112,8 @@ const ChampDetailScreen = () => {
     <>
       <UpperGeneralDiv>
         <ChampDetailDiv>
-          <BackContainer>
-            <NavigateBackDiv onClick={handleNavigate}>
+          <BackContainer onClick={handleNavigate}>
+            <NavigateBackDiv>
               <ArrowBackInfo />
               <GoBackText>GO BACK</GoBackText>
             </NavigateBackDiv>

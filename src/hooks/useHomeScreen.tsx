@@ -149,6 +149,7 @@ export const useHomeScreen = () => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
     setSearchValue(e.target.value);
   };
 

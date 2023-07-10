@@ -121,7 +121,13 @@ const LoginScreen = () => {
                 >
                   {isRememberIconClicked ? <RememberIcon /> : null}
                 </RememberDiv>
-                <LoginOption>Remember me</LoginOption>
+                <LoginOption
+                  onClick={() =>
+                    setIsRememberIconClicked((prevState) => !prevState)
+                  }
+                >
+                  Remember me
+                </LoginOption>
               </RememberContainer>
 
               <ForgotPasswordLinkContainer>

@@ -6,6 +6,9 @@ import CheckIcon from "@mui/icons-material/Check";
 type PasswordProps = {
   isPasswordForgotten: boolean;
 };
+type LogInProps = {
+  isFormOnFocus: boolean;
+};
 
 export const LoaderContainer = styled.div`
   display: flex;
@@ -98,6 +101,7 @@ export const LoginBody = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 30px;
+  position: relative;
 
   @media ${device.old_phones} {
     margin-top: 20px;
@@ -232,4 +236,19 @@ export const ForgotPasswordToolTip = styled.div<PasswordProps>`
   padding: 6px 10px;
   opacity: ${({ isPasswordForgotten }) => (isPasswordForgotten ? "0.6" : "0")};
   transition: opacity 0.2s ease-in-out;
+`;
+
+export const LogInToolTip = styled.div<LogInProps>`
+  position: absolute;
+  background-color: gray;
+  color: black;
+  font-size: 10px;
+  right: 0px;
+  top: -10px;
+  text-align: center;
+  border-radius: 8px;
+  padding: 4px;
+  opacity: ${({ isFormOnFocus }) => (isFormOnFocus ? "0.6" : "0")};
+  transition: opacity 0.2s ease-in-out;
+  font-weight: 600;
 `;

@@ -20,10 +20,10 @@ import {
   ForgotPasswordLink,
   LoginSubmitButton,
   LoaderContainer,
-  AlertPasswordText,
   RememberIcon,
   ForgotPasswordLinkContainer,
   ForgotPasswordToolTip,
+  LogInToolTip,
 } from "./styles";
 import lolLogo from "../../assets/lol-logo.png";
 
@@ -41,6 +41,23 @@ const LoginScreen = () => {
   const [fieldsFilled, setFieldsFilled] = useState(false);
   const [isRememberIconClicked, setIsRememberIconClicked] = useState(false);
   const [isPasswordForgotten, setIsPasswordForgotten] = useState(false);
+  const [isFormClicked, setIsFormClicked] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutsideForm = (event: MouseEvent) => {
+      const target = event.target as Node;
+      const isFormClicked = document.querySelector("form")?.contains(target);
+      if (!isFormClicked) {
+        setIsFormClicked(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutsideForm);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideForm);
+    };
+  }, []);
 
   const navigate = useNavigate();
 
@@ -88,22 +105,24 @@ const LoginScreen = () => {
           <LoginHeader>
             <HeaderText>Welcome</HeaderText>
             <HeaderSubText>Please enter your detail</HeaderSubText>
-            <AlertPasswordText>
-              This is a fake log in.
-              <br />
-              Don't put your real password.
-            </AlertPasswordText>
           </LoginHeader>
 
           <LoginBody>
             <form>
-              <LoginTitle>Email</LoginTitle>
+              <LoginTitle>
+                Email
+                <LogInToolTip isFormOnFocus={isFormClicked}>
+                  This is a fake log in. <br />
+                  Don't put your real password.
+                </LogInToolTip>
+              </LoginTitle>
               <LoginButton
+                onFocus={() => setIsFormClicked(true)}
                 type="text"
                 placeholder="Enter your email"
                 value={email}
                 onChange={handleEmailChange}
-              />
+              ></LoginButton>
               <LoginTitle>Password</LoginTitle>
               <LoginButton
                 type="password"

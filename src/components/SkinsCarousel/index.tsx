@@ -104,7 +104,7 @@ const SkinsCarousel = ({
         );
       })}
       <SkinsPrevArrow className="swiper-button-prev" />
-      <SkinsNextArrow className="swiper-button-next" />
+      <SkinsNextArrow fontSize={15} className="swiper-button-next" />
     </SkinsSwiper>
   );
 };

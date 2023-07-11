@@ -152,7 +152,6 @@ export const useHomeScreen = () => {
     e.preventDefault();
     setSearchValue(e.target.value);
   };
-
   const getChamps = async () => {
     const url = `http://ddragon.leagueoflegends.com/cdn/13.10.1/data/en_US/champion.json`;
     try {

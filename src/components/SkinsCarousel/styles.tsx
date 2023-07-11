@@ -46,14 +46,19 @@ export const SkinsSwiperSlide = styled(SwiperSlide)`
 export const SkinsPrevArrow = styled(MdKeyboardArrowLeft)`
   cursor: pointer;
   fill: #bfbfbf;
-  width: 44px;
+  width: 45px;
+  height: 45px;
   transform: rotate(90deg);
   top: var(--swiper-navigation-top-offset, 5%);
   left: 43.5%;
+  // background-color: #27272d;
+  // border-radius: 50%;
+  background-color: rgba(39, 39, 45, 0.7);
+  border-radius: 50%;
+  box-shadow: 0 0 2px 3px rgba(39, 39, 45, 0.7);
 
   @media ${device.desktops_large} {
     top: 50%;
-    width: 44px;
     left: 15px;
     transform: rotate(0deg);
   }
@@ -62,14 +67,17 @@ export const SkinsPrevArrow = styled(MdKeyboardArrowLeft)`
 export const SkinsNextArrow = styled(MdKeyboardArrowRight)`
   cursor: pointer;
   fill: #bfbfbf;
-  width: 44px;
+  width: 45px;
+  height: 45px;
   transform: rotate(90deg);
   top: var(--swiper-navigation-top-offset, 95%);
   right: 43.5%;
+  background-color: rgba(39, 39, 45, 0.7);
+  border-radius: 50%;
+  box-shadow: 0 0 2px 3px rgba(39, 39, 45, 0.7);
 
   @media ${device.desktops_large} {
     top: 50%;
-    width: 44px;
     right: 15px;
     transform: rotate(0deg);
   }

@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { device } from "../../constants";
-import { AiTwotoneStar } from "react-icons/ai";
 import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
 
 type FilterButtonProps = {

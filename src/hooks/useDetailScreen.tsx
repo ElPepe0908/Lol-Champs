@@ -134,7 +134,7 @@ export const useDetailScreen = () => {
   const getChampionData = async (name: string) => {
     const url = `https://league-of-legends-champions.p.rapidapi.com/champions/en-us/${name}`;
     const headers = {
-      "X-RapidAPI-Key": "2d60f7bfc5msh614cefcd884660dp1b936djsn2451881ee132",
+      "X-RapidAPI-Key": "bc7631622amshe4ce671bd4342e8p19a558jsn729252f3fc32",
       "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
     };
     try {

@@ -44,6 +44,7 @@ import {
   BackContainer,
   GoBackText,
   NavigateBackDiv,
+  ScreenContainer,
 } from "./styles";
 
 import { Loader } from "../../components/Loader";
@@ -185,17 +186,19 @@ const ChampDetailScreen = () => {
             />
 
             {selectedVideo && (
-              <ChampSpellsVideo>
-                <ChampSpellsVideoPlayer
-                  src={selectedVideo}
-                  ref={videoRef}
-                  controls
-                  autoPlay
-                />
-                <LogoSpellVideo onClick={handleCloseVideo}>
-                  <RemoveIcon />
-                </LogoSpellVideo>
-              </ChampSpellsVideo>
+              <>
+                <ChampSpellsVideo>
+                  <ChampSpellsVideoPlayer
+                    src={selectedVideo}
+                    ref={videoRef}
+                    controls
+                    autoPlay
+                  />
+                  <LogoSpellVideo onClick={handleCloseVideo}>
+                    <RemoveIcon />
+                  </LogoSpellVideo>
+                </ChampSpellsVideo>
+              </>
             )}
           </ChampCarouselInner>
         </ChampCarouselDiv>
@@ -211,6 +214,7 @@ const ChampDetailScreen = () => {
 
   return (
     <GeneralDiv>
+      {selectedVideo && <ScreenContainer />}
       {mobileScreen}
       {desktopScreen}
     </GeneralDiv>

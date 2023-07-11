@@ -15,8 +15,9 @@ export const LoaderContainer = styled.div`
 `;
 
 export const GeneralDiv = styled("div")({
+  position: "relative",
   width: "95%",
-  height: "none",
+  height: "100%",
   margin: "2vh auto",
   display: "flex",
   flexDirection: "column",
@@ -399,6 +400,7 @@ export const ChampSkinDiv = styled("div")({
   width: "75%",
   marginRight: 20,
   borderRadius: 10,
+  transition: "all 0.5s ease",
 
   [`@media ${device.desktops_large}`]: {
     width: "100%",
@@ -760,3 +762,14 @@ export const ArrowBackInfo = styled(MdKeyboardArrowLeft)`
     font-size: 40px;
   }
 `;
+
+export const ScreenContainer = styled("div")({
+  width: "100%",
+  height: "100%",
+  position: "absolute",
+  top: 0,
+  left: 0,
+  backgroundColor: "#000",
+  opacity: 0.6,
+  zIndex: 2,
+});

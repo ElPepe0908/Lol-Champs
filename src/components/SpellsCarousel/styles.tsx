@@ -22,13 +22,19 @@ export const SpellsSwiperSlide = styled(SwiperSlide)`
 export const SpellsPrevArrow = styled(MdKeyboardArrowLeft)`
   cursor: pointer;
   fill: #bfbfbf;
-  width: 44px;
+  width: 45px;
   left: 25px;
+  background-color: rgba(39, 39, 45, 0.7);
+  border-radius: 50%;
+  box-shadow: 0 0 2px 3px rgba(39, 39, 45, 0.7);
 `;
 
 export const SpellsNextArrow = styled(MdKeyboardArrowRight)`
   cursor: pointer;
   fill: #bfbfbf;
-  width: 44px;
+  width: 45px;
   right: 25px;
+  background-color: rgba(39, 39, 45, 0.7);
+  border-radius: 50%;
+  box-shadow: 0 0 2px 3px rgba(39, 39, 45, 0.7);
 `;

@@ -51,6 +51,7 @@ const HomeScreen = () => {
     navigateToChampionDetail,
     show,
     hoveredChamp,
+    handleKeyDown,
   } = useHomeScreen();
 
   return (
@@ -83,6 +84,7 @@ const HomeScreen = () => {
               name="searchValue"
               value={searchValue}
               onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
               autoComplete="off"
             />
             <DeleteButton

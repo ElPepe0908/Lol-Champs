@@ -152,6 +152,16 @@ export const useHomeScreen = () => {
     e.preventDefault();
     setSearchValue(e.target.value);
   };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      console.log("enter");
+      e.preventDefault();
+    } else if (e.key === "Escape") {
+      console.log("escape");
+      setSearchValue("");
+    }
+  };
   const getChamps = async () => {
     const url = `http://ddragon.leagueoflegends.com/cdn/13.10.1/data/en_US/champion.json`;
     try {
@@ -259,6 +269,7 @@ export const useHomeScreen = () => {
     navigateToChampionDetail,
     toggleDrawer,
     drawerState,
+    handleKeyDown,
     hoveredChamp,
   };
 };

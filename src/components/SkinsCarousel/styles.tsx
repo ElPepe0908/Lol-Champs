@@ -51,8 +51,6 @@ export const SkinsPrevArrow = styled(MdKeyboardArrowLeft)`
   transform: rotate(90deg);
   top: var(--swiper-navigation-top-offset, 5%);
   left: 43.5%;
-  // background-color: #27272d;
-  // border-radius: 50%;
   background-color: rgba(39, 39, 45, 0.7);
   border-radius: 50%;
   box-shadow: 0 0 2px 3px rgba(39, 39, 45, 0.7);

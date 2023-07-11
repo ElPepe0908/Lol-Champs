@@ -43,8 +43,6 @@ export const FilterDifficultyButton = ({
         <FilterButtonText isHovered={isHovered} isSelected={isSelected}>
           {buttonTitle}
         </FilterButtonText>
-        {/* {Icon && renderIcons()} */}
-        {/* {renderIcons()} */}
         {Icon && <Icon isSelected={isSelected} isHovered={isHovered} />}
       </FilterButton>
     </>

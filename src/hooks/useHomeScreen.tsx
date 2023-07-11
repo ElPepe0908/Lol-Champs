@@ -149,16 +149,13 @@ export const useHomeScreen = () => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
     setSearchValue(e.target.value);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      console.log("enter");
       e.preventDefault();
     } else if (e.key === "Escape") {
-      console.log("escape");
       setSearchValue("");
     }
   };

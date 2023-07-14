@@ -377,7 +377,6 @@ export const ChampInfoSkinsDiv = styled("div")({
   borderRadius: 10,
   display: "flex",
   width: "78%",
-  minHeight: "585px",
 
   [`@media ${device.desktops_large}`]: {
     flexDirection: "column",
@@ -600,9 +599,11 @@ export const ChampCarouselInner = styled("div")({
   },
   [`@media ${device.phones}`]: {
     minHeight: "210px",
+    height: "210px",
   },
   [`@media ${device.old_phones}`]: {
     minHeight: "170px",
+    height: "170px",
   },
   [`@media ${device.small_phones}`]: {
     minHeight: "180px",
@@ -637,49 +638,78 @@ export const ChampCarrusellSpellDiv = styled.div<BackgroundImageProps>`
 
 export const ChampSpellsVideo = styled.div`
   display: flex;
-  width: 60vw;
-  height: 75vh;
-  border: 10px solid #101016;
+  width: 50vw;
+  border: 1px solid #fff;
   border-radius: 10px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 9990;
+  flex-direction: column;
+  position: relative;
 
   @media ${device.desktops_large} {
-    width: 70vw;
-    height: 75vh;
+    width: 50vw;
   }
   @media ${device.desktops} {
     width: 70vw;
-    height: 60vh;
   }
   @media ${device.tablets} {
     width: 86vw;
-    height: 55vh;
   }
   @media ${device.phones} {
     width: 96vw;
-    height: 50vh;
-  }
-  @media ${device.old_phones} {
-    width: 96vw;
-    height: 40vh;
-  }
-  @media ${device.small_phones} {
-    width: 96vw;
-    height: 30vh;
   }
 `;
 
 export const ChampSpellsVideoPlayer = styled.video`
   width: 100%;
-  height: 100%;
+  height: 60vh;
   object-fit: cover;
-  justify-content: center;
-  align-items: center;
+  border-radius: 10px 10px 0 0;
 `;
+
+export const SpellInfoDiv = styled("div")({
+  width: "100%",
+  height: "120px",
+  backgroundColor: "rgba(0, 0, 0, 0.7)",
+  borderRadius: "0px 0px 10px 10px",
+  borderTop: "1px solid rgba(255, 255, 255, 0.2)",
+  display: "flex",
+});
+
+export const SpellImageDiv = styled("div")({
+  width: "20%",
+  height: "100%",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+});
+
+export const SpellImage = styled("img")({
+  width: "70px",
+  height: "70px",
+  borderRadius: "5px",
+  objectFit: "cover",
+  backgroundColor: "rgba(255, 255, 255, 1)",
+});
+
+export const SpellInfoTextDiv = styled("div")({
+  width: "80%",
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "flex-start",
+  paddingRight: "20px",
+});
+
+export const SpellInfoTitle = styled("h2")({
+  fontSize: "16px",
+  fontWeight: "bold",
+  width: "max-content",
+});
+
+export const SpellInfoDescription = styled("p")({
+  fontSize: "13px",
+  marginBottom: 0,
+});
 
 export const LogoSpellVideo = styled.div`
   display: flex;
@@ -690,8 +720,9 @@ export const LogoSpellVideo = styled.div`
   border-radius: 50%;
   cursor: pointer;
   background-color: rgba(0, 0, 0, 1);
-  position: fixed;
-  transform: translate(-50%, -50%);
+  position: absolute;
+  top: 10px;
+  right: 10px;
 
   @media ${device.desktops} {
     width: 45px;
@@ -735,11 +766,20 @@ export const LogoSpellCircle = styled("div")({
   position: "fixed",
   bottom: "39%",
   alignSelf: "center",
+
+  [`@media ${device.old_phones}`]: {
+    width: "40px",
+    height: "40px",
+  },
 });
 
 export const LogoSpellIcon = styled(MdPlayArrow)({
   fontSize: "30px",
   fill: "#A3A3A3",
+
+  [`@media ${device.old_phones}`]: {
+    fontSize: "25px",
+  },
 });
 
 export const SwiperContainer = styled("div")({
@@ -761,15 +801,21 @@ export const ArrowBackInfo = styled(MdKeyboardArrowLeft)`
   @media ${device.tablets} {
     font-size: 40px;
   }
+  @media ${device.old_phones} {
+    margin-bottom: 0.5rem;
+  }
 `;
 
 export const ScreenContainer = styled("div")({
+  position: "absolute",
   width: "100%",
   height: "100%",
-  position: "absolute",
+  display: "flex",
   top: 0,
   left: 0,
-  backgroundColor: "#000",
-  opacity: 0.6,
-  zIndex: 2,
+  justifyContent: "center",
+  alignItems: "center",
+  zIndex: 9999,
+  backgroundColor: "rgba(0, 0, 0, 0.6)",
+  borderRadius: 10,
 });

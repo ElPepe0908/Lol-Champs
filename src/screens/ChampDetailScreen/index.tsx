@@ -45,12 +45,19 @@ import {
   GoBackText,
   NavigateBackDiv,
   ScreenContainer,
+  SpellInfoDiv,
+  SpellImageDiv,
+  SpellImage,
+  SpellInfoTextDiv,
+  SpellInfoTitle,
+  SpellInfoDescription,
 } from "./styles";
 
 import { Loader } from "../../components/Loader";
 import SkinsCarousel from "../../components/SkinsCarousel";
 import SpellsCarousel from "../../components/SpellsCarousel";
 import { useDetailScreen } from "../../hooks/useDetailScreen";
+import { spellImgBaseUrl } from "../../constants";
 
 const ChampDetailScreen = () => {
   const {
@@ -70,8 +77,11 @@ const ChampDetailScreen = () => {
     handleCloseVideo,
     isDataFetching,
     selectedVideo,
-    videoRef,
+    videoRefContainer,
     isChampionFetching,
+    spellSelected,
+    spellInfo,
+    getSpellImg,
   } = useDetailScreen();
 
   const mobileScreen = (
@@ -180,25 +190,56 @@ const ChampDetailScreen = () => {
               onMouseOut={handleMouseOut}
               itemToShow={itemToShow}
               onClickImage={handleOpenVideo}
-              closeVideo={handleCloseVideo}
               spells={spells}
               isFetching={isDataFetching}
             />
 
             {selectedVideo && (
-              <>
-                <ChampSpellsVideo>
-                  <ChampSpellsVideoPlayer
-                    src={selectedVideo}
-                    ref={videoRef}
-                    controls
-                    autoPlay
-                  />
-                  <LogoSpellVideo onClick={handleCloseVideo}>
-                    <RemoveIcon />
-                  </LogoSpellVideo>
-                </ChampSpellsVideo>
-              </>
+              <ScreenContainer>
+                <div
+                  style={{
+                    position: "fixed",
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "rgba(0, 0, 0, 0.6)",
+                    top: 0,
+                    left: 0,
+                  }}
+                >
+                  <ChampSpellsVideo ref={videoRefContainer}>
+                    <ChampSpellsVideoPlayer
+                      src={selectedVideo}
+                      controls
+                      autoPlay
+                    />
+                    <SpellInfoDiv>
+                      <SpellImageDiv>
+                        <SpellImage src={getSpellImg()} />
+                      </SpellImageDiv>
+                      <SpellInfoTextDiv>
+                        <SpellInfoTitle>
+                          {spellInfo?.image.full.includes(spellSelected) &&
+                            spellInfo?.image.full.replace(
+                              new RegExp(`.*${spellSelected}.*`),
+                              spellSelected
+                            )}{" "}
+                          - {spellInfo?.name}
+                        </SpellInfoTitle>
+
+                        <SpellInfoDescription>
+                          {spellInfo?.description}
+                        </SpellInfoDescription>
+                      </SpellInfoTextDiv>
+                    </SpellInfoDiv>
+                    <LogoSpellVideo onClick={handleCloseVideo}>
+                      <RemoveIcon />
+                    </LogoSpellVideo>
+                  </ChampSpellsVideo>
+                </div>
+              </ScreenContainer>
             )}
           </ChampCarouselInner>
         </ChampCarouselDiv>
@@ -214,7 +255,6 @@ const ChampDetailScreen = () => {
 
   return (
     <GeneralDiv>
-      {selectedVideo && <ScreenContainer />}
       {mobileScreen}
       {desktopScreen}
     </GeneralDiv>

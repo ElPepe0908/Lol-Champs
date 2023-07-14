@@ -6,7 +6,7 @@ import {
   Champion,
   NewChampsDetailListResponse,
 } from "../interfaces/NewChampsDetailListResponse";
-import { baseUrl } from "../constants";
+import { baseUrl, passiveImgBaseUrl, spellImgBaseUrl } from "../constants";
 import axios from "axios";
 import { ChampDetailResponse } from "../interfaces/ChampDetailInterface";
 
@@ -46,7 +46,33 @@ export const useDetailScreen = () => {
   const [imageSkin, setImageSkin] = useState<string>(
     `${baseUrl}${modifiedChampionName}_0.jpg`
   );
+  const [spellSelected, setSpellSelected] = useState<string>("");
   const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRefContainer = useRef<HTMLDivElement>(null);
+  console.log(spellSelected);
+
+  const handleOpenVideo = (videoName: string, spellName: string) => {
+    setSelectedVideo(videoName as any);
+    setSpellSelected(spellName);
+  };
+  const handleCloseVideo = () => {
+    setSelectedVideo(null);
+  };
+  useEffect(() => {
+    const handleClickOutsideForm = (event: MouseEvent) => {
+      const target = event.target as Node;
+      const isVideoClicked = videoRefContainer?.current?.contains(target);
+      if (!isVideoClicked) {
+        handleCloseVideo();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutsideForm);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideForm);
+    };
+  }, [handleCloseVideo, videoRef]);
 
   useEffect(() => {
     if (championDetailInfo) {
@@ -85,13 +111,20 @@ export const useDetailScreen = () => {
     setItemToShow("none");
   };
 
-  const handleOpenVideo = (videoName: string) => {
-    setSelectedVideo(videoName as any);
+  const getSpellInfo = () => {
+    if (spellSelected === "Passive") return championDetailInfo?.passive;
+    if (spellSelected === "Q") return championDetailInfo?.spells[0];
+    if (spellSelected === "W") return championDetailInfo?.spells[1];
+    if (spellSelected === "E") return championDetailInfo?.spells[2];
+    if (spellSelected === "R") return championDetailInfo?.spells[3];
+    return null;
   };
-  const handleCloseVideo = () => {
-    setSelectedVideo(null);
+  const getSpellImg = () => {
+    return spellSelected === "Passive"
+      ? passiveImgBaseUrl + spellInfo?.image.full
+      : spellImgBaseUrl + spellInfo?.image.full;
   };
-
+  const spellInfo = getSpellInfo();
   const navigate = useNavigate();
   const pathNameChamp = pathname.split("/")[2];
 
@@ -134,7 +167,7 @@ export const useDetailScreen = () => {
   const getChampionData = async (name: string) => {
     const url = `https://league-of-legends-champions.p.rapidapi.com/champions/en-us/${name}`;
     const headers = {
-      "X-RapidAPI-Key": "bc7631622amshe4ce671bd4342e8p19a558jsn729252f3fc32",
+      "X-RapidAPI-Key": "277eda47bemsh4c1888285d82b0ep119cc3jsn810817b025da",
       "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
     };
     try {
@@ -151,31 +184,41 @@ export const useDetailScreen = () => {
   };
 
   const champPassive = {
+    hability: "Passive",
     name: `Passive - ${championData?.champion[0].champion_passive.champion_passive_name}`,
     imageUrl:
       championData?.champion[0].champion_passive.champion_passive_video_poster,
     videoUrl:
       championData?.champion[0].champion_passive.champion_passive_video_mp4,
+    spellAssets: `${passiveImgBaseUrl}${championDetailInfo?.passive.image.full}`,
   };
   const champQ = {
+    hability: "Q",
     name: `Q - ${championData?.champion[0].champion_q.champion_q_name}`,
     imageUrl: championData?.champion[0].champion_q.champion_q_video_poster,
     videoUrl: championData?.champion[0].champion_q.champion_q_video_mp4,
+    spellAssets: `${spellImgBaseUrl}${championDetailInfo?.spells[0].image.full}`,
   };
   const champW = {
+    hability: "W",
     name: `W - ${championData?.champion[0].champion_w.champion_w_name}`,
     imageUrl: championData?.champion[0].champion_w.champion_w_video_poster,
     videoUrl: championData?.champion[0].champion_w.champion_w_video_mp4,
+    spellAssets: `${spellImgBaseUrl}${championDetailInfo?.spells[1].image.full}`,
   };
   const champE = {
+    hability: "E",
     name: `E - ${championData?.champion[0].champion_e.champion_e_name}`,
     imageUrl: championData?.champion[0].champion_e.champion_e_video_poster,
     videoUrl: championData?.champion[0].champion_e.champion_e_video_mp4,
+    spellAssets: `${spellImgBaseUrl}${championDetailInfo?.spells[2].image.full}`,
   };
   const champR = {
+    hability: "R",
     name: `R - ${championData?.champion[0].champion_r.champion_r_name}`,
     imageUrl: championData?.champion[0].champion_r.champion_r_video_poster,
     videoUrl: championData?.champion[0].champion_r.champion_r_video_mp4,
+    spellAssets: `${spellImgBaseUrl}${championDetailInfo?.spells[3].image.full}`,
   };
   const spells = [champPassive, champQ, champW, champE, champR];
 
@@ -275,7 +318,11 @@ export const useDetailScreen = () => {
     isDataFetching,
     selectedVideo,
     videoRef,
+    videoRefContainer,
     isChampionFetching,
     championTitle,
+    spellSelected,
+    spellInfo,
+    getSpellImg,
   };
 };

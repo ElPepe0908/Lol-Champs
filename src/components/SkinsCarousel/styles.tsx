@@ -46,8 +46,8 @@ export const SkinsSwiperSlide = styled(SwiperSlide)`
 export const SkinsPrevArrow = styled(MdKeyboardArrowLeft)`
   cursor: pointer;
   fill: #bfbfbf;
-  width: 45px;
-  height: 45px;
+  width: 35px;
+  height: 35px;
   transform: rotate(90deg);
   top: var(--swiper-navigation-top-offset, 5%);
   left: 43.5%;
@@ -60,13 +60,17 @@ export const SkinsPrevArrow = styled(MdKeyboardArrowLeft)`
     left: 15px;
     transform: rotate(0deg);
   }
+  @media ${device.old_phones} {
+    width: 30px;
+    height: 30px;
+  }
 `;
 
 export const SkinsNextArrow = styled(MdKeyboardArrowRight)`
   cursor: pointer;
   fill: #bfbfbf;
-  width: 45px;
-  height: 45px;
+  width: 35px;
+  height: 35px;
   transform: rotate(90deg);
   top: var(--swiper-navigation-top-offset, 95%);
   right: 43.5%;
@@ -78,6 +82,10 @@ export const SkinsNextArrow = styled(MdKeyboardArrowRight)`
     top: 50%;
     right: 15px;
     transform: rotate(0deg);
+  }
+  @media ${device.old_phones} {
+    width: 30px;
+    height: 30px;
   }
 `;
 

@@ -69,6 +69,7 @@ const SkinsCarousel = ({
         prevEl: ".swiper-button-prev",
         nextEl: ".swiper-button-next",
       }}
+      loop={true}
     >
       {skins?.map((skin: Skin) => {
         !skins && (

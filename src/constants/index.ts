@@ -42,10 +42,18 @@ export const initialChampsToRender = 10;
 export const baseUrl =
   "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/";
 
+export const spellImgBaseUrl =
+  "https://ddragon.leagueoflegends.com/cdn/13.13.1/img/spell/";
+
+export const passiveImgBaseUrl =
+  "https://ddragon.leagueoflegends.com/cdn/13.13.1/img/passive/";
+
 export interface ICarouselItem {
+  hability: string;
   name: string;
   imageUrl: string | undefined;
   videoUrl?: string | undefined;
+  spellAssets?: string | undefined;
 }
 
 export const champStats = ["Easy", "Medium", "Hard"];

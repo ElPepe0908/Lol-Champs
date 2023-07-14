@@ -2,12 +2,8 @@ import { Navigation } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 import {
-  ChampSpellsVideo,
-  ChampSpellsVideoPlayer,
   LogoSpellCircle,
   LogoSpellIcon,
-  LogoSpellVideo,
-  RemoveIcon,
   SkinName,
   SkinNameHover,
 } from "../../screens/ChampDetailScreen/styles";
@@ -25,8 +21,7 @@ interface Props {
   onMouseOver: (itemToShow: string) => void;
   onMouseOut: () => void;
   itemToShow: string;
-  onClickImage: (selectedVideoName: string, videoName: string) => void;
-  closeVideo: () => void;
+  onClickImage: (selectedVideoName: string, spellName: string) => void;
   spells: ICarouselItem[];
   isFetching: boolean;
 }
@@ -37,7 +32,6 @@ const SpellsCarousel = ({
   onMouseOut,
   itemToShow,
   onClickImage,
-  closeVideo,
   spells,
   isFetching,
 }: Props) => {
@@ -70,12 +64,12 @@ const SpellsCarousel = ({
               }
               onMouseOver={() => onMouseOver(`${spells.name}`)}
               onMouseOut={onMouseOut}
-              onClick={() =>
+              onClick={() => {
                 onClickImage(
                   spells.videoUrl ? spells.videoUrl : "",
-                  spells.name
-                )
-              }
+                  spells.hability
+                );
+              }}
             >
               {isFetching ? (
                 <Loader />
@@ -93,13 +87,6 @@ const SpellsCarousel = ({
                 <SkinName>{spells.name}</SkinName>
               </SkinNameHover>
             </SpellsSwiperSlide>
-
-            <ChampSpellsVideo>
-              <ChampSpellsVideoPlayer src={spells.videoUrl} controls autoPlay />
-              <LogoSpellVideo onClick={closeVideo}>
-                <RemoveIcon />
-              </LogoSpellVideo>
-            </ChampSpellsVideo>
           </div>
         );
       })}

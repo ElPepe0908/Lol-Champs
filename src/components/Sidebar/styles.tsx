@@ -111,7 +111,6 @@ export const SideBarResponsive = styled.div`
 
 export const RolesMenuContainer = styled.div`
   display: none;
-  // position: relative;
 
   @media ${device.phones} {
     display: flex;

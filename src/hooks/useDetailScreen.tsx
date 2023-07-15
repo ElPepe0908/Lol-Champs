@@ -13,18 +13,20 @@ import { ChampDetailResponse } from "../interfaces/ChampDetailInterface";
 export const useDetailScreen = () => {
   const { state, pathname } = useLocation();
   const championName = state?.championName;
-  const modifiedChampionName = championName.includes(" ")
+  const modifiedChampionName = championName.includes(". ")
+    ? championName.replace(/\./g, "").replace(/\s/g, "")
+    : championName.includes(" ")
     ? championName.replace(/\s/g, "")
     : championName.includes("'")
     ? championName
         .replace(/'/g, "")
         .replace(
           /(\b\w+)/,
-          (match: any, word: any) =>
+          (word: any) =>
             word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
         )
     : championName;
-
+  console.log("modifiedChampionName", modifiedChampionName);
   const { data: championDetail, isFetching: isChampionFetching } = useQuery(
     ["championDetail", state?.championName],
     () => getDetail(modifiedChampionName),
@@ -167,7 +169,7 @@ export const useDetailScreen = () => {
   const getChampionData = async (name: string) => {
     const url = `https://league-of-legends-champions.p.rapidapi.com/champions/en-us/${name}`;
     const headers = {
-      "X-RapidAPI-Key": "277eda47bemsh4c1888285d82b0ep119cc3jsn810817b025da",
+      "X-RapidAPI-Key": "c2de09efd7msh362205fafa2ff67p1c73c0jsn98474d950e34",
       "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
     };
     try {
@@ -264,17 +266,21 @@ export const useDetailScreen = () => {
     200: {
       slidesPerView: 1,
       direction: "horizontal",
+      spaceBetween: 10,
     },
     415: {
       slidesPerView: 2,
       direction: "horizontal",
+      spaceBetween: 10,
     },
     576: {
       slidesPerView: 2,
+      spaceBetween: 10,
       direction: "horizontal",
     },
     768: {
       slidesPerView: 2,
+      spaceBetween: 10,
       direction: "horizontal",
     },
     992: {

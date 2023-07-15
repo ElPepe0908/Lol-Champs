@@ -52,6 +52,7 @@ const HomeScreen = () => {
     show,
     hoveredChamp,
     handleKeyDown,
+    formatChampName,
   } = useHomeScreen();
 
   return (
@@ -133,6 +134,10 @@ const HomeScreen = () => {
               navigateToChampionDetail={navigateToChampionDetail}
               show={show}
               hoveredChamp={hoveredChamp}
+              clickedChamp={() => {
+                navigateToChampionDetail(champDetail.name);
+                formatChampName(champDetail.name);
+              }}
             />
           ))}
         </CardsContainer>

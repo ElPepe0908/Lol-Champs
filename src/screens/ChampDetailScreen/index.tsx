@@ -57,7 +57,6 @@ import { Loader } from "../../components/Loader";
 import SkinsCarousel from "../../components/SkinsCarousel";
 import SpellsCarousel from "../../components/SpellsCarousel";
 import { useDetailScreen } from "../../hooks/useDetailScreen";
-import { spellImgBaseUrl } from "../../constants";
 
 const ChampDetailScreen = () => {
   const {
@@ -88,8 +87,8 @@ const ChampDetailScreen = () => {
     <UpperGeneralDiv>
       <ChampDetailDiv>
         <BackInfoDiv>
-          <GoBackDiv>
-            <ArrowBackInfo onClick={handleNavigate} />
+          <GoBackDiv onClick={handleNavigate}>
+            <ArrowBackInfo />
           </GoBackDiv>
           <ChampInfoResp>
             <ChampNameContainer>
@@ -221,16 +220,15 @@ const ChampDetailScreen = () => {
                       </SpellImageDiv>
                       <SpellInfoTextDiv>
                         <SpellInfoTitle>
-                          {spellInfo?.image.full.includes(spellSelected) &&
-                            spellInfo?.image.full.replace(
-                              new RegExp(`.*${spellSelected}.*`),
-                              spellSelected
-                            )}{" "}
+                          {spellInfo?.image.full.replace(
+                            new RegExp(`.*${spellSelected}.*`),
+                            spellSelected
+                          )}{" "}
                           - {spellInfo?.name}
                         </SpellInfoTitle>
 
                         <SpellInfoDescription>
-                          {spellInfo?.description}
+                          {spellInfo?.description.replace(/<[^>]+>/g, "")}
                         </SpellInfoDescription>
                       </SpellInfoTextDiv>
                     </SpellInfoDiv>

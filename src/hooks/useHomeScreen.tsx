@@ -138,14 +138,19 @@ export const useHomeScreen = () => {
     setChampsFiltered(originalChampsData);
   };
 
-  const handleMouseOver = (tag: any) => {
+  const handleMouseOver = (name: any) => {
     setShow(true);
-    setHoveredChamp(tag);
+    setHoveredChamp(name);
   };
 
   const handleMouseOut = () => {
     setShow(false);
     setHoveredChamp(null);
+  };
+
+  const clickedChamp = (name: any) => {
+    console.log("hoveredChamp from clickedChamp", hoveredChamp);
+    setHoveredChamp(name);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -214,22 +219,15 @@ export const useHomeScreen = () => {
     setChampsFiltered(filterNewChamp);
   };
 
-  const champToNavigate = () => {
-    const clickedChampion = champsFiltered.find(
-      (champ) => champ.name === hoveredChamp
-    );
-    return clickedChampion;
+  const formatChampName = (champName: string) => {
+    console.log("champName", champName);
+    return champName.replace(/\./g, "").replace(/\s/g, "-").replace(/'/g, "-");
   };
-  const championPathName = () => {
-    if (champToNavigate()) {
-      return champToNavigate()?.name.replace(/\s/g, "-").replace(/'/g, "-");
-    }
-  };
-  const navigateToChampionDetail = () => {
-    const championPath = championPathName();
 
+  const navigateToChampionDetail = (name: string) => {
+    const championPath = formatChampName(name);
     navigate(`/champ-detail/${championPath}`, {
-      state: { championName: hoveredChamp },
+      state: { championName: name },
     });
   };
 
@@ -268,5 +266,7 @@ export const useHomeScreen = () => {
     drawerState,
     handleKeyDown,
     hoveredChamp,
+    clickedChamp,
+    formatChampName,
   };
 };

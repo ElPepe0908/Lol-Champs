@@ -16,6 +16,7 @@ interface Props {
   navigateToChampionDetail: any;
   show: boolean;
   hoveredChamp: any;
+  clickedChamp: any;
 }
 
 export const ChampToRender = ({
@@ -26,6 +27,7 @@ export const ChampToRender = ({
   navigateToChampionDetail,
   show,
   hoveredChamp,
+  clickedChamp,
 }: Props) => {
   const { elementRef, isIntersecting } = useChampToRender();
   return (
@@ -36,7 +38,7 @@ export const ChampToRender = ({
         isIntersecting={isIntersecting}
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
-        onClick={navigateToChampionDetail}
+        onClick={clickedChamp}
       >
         {!champDetail ? (
           <Loader />

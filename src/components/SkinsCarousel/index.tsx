@@ -63,7 +63,7 @@ const SkinsCarousel = ({
   return (
     <SkinsSwiper
       modules={[Navigation, Pagination, Scrollbar, A11y]}
-      spaceBetween={20}
+      spaceBetween={15}
       breakpoints={breakpoints}
       navigation={{
         prevEl: ".swiper-button-prev",

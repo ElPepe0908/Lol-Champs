@@ -38,7 +38,7 @@ const SpellsCarousel = ({
   return (
     <SpellsSwiper
       modules={[Navigation]}
-      spaceBetween={20}
+      spaceBetween={15}
       slidesPerView={4}
       breakpoints={breakpoints}
       navigation={{

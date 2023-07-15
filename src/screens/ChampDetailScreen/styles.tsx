@@ -16,18 +16,12 @@ export const LoaderContainer = styled.div`
 
 export const GeneralDiv = styled("div")({
   position: "relative",
-  width: "95%",
-  height: "100%",
-  margin: "2vh auto",
+  margin: "15px 15px",
   display: "flex",
   flexDirection: "column",
 
   [`@media ${device.tablets}`]: {
-    width: "85%",
-    margin: "3vh auto",
-  },
-  [`@media ${device.phones}`]: {
-    width: "95%",
+    margin: "30px 30px",
   },
 });
 
@@ -88,6 +82,9 @@ export const GoBackDiv = styled("div")({
     alignItems: "center",
     fontSize: 11,
   },
+  [`@media ${device.phones}`]: {
+    width: "25%",
+  },
   [`@media ${device.old_phones}`]: {
     display: "none",
   },
@@ -105,6 +102,9 @@ export const ChampInfoResp = styled("div")({
     justifyContent: "center",
     padding: "15px 0",
     marginLeft: "10px",
+  },
+  [`@media ${device.phones}`]: {
+    width: "75%",
   },
   [`@media ${device.old_phones}`]: {
     width: "100%",
@@ -185,7 +185,7 @@ export const ArrowIconResp = styled("div")({
 export const BackContainer = styled("div")({
   display: "flex",
   width: "100%",
-  padding: "10px 0",
+  padding: "15px 0",
   backgroundColor: "#27272D",
   borderRadius: 10,
   justifyContent: "center",
@@ -282,6 +282,11 @@ export const ChampTextInfo = styled("p")({
   [`@media ${device.tablets}`]: {
     padding: "0",
     width: "90%",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    display: "-webkit-box",
+    "-webkit-line-clamp": 3,
+    "-webkit-box-orient": "vertical",
   },
   [`@media ${device.phones}`]: {
     fontSize: 12,
@@ -314,7 +319,7 @@ export const ChampStatsDiv = styled("div")({
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-evenly",
-  padding: "15px 0",
+  padding: "10px 0",
 
   [`@media ${device.tablets}`]: {
     display: "none",
@@ -334,6 +339,10 @@ export const ChampStatsDivResp = styled("div")({
     justifyContent: "space-evenly",
     padding: "0",
     marginTop: "15px",
+  },
+  [`@media ${device.phones}`]: {
+    justifyContent: "space-between",
+    padding: "0 10px",
   },
 });
 
@@ -368,6 +377,12 @@ export const ChampStatsInfoResp = styled("div")({
     margin: "0",
     padding: "13px 0",
   },
+  [`@media ${device.phones}`]: {
+    width: "49%",
+  },
+  [`@media ${device.small_phones}`]: {
+    width: "48%",
+  },
 });
 
 export const ChampInfoSkinsDiv = styled("div")({
@@ -397,7 +412,7 @@ export const ChampSkinDiv = styled("div")({
   backgroundPosition: "center center",
   backgroundColor: "#17171B",
   width: "75%",
-  marginRight: 20,
+  marginRight: 15,
   borderRadius: 10,
   transition: "all 0.5s ease",
 
@@ -538,7 +553,6 @@ export const GeneralSpellsDiv = styled("div")({
   fontWeight: "semibold",
   flexDirection: "column",
   height: "none",
-  minHeight: "37.5vh",
 
   [`@media ${device.tablets}`]: {
     marginTop: 10,
@@ -638,23 +652,23 @@ export const ChampCarrusellSpellDiv = styled.div<BackgroundImageProps>`
 
 export const ChampSpellsVideo = styled.div`
   display: flex;
-  width: 50vw;
+  width: 55vw;
   border: 1px solid #fff;
   border-radius: 10px;
   flex-direction: column;
   position: relative;
 
-  @media ${device.desktops_large} {
-    width: 50vw;
-  }
   @media ${device.desktops} {
-    width: 70vw;
+    width: 60vw;
   }
   @media ${device.tablets} {
-    width: 86vw;
+    width: 75vw;
   }
   @media ${device.phones} {
-    width: 96vw;
+    width: 85vw;
+  }
+  @media ${device.old_phones} {
+    width: 90vw;
   }
 `;
 
@@ -663,23 +677,42 @@ export const ChampSpellsVideoPlayer = styled.video`
   height: 60vh;
   object-fit: cover;
   border-radius: 10px 10px 0 0;
+
+  @media ${device.desktops} {
+    height: 55vh;
+  }
+  @media ${device.tablets} {
+    height: 50vh;
+  }
+  @media ${device.phones} {
+    height: 45vh;
+  }
+  @media ${device.old_phones} {
+    height: 37vh;
+  }
+  @media ${device.small_phones} {
+    height: 28vh;
+  }
 `;
 
 export const SpellInfoDiv = styled("div")({
   width: "100%",
-  height: "120px",
   backgroundColor: "rgba(0, 0, 0, 0.7)",
   borderRadius: "0px 0px 10px 10px",
   borderTop: "1px solid rgba(255, 255, 255, 0.2)",
-  display: "flex",
+  padding: "25px 25px",
 });
 
 export const SpellImageDiv = styled("div")({
-  width: "20%",
   height: "100%",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
+  marginRight: "25px",
+  marginBottom: "5px",
+  float: "left",
+
+  [`@media ${device.old_phones}`]: {
+    marginRight: "17px",
+    marginBottom: "0px",
+  },
 });
 
 export const SpellImage = styled("img")({
@@ -688,71 +721,66 @@ export const SpellImage = styled("img")({
   borderRadius: "5px",
   objectFit: "cover",
   backgroundColor: "rgba(255, 255, 255, 1)",
+
+  [`@media ${device.phones}`]: {
+    width: "55px",
+    height: "55px",
+  },
+  [`@media ${device.old_phones}`]: {
+    width: "45px",
+    height: "45px",
+  },
 });
 
 export const SpellInfoTextDiv = styled("div")({
-  width: "80%",
   height: "100%",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "flex-start",
-  paddingRight: "20px",
 });
 
 export const SpellInfoTitle = styled("h2")({
-  fontSize: "16px",
+  fontSize: "19px",
   fontWeight: "bold",
-  width: "max-content",
+  [`@media ${device.phones}`]: {
+    fontSize: "17px",
+  },
+  [`@media ${device.old_phones}`]: {
+    marginBottom: "0px",
+  },
 });
 
 export const SpellInfoDescription = styled("p")({
-  fontSize: "13px",
+  fontSize: "15px",
   marginBottom: 0,
+
+  [`@media ${device.desktops}`]: {
+    fontSize: "14px",
+  },
+
+  [`@media ${device.old_phones}`]: {
+    fontSize: "12px",
+    marginTop: "2px",
+  },
+  [`@media ${device.small_phones}`]: {
+    fontSize: "13px",
+  },
 });
 
 export const LogoSpellVideo = styled.div`
   display: flex;
-  width: 50px;
-  height: 50px;
+  width: 35px;
+  height: 35px;
   justify-content: center;
   align-items: center;
-  border-radius: 50%;
+  border-radius: 7px;
   cursor: pointer;
   background-color: rgba(0, 0, 0, 1);
   position: absolute;
   top: 10px;
   right: 10px;
-
-  @media ${device.desktops} {
-    width: 45px;
-    height: 45px;
-  }
-  @media ${device.phones} {
-    width: 40px;
-    height: 40px;
-  }
-  @media ${device.old_phones} {
-    width: 35px;
-    height: 35px;
-  }
 `;
 
 export const RemoveIcon = styled(MdClear)`
-  font-size: 30px;
+  font-size: 17px;
   fill: #a3a3a3;
-
-  @media ${device.desktops} {
-    font-size: 25px;
-  }
-  @media ${device.phones} {
-    width: 20px;
-    height: 20px;
-  }
-  @media ${device.old_phones} {
-    width: 15px;
-    height: 15px;
-  }
 `;
 
 export const LogoSpellCircle = styled("div")({

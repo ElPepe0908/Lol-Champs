@@ -40,7 +40,7 @@ export const device = {
 export const initialChampsToRender = 10;
 
 export const baseUrl =
-  "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/";
+  "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/";
 
 export const spellImgBaseUrl =
   "https://ddragon.leagueoflegends.com/cdn/13.13.1/img/spell/";

@@ -156,7 +156,7 @@ export const useDetailScreen = () => {
   };
 
   const getDetail = async (name: string) => {
-    const url = `http://ddragon.leagueoflegends.com/cdn/13.11.1/data/en_US/champion/${name}.json`;
+    const url = `https://ddragon.leagueoflegends.com/cdn/13.11.1/data/en_US/champion/${name}.json`;
     try {
       const response = await axios.get<NewChampsDetailListResponse>(url);
       return response.data.data;

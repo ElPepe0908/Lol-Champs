@@ -165,7 +165,7 @@ export const useHomeScreen = () => {
     }
   };
   const getChamps = async () => {
-    const url = `http://ddragon.leagueoflegends.com/cdn/13.10.1/data/en_US/champion.json`;
+    const url = `https://ddragon.leagueoflegends.com/cdn/13.10.1/data/en_US/champion.json`;
     try {
       const response = await axios.get<NewChampsListResponse>(url);
       const champsData = response.data.data;

@@ -149,7 +149,6 @@ export const useHomeScreen = () => {
   };
 
   const clickedChamp = (name: any) => {
-    console.log("hoveredChamp from clickedChamp", hoveredChamp);
     setHoveredChamp(name);
   };
 
@@ -220,7 +219,6 @@ export const useHomeScreen = () => {
   };
 
   const formatChampName = (champName: string) => {
-    console.log("champName", champName);
     return champName.replace(/\./g, "").replace(/\s/g, "-").replace(/'/g, "-");
   };
 

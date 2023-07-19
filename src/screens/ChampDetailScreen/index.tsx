@@ -51,6 +51,7 @@ import {
   SpellInfoTextDiv,
   SpellInfoTitle,
   SpellInfoDescription,
+  SpellVideoContainer,
 } from "./styles";
 
 import { Loader } from "../../components/Loader";
@@ -81,6 +82,7 @@ const ChampDetailScreen = () => {
     spellSelected,
     spellInfo,
     getSpellImg,
+    spellHability,
   } = useDetailScreen();
 
   const mobileScreen = (
@@ -195,19 +197,7 @@ const ChampDetailScreen = () => {
 
             {selectedVideo && (
               <ScreenContainer>
-                <div
-                  style={{
-                    position: "fixed",
-                    width: "100%",
-                    height: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    backgroundColor: "rgba(0, 0, 0, 0.6)",
-                    top: 0,
-                    left: 0,
-                  }}
-                >
+                <SpellVideoContainer>
                   <ChampSpellsVideo ref={videoRefContainer}>
                     <ChampSpellsVideoPlayer
                       src={selectedVideo}
@@ -220,10 +210,13 @@ const ChampDetailScreen = () => {
                       </SpellImageDiv>
                       <SpellInfoTextDiv>
                         <SpellInfoTitle>
-                          {spellInfo?.image.full.replace(
-                            new RegExp(`.*${spellSelected}.*`),
-                            spellSelected
-                          )}{" "}
+                          {
+                            // spellInfo?.image.full.replace(
+                            //   new RegExp(`.*${spellSelected}.*`),
+                            //   spellSelected
+                            // )
+                            spellHability
+                          }{" "}
                           - {spellInfo?.name}
                         </SpellInfoTitle>
 
@@ -236,7 +229,7 @@ const ChampDetailScreen = () => {
                       <RemoveIcon />
                     </LogoSpellVideo>
                   </ChampSpellsVideo>
-                </div>
+                </SpellVideoContainer>
               </ScreenContainer>
             )}
           </ChampCarouselInner>
@@ -244,6 +237,8 @@ const ChampDetailScreen = () => {
       </GeneralSpellsDiv>
     </>
   );
+  console.log("spellSelected", spellSelected);
+  console.log("spellInfo?.image.full", spellInfo?.image.full);
   if (isChampionFetching)
     return (
       <LoaderContainer>

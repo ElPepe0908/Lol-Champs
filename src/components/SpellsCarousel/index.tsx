@@ -35,6 +35,7 @@ const SpellsCarousel = ({
   spells,
   isFetching,
 }: Props) => {
+  console.log("spells", spells[0].hability);
   return (
     <SpellsSwiper
       modules={[Navigation]}

@@ -847,3 +847,15 @@ export const ScreenContainer = styled("div")({
   backgroundColor: "rgba(0, 0, 0, 0.6)",
   borderRadius: 10,
 });
+
+export const SpellVideoContainer = styled("div")({
+  position: "fixed",
+  width: "100%",
+  height: "100%",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: "rgba(0, 0, 0, 0.6)",
+  top: 0,
+  left: 0,
+});

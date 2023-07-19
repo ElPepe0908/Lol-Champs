@@ -26,7 +26,6 @@ export const useDetailScreen = () => {
             word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
         )
     : championName;
-  console.log("modifiedChampionName", modifiedChampionName);
   const { data: championDetail, isFetching: isChampionFetching } = useQuery(
     ["championDetail", state?.championName],
     () => getDetail(modifiedChampionName),
@@ -51,7 +50,6 @@ export const useDetailScreen = () => {
   const [spellSelected, setSpellSelected] = useState<string>("");
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoRefContainer = useRef<HTMLDivElement>(null);
-  console.log(spellSelected);
 
   const handleOpenVideo = (videoName: string, spellName: string) => {
     setSelectedVideo(videoName as any);
@@ -169,7 +167,7 @@ export const useDetailScreen = () => {
   const getChampionData = async (name: string) => {
     const url = `https://league-of-legends-champions.p.rapidapi.com/champions/en-us/${name}`;
     const headers = {
-      "X-RapidAPI-Key": "c2de09efd7msh362205fafa2ff67p1c73c0jsn98474d950e34",
+      "X-RapidAPI-Key": "b4fb24a3bamshfffdc8e885f7895p191ffdjsne91bdec0876b",
       "X-RapidAPI-Host": "league-of-legends-champions.p.rapidapi.com",
     };
     try {
@@ -223,6 +221,19 @@ export const useDetailScreen = () => {
     spellAssets: `${spellImgBaseUrl}${championDetailInfo?.spells[3].image.full}`,
   };
   const spells = [champPassive, champQ, champW, champE, champR];
+  const getSpellsHability = () => {
+    let filteredSpellSelected = "";
+    spells.map((spell) => {
+      const filterSpellName = spell.name.split(" - ")[0];
+      console.log("filterSpellName", filterSpellName);
+      if (spellSelected.includes(filterSpellName)) {
+        filteredSpellSelected = filterSpellName;
+      }
+    });
+    return filteredSpellSelected;
+  };
+
+  const spellHability = getSpellsHability();
 
   const SpellStyles = {
     swiper: {
@@ -330,5 +341,6 @@ export const useDetailScreen = () => {
     spellSelected,
     spellInfo,
     getSpellImg,
+    spellHability,
   };
 };
